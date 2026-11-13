@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-13T14:38:10.926Z",
+  "verifiedAt": "2026-11-13T14:42:19.733Z",
   "checked": [
     {
       "name": "create",
@@ -134,6 +134,26 @@
         "MAGEN_SETTLED nonce=2 success=true migration=false"
       ],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Browser deploy and lock",
+      "hash": "EmXr8VNe86Pk9Ceys5wQ3ic4teGQZH2bdHbV8JfPSBsY",
+      "success": true,
+      "error": "",
+      "logs": [],
+      "signer": "shield.magen-film-mwf2kq5t.testnet",
+      "signing_key_type": "ed25519",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Browser wallet creation",
+      "hash": "8Aorejg3kgYnJ4LrzsLVe4ZsLcus1K7gL9DcT5d4NPzz",
+      "success": true,
+      "error": "",
+      "logs": [],
+      "signer": "magen-film-mwf2kq5t.testnet",
       "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },

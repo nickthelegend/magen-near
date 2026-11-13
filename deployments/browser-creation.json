@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Browser deploy and lock",
+    "signer": "shield.magen-film-mwf2kq5t.testnet",
+    "hash": "EmXr8VNe86Pk9Ceys5wQ3ic4teGQZH2bdHbV8JfPSBsY",
+    "success": true,
+    "error": "",
+    "logs": [],
+    "actions": [
+      "DeployContract",
+      "FunctionCall",
+      "DeleteKey"
+    ],
+    "final_execution_status": "FINAL"
+  },
+  {
+    "name": "Browser wallet creation",
+    "signer": "magen-film-mwf2kq5t.testnet",
+    "hash": "8Aorejg3kgYnJ4LrzsLVe4ZsLcus1K7gL9DcT5d4NPzz",
+    "success": true,
+    "error": "",
+    "logs": [],
+    "actions": [
+      "CreateAccount",
+      "Transfer",
+      "AddKey"
+    ],
+    "final_execution_status": "FINAL"
+  }
+]

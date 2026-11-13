@@ -19,6 +19,6 @@ Contract: shield.magen-mwf26bd5.testnet (hybrid, keyless)
 Native migration proof: shield.magen-film-mwf2kq5t.testnet
 Film: magen-near-film-share.mp4 (2:35, H264/AAC, 720p)
 Project repository: session owner must push and supply the public repository URL; no push performed by this agent.
-Testing: 10 SDK tests, 13 sandbox cases, 18 viewport/route checks; 17 final live receipts verified over RPC.
+Testing: 10 SDK tests, 13 sandbox cases, 18 viewport/route checks; 19 final live receipts verified over RPC.
 Explorer rendering caveat: NearBlocks blocks automated capture; direct protocol RPC proof is shown honestly in the film.
 License: MIT. Copyright (c) 2026 Nivesh Gajengi.

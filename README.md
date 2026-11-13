@@ -35,6 +35,8 @@ RPC checks on Nov 13: **testnet and mainnet both protocol 88**. The host functio
 
 Browser-created film account: [shield.magen-film-mwf2kq5t.testnet](https://testnet.nearblocks.io/address/shield.magen-film-mwf2kq5t.testnet#keys), now native PQ-only full access. [Migration](https://testnet.nearblocks.io/txns/9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr) · [Native-signed transfer](https://testnet.nearblocks.io/txns/8EGTshvxxVGKrXgcTftXjWZ4sGVKr8ukDBwnNtiQgu8F).
 
+Browser setup receipts: [create](https://testnet.nearblocks.io/txns/8Aorejg3kgYnJ4LrzsLVe4ZsLcus1K7gL9DcT5d4NPzz) · [deploy + initialize + delete key](https://testnet.nearblocks.io/txns/EmXr8VNe86Pk9Ceys5wQ3ic4teGQZH2bdHbV8JfPSBsY).
+
 A dual-signed cross-contract call to the film wallet status method also succeeded: [receipt](https://testnet.nearblocks.io/txns/DomrPPW1kJRP3r2kcdYfxspvW7h2rsprryFijHyakAQA).
 
 ## Build
