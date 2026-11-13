@@ -1,4 +1,4 @@
-import { ArrowUpRight, ArrowDownLeft, Power, KeyRound, Atom, Check, X, RefreshCw, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Power, KeyRound, Atom, Check, X, RefreshCw, ExternalLink, Network, EyeOff, Repeat, ChevronRight } from 'lucide-react';
 import { useWallet } from '../lib/store.tsx';
 import { accountUrl, near, readActivity, short } from '../lib/chain.ts';
 import { grade } from '../../../sdk/scan.ts';
@@ -44,6 +44,11 @@ export function Dashboard() {
           <div className="lock-row"><span className="lock-ico pq"><Power size={18} /></span><span style={{ minWidth: 0 }}><b>Native post-quantum key</b><small>{migrated ? 'On. Listed in NEAR’s access keys.' : 'Off. Turn on with the Q-Day switch.'}</small></span>{migrated ? <Check size={18} className="ico-ok" /> : <span className="pill pill-gray">Off</span>}</div>
         </div>
       </section>
+    </div>
+    <div className="tiles">
+      <a className="tile card" href="#/app/chains"><span className="tile-ico"><Network size={20} /></span><span><b>Every chain</b><small>ETH, BTC, SOL, Cosmos addresses guarded by your quantum key</small></span><ChevronRight size={18} /></a>
+      <a className="tile card" href="#/app/private"><span className="tile-ico"><EyeOff size={20} /></span><span><b>Private send</b><small>Pay a one-time account only the recipient can open</small></span><ChevronRight size={18} /></a>
+      <a className="tile card" href="#/app/swap"><span className="tile-ico"><Repeat size={20} /></span><span><b>Swap & bridge</b><small>Live NEAR Intents quotes: ZEC, SOL, ETH, BTC</small></span><ChevronRight size={18} /></a>
     </div>
     <div className="grid2">
       <section className="card">
