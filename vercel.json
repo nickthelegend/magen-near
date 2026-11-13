@@ -1,0 +1,1 @@
+{"buildCommand":"npm run build","outputDirectory":"web/dist","framework":null,"rewrites":[{"source":"/((?!assets/|wallet.wasm|live.json|shield.svg|commissioner.ttf).*)","destination":"/index.html"}]}

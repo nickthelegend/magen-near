@@ -1,0 +1,57 @@
+{
+  "count": 13,
+  "results": [
+    {
+      "name": "forged ed25519",
+      "passed": true
+    },
+    {
+      "name": "forged ML-DSA",
+      "passed": true
+    },
+    {
+      "name": "missing quantum half",
+      "passed": true
+    },
+    {
+      "name": "wrong message",
+      "passed": true
+    },
+    {
+      "name": "wrong wallet",
+      "passed": true
+    },
+    {
+      "name": "expired intent",
+      "passed": true
+    },
+    {
+      "name": "migration by non-owner",
+      "passed": true
+    },
+    {
+      "name": "valid dual transfer",
+      "passed": true
+    },
+    {
+      "name": "nonce replay",
+      "passed": true
+    },
+    {
+      "name": "self call blocked",
+      "passed": true
+    },
+    {
+      "name": "private callback",
+      "passed": true
+    },
+    {
+      "name": "native migration",
+      "passed": true
+    },
+    {
+      "name": "migration status settled",
+      "passed": true
+    }
+  ]
+}

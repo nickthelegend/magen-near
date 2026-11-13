@@ -6,3 +6,4 @@ target/
 .demo/
 dist/
 .loom/
+.vercel

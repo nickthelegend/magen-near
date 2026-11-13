@@ -1,0 +1,95 @@
+{
+  "rows": [
+    {
+      "route": "home",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "send",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "receive",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "activity",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "security",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "contacts",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "create",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "unlock",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "call",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "home",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "send",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "receive",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "activity",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "security",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "contacts",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "create",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "unlock",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "call",
+      "width": 375,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}
