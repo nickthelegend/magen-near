@@ -133,9 +133,9 @@ parts_src = {}
 S = {}
 # s1: landing → dApp approval signed twice → drill (all within ~15 s)
 L = {k: v / 1000 for k, v in M['landing'].items()}
-seg_web(f'{WORK}/s1a.mp4', 'landing.webm', L['hero'], L['hero'] + 2.4)
-seg_dapp(f'{WORK}/s1b.mp4', 4.3, 11.2, M['dapp']['approveOpen'] / 1000)
-seg_web(f'{WORK}/s1c.mp4', 'drill.webm', 4.9, 17.6, speed=1.7)
+seg_web(f'{WORK}/s1a.mp4', 'landing.webm', L['hero'], L['hero'] + 3.8)
+seg_dapp(f'{WORK}/s1b.mp4', 4.4, 10.9, M['dapp']['approveOpen'] / 1000)
+seg_web(f'{WORK}/s1c.mp4', 'drill.webm', 4.9, 17.6, speed=2.3)
 cat(f'{WORK}/s1.mp4', [f'{WORK}/s1a.mp4', f'{WORK}/s1b.mp4', f'{WORK}/s1c.mp4'])
 # s2: readiness scan of root.near
 seg_web(f'{WORK}/s2.mp4', 'landing.webm', L['type'] - 1.3, L['how'] + 4.3)
