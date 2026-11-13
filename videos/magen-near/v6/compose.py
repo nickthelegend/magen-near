@@ -132,15 +132,16 @@ M = json.load(open(f'{HERE}/marks.json'))
 parts_src = {'s4': 'phone.mov', 's5': 'phone.mov', 's6a': 'phone2.mov'}
 S = {}
 # s1: landing → dApp approval signed twice → drill (all within ~15 s)
-seg_web(f'{WORK}/s1a.mp4', 'landing.webm', 1.4, 3.8)
+L = {k: v / 1000 for k, v in M['landing'].items()}
+seg_web(f'{WORK}/s1a.mp4', 'landing.webm', L['hero'], L['hero'] + 2.4)
 seg_dapp(f'{WORK}/s1b.mp4', 4.3, 11.2, M['dapp']['approveOpen'] / 1000)
 seg_web(f'{WORK}/s1c.mp4', 'drill.webm', 4.9, 17.6, speed=1.7)
 cat(f'{WORK}/s1.mp4', [f'{WORK}/s1a.mp4', f'{WORK}/s1b.mp4', f'{WORK}/s1c.mp4'])
 # s2: readiness scan of root.near
-seg_web(f'{WORK}/s2.mp4', 'landing.webm', 5.2, 21.4)
+seg_web(f'{WORK}/s2.mp4', 'landing.webm', L['type'] - 1.3, L['how'] + 4.3)
 # s3: upgrade in place from the extension, then the one-transaction explainer
 seg_popup(f'{WORK}/s3a.mp4', 'upgrade.webm', 1.0, 12.0, 's3', 'Upgrade in place.\nOne transaction.', 'Same account name, same balance.\nYour key stays as lock 1.')
-seg_web(f'{WORK}/s3b.mp4', 'landing.webm', 21.4, 25.6)
+seg_web(f'{WORK}/s3b.mp4', 'landing.webm', L['how'] + 4.3, L['how'] + 8.5)
 seg_popup(f'{WORK}/s3c.mp4', 'tour.webm', 3.2, 6.8, 's3c', 'Two locks on.', 'ed25519 + ML-DSA-65,\nchecked on chain.')
 cat(f'{WORK}/s3.mp4', [f'{WORK}/s3a.mp4', f'{WORK}/s3b.mp4', f'{WORK}/s3c.mp4'])
 # s4/s5/s6: the phone app
@@ -154,7 +155,7 @@ cat(f'{WORK}/s6.mp4', [f'{WORK}/s6a.mp4', f'{WORK}/s6b.mp4', f'{WORK}/s6c.mp4'])
 # s7: the extension popup tour
 seg_popup(f'{WORK}/s7.mp4', 'tour.webm', 7.6, 24.2, 's7', 'In your browser.', 'dApps connect with window.magen.\nEvery request: signed twice.', speed=1.25)
 # s8: get Magen + end card
-seg_web(f'{WORK}/s8a.mp4', 'landing.webm', 25.9, 31.4)
+seg_web(f'{WORK}/s8a.mp4', 'landing.webm', L['get'] + 0.25, L['get'] + 5.75)
 still(f'{WORK}/s8b.mp4', endcard(), 6.0)
 cat(f'{WORK}/s8.mp4', [f'{WORK}/s8a.mp4', f'{WORK}/s8b.mp4'])
 
