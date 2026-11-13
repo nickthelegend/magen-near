@@ -6,8 +6,7 @@ import { useFonts } from 'expo-font';
 import * as SecureStore from 'expo-secure-store';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import QRCode from 'react-native-qrcode-svg';
-import { ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Copy, Power, ExternalLink, ChevronLeft } from 'lucide-react-native';
+import { ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Power, ExternalLink, ChevronLeft, ScanLine } from 'lucide-react-native';
 import { actions, base58, base64, execute, makeIntent, nearAmount, outcome, pqHandle, publicKeys, signIntent, submit, view, type Vault } from '../../sdk/index.ts';
 import { edKeyString, precheckUpgrade, seedFromPrivateKey, upgradeInPlace } from '../../sdk/upgrade.ts';
 import { createWithHelper } from '../../sdk/drillflow.ts';
@@ -15,6 +14,8 @@ import { random } from '../../sdk/index.ts';
 import { ago, friendlyError, near, readAccount, readActivity, readKeys, readStatus, short, txUrl, type Activity, type KeyInfo } from '../../web/src/lib/chain.ts';
 import { WALLET_WASM_B64 } from './src/wasm';
 import { TabBar, ShieldSend, type Tab } from './src/TabBar';
+import { ScanScreen, type ScanMode, type Sheet } from './src/ScanScreen';
+import { parseScan } from './src/scan';
 
 const C = { ink: '#0b0e14', graphite: '#1b212b', bg: '#f3f4f6', paper: '#ffffff', line: '#e4e7ec', text: '#0e131c', text2: '#4b5466', text3: '#7a8394', onInk: '#eef1f6', onInk2: '#9aa3b4', cobalt: '#3366ff', cobaltSoft: '#ebf0ff', red: '#d93036', redSoft: '#fdeeee', green: '#138a5c', greenSoft: '#e5f5ee' };
 const F = 'Commissioner';
@@ -123,6 +124,9 @@ function Onboarding({ onDone }: { onDone: (v: Vault) => void }) {
 type Live = { amount: bigint | null; storage: number; keys: KeyInfo[]; status: any };
 function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
   const [tab, setTab] = useState<Tab>('home');
+  const [scanMode, setScanMode] = useState<ScanMode>('scan');
+  const [sheet, setSheet] = useState<Sheet | null>(null);
+  const [prefill, setPrefill] = useState<Prefill | null>(null);
   const [live, setLive] = useState<Live | null>(null);
   const [acts, setActs] = useState<Activity[] | null>(null);
   const insets = useSafeAreaInsets();
@@ -138,8 +142,29 @@ function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
     } catch { /* keep the last values; the next tick retries */ }
   }, [vault.wallet]);
   useEffect(() => { refresh(); const t = setInterval(refresh, 30000); return () => clearInterval(t); }, [refresh]);
-  const go = (t: Tab) => { if (t === tab) return; fade.setValue(0); setTab(t); Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start(); };
-  const props = { vault, live, acts, refresh, go };
+  const tabRef = useRef(tab); tabRef.current = tab;
+  const go = (t: Tab) => { if (t === tabRef.current) return; if (t !== 'scan') setSheet(null); fade.setValue(0); setTab(t); Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start(); };
+  const openScan = (m: ScanMode) => { setScanMode(m); go('scan'); };
+  const send = (p: Omit<Prefill, 'key'>) => { setSheet(null); setPrefill({ ...p, key: Date.now() }); go('send'); };
+  /** One router for the camera, a photo, the clipboard and magen:// links. */
+  const route = useCallback((raw: string) => {
+    const r = parseScan(raw, vault.wallet);
+    if (r.kind === 'account') return send({ to: r.account });
+    if (r.kind === 'open') {
+      if (r.screen === 'send') return send({ to: r.to ?? '', amount: r.amount });
+      setSheet(null); return openScan(r.screen);
+    }
+    setSheet(r); setScanMode('scan'); go('scan');
+  }, [vault.wallet]);
+  // Deep links: magen://pay?…, magen://send?…, magen://receive, magen://scan (cold start and while running).
+  useEffect(() => {
+    Linking.getInitialURL().then(u => { if (u) route(u); }).catch(() => {});
+    const sub = Linking.addEventListener('url', ({ url }) => route(url));
+    return () => sub.remove();
+  }, [route]);
+  // Tapping Send yourself (tab bar, Home) opens a blank form; only a scan or a link prefills it.
+  const goTab = (t: Tab) => { if (t === 'send') setPrefill(null); go(t); };
+  const props = { vault, live, acts, refresh, go: goTab, receive: () => openScan('code') };
   return <View style={{ flex: 1, backgroundColor: C.bg }}>
     <View style={{ paddingTop: insets.top, backgroundColor: C.bg }}>
       <View style={styles.top}><Image source={require('./assets/icon.png')} style={{ width: 30, height: 30, borderRadius: 9 }} />
@@ -147,19 +172,23 @@ function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
         <View style={styles.lockChip}><Atom color={C.cobalt} size={14} /><T style={{ color: '#1739a8', fontSize: 12, fontWeight: '600' }}>{live?.status?.migrated ? 'PQ native' : '2 locks'}</T></View>
       </View>
     </View>
-    <Animated.ScrollView style={{ opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }} contentContainerStyle={{ padding: 16, paddingBottom: 130, gap: 14 }} keyboardShouldPersistTaps="handled">
+    {tab !== 'scan' && <Animated.ScrollView style={{ opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }} contentContainerStyle={{ padding: 16, paddingBottom: 130, gap: 14 }} keyboardShouldPersistTaps="handled">
       {tab === 'home' && <HomeTab {...props} />}
-      {tab === 'send' && <SendTab {...props} />}
-      {tab === 'receive' && <ReceiveTab {...props} />}
+      {tab === 'send' && <SendTab {...props} prefill={prefill} />}
       {tab === 'activity' && <ActivityTab {...props} />}
       {tab === 'security' && <SecurityTab {...props} onReset={onReset} />}
-    </Animated.ScrollView>
-    <TabBar tab={tab} onChange={go} bottom={insets.bottom} />
+    </Animated.ScrollView>}
+    {tab === 'scan' && <Animated.View style={[StyleSheet.absoluteFill, { opacity: fade }]}>
+      <ScanScreen wallet={vault.wallet} mode={scanMode} setMode={m => { setSheet(null); setScanMode(m); }} sheet={sheet} onCode={route}
+        onConfirm={p => send({ to: p.to, amount: p.amount, memo: p.memo, request: true })} onDismiss={() => setSheet(null)} top={insets.top} bottom={insets.bottom} />
+    </Animated.View>}
+    <TabBar tab={tab} onChange={t => (t === 'scan' && tab === 'scan' ? setSheet(null) : goTab(t))} bottom={insets.bottom} />
   </View>;
 }
-type P = { vault: Vault; live: Live | null; acts: Activity[] | null; refresh: () => void; go: (t: Tab) => void };
+type P = { vault: Vault; live: Live | null; acts: Activity[] | null; refresh: () => void; go: (t: Tab) => void; receive: () => void };
+type Prefill = { to: string; amount?: string; memo?: string; request?: boolean; key: number };
 
-function HomeTab({ vault, live, acts, go }: P) {
+function HomeTab({ vault, live, acts, go, receive }: P) {
   const migrated = !!live?.status?.migrated;
   return <>
     <View style={styles.balance}>
@@ -169,7 +198,7 @@ function HomeTab({ vault, live, acts, go }: P) {
       <T style={{ color: C.onInk2, fontSize: 13.5, marginTop: 6 }}>{vault.wallet}</T>
       <View style={{ flexDirection: 'row', gap: 8, marginTop: 22 }}>
         <View style={{ flex: 1 }}><Btn title="Send" icon={<ArrowUpRight color="#fff" size={18} />} onPress={() => go('send')} /></View>
-        <View style={{ flex: 1 }}><Btn title="Receive" kind="ghost" icon={<ArrowDownLeft color="#fff" size={18} />} onPress={() => go('receive')} /></View>
+        <View style={{ flex: 1 }}><Btn title="Receive" kind="ghost" icon={<ArrowDownLeft color="#fff" size={18} />} onPress={receive} /></View>
       </View>
     </View>
     <Card>
@@ -200,8 +229,10 @@ function ActRow({ a }: { a: Activity }) {
 }
 const Empty = () => <View style={{ alignItems: 'center', padding: 20, gap: 6 }}><Image source={require('./assets/empty-activity.png')} style={{ width: 96, height: 96 }} /><T style={{ fontWeight: '600' }}>No activity yet</T><T style={{ color: C.text3 }}>Your first payment shows here.</T></View>;
 
-function SendTab({ vault, live, refresh }: P) {
-  const [to, setTo] = useState(''); const [amt, setAmt] = useState('');
+function SendTab({ vault, live, refresh, go, prefill }: P & { prefill: Prefill | null }) {
+  const [to, setTo] = useState(prefill?.to ?? ''); const [amt, setAmt] = useState(prefill?.amount ?? '');
+  const [from, setFrom] = useState<Prefill | null>(prefill);
+  useEffect(() => { if (prefill && prefill.key !== from?.key) { setFrom(prefill); setTo(prefill.to); setAmt(prefill.amount ?? ''); setStage('form'); setRes(null); setErr(''); } }, [prefill?.key]);
   const [stage, setStage] = useState<'form' | 'signing' | 'sending' | 'done'>('form'); const [err, setErr] = useState('');
   const [res, setRes] = useState<{ hash: string; success: boolean; error: string } | null>(null);
   const spendable = live?.amount ? live.amount - BigInt(live.storage) * 10n ** 19n - 5n * 10n ** 23n : 0n;
@@ -222,8 +253,15 @@ function SendTab({ vault, live, refresh }: P) {
     } catch (e: any) { setErr(friendlyError(String(e.message))); setStage('form'); }
   };
   const signedYet = stage === 'sending' || stage === 'done';
+  const scanned = !!from && from.to === to.trim().toLowerCase();
   return <>
-    <T style={styles.h1}>Send</T>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <T style={styles.h1}>Send</T>
+      {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" style={styles.scanChip} hitSlop={6}><ScanLine color={C.cobalt} size={17} /><T style={{ color: '#1739a8', fontWeight: '600', fontSize: 13.5 }}>Scan</T></Pressable>}
+    </View>
+    {scanned && <View style={[styles.banner, { backgroundColor: C.cobaltSoft, alignItems: 'center' }]}><ScanLine color={C.cobalt} size={18} />
+      <View style={{ flex: 1 }}><T style={{ color: '#1739a8', fontWeight: '600' }}>{from!.request ? 'From a Magen pay request' : 'From a scanned code'}</T>
+        {!!from!.memo && <T style={{ color: '#1739a8', fontSize: 13, marginTop: 2 }} numberOfLines={2}>Memo: {from!.memo} (not sent on chain)</T>}</View></View>}
     <Card style={{ padding: 18, gap: 14 }}>
       <T style={styles.label}>To</T>
       <TextInput style={styles.input} placeholder="bob.testnet" value={to} onChangeText={setTo} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} />
@@ -254,19 +292,6 @@ const SigRow = ({ icon, title, sub, done, pq }: any) => <View style={{ flexDirec
   <View style={{ flex: 1 }}><T style={{ color: '#fff', fontWeight: '600' }}>{title}</T><T style={{ color: C.onInk2, fontSize: 12.5 }}>{sub}</T></View>
   {done && <Check color="#3ad29f" size={18} />}
 </View>;
-
-function ReceiveTab({ vault }: P) {
-  const [ok, setOk] = useState(false);
-  return <>
-    <T style={styles.h1}>Receive</T>
-    <View style={[styles.balance, { alignItems: 'center', paddingVertical: 32 }]}>
-      <View style={{ backgroundColor: '#fff', padding: 18, borderRadius: 20 }}><QRCode value={vault.wallet} size={210} color={C.ink} /></View>
-      <T style={{ color: '#fff', fontSize: 17, fontWeight: '600', marginTop: 20 }}>{vault.wallet}</T>
-      <T style={{ color: C.onInk2, fontSize: 13.5, marginTop: 6, textAlign: 'center' }}>Your account name is your address. Receiving needs no signature.</T>
-    </View>
-    <Btn title={ok ? 'Copied' : 'Copy address'} kind="dark" icon={ok ? <Check color="#fff" size={18} /> : <Copy color="#fff" size={18} />} onPress={async () => { await Clipboard.setStringAsync(vault.wallet); setOk(true); setTimeout(() => setOk(false), 1500); }} />
-  </>;
-}
 
 function ActivityTab({ acts }: P) {
   return <><T style={styles.h1}>Activity</T><Card>{acts === null ? <ActivityIndicator style={{ padding: 24 }} /> : acts.length ? acts.map(a => <ActRow key={a.hash} a={a} />) : <Empty />}</Card>
@@ -346,5 +371,6 @@ const styles = StyleSheet.create({
   tab: { flex: 1, alignItems: 'center', gap: 3 },
   input: { borderWidth: 1, borderColor: C.line, borderRadius: 14, height: 52, paddingHorizontal: 14, fontFamily: F, fontSize: 16, color: C.text, backgroundColor: C.paper },
   inputDark: { borderWidth: 1, borderColor: 'rgba(255,255,255,.14)', borderRadius: 14, height: 54, paddingHorizontal: 16, fontFamily: F, fontSize: 16, color: '#fff', backgroundColor: 'rgba(255,255,255,.06)' },
+  scanChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, height: 34, borderRadius: 17, backgroundColor: '#ebf0ff', marginTop: 4 },
   banner: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', padding: 14, borderRadius: 14 },
 });
