@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ArrowLeft, KeyRound, Atom, Check, ShieldAlert, ShieldCheck, ArrowRight } from 'lucide-react';
-import { useWallet } from '../lib/store.tsx';
+import { useWallet, feeSigner } from '../lib/store.tsx';
 import { friendlyError, near, readAccount, readActivity, short } from '../lib/chain.ts';
 import { execute, makeIntent, nearAmount, signIntent, view } from '../../../sdk/index.ts';
 import { ReadOnlyBar, Spinner, TxLink, useAsync } from '../ui/bits.tsx';
@@ -45,7 +45,7 @@ export function Send() {
       const signed = signIntent(intent, vault.keys);
       setSig({ ed: 64, pq: dropPq ? 0 : 3309, intent });
       setBusy('Sending to NEAR. The contract checks both signatures…');
-      const r = await execute(vault.relay, vault.wallet, dropPq ? { ...signed, pq_sig: '' } : signed);
+      const r = await execute(feeSigner(vault, live), vault.wallet, dropPq ? { ...signed, pq_sig: '' } : signed);
       setRes(r); setStage('done'); refresh();
     } catch (e: any) { setErr(friendlyError(String(e.message))); setStage('review'); } finally { setBusy(''); }
   };

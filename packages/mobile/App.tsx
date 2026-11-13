@@ -8,7 +8,7 @@ import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import QRCode from 'react-native-qrcode-svg';
 import { ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Copy, Power, ExternalLink, ChevronLeft } from 'lucide-react-native';
-import { base64, execute, makeIntent, nearAmount, pqHandle, publicKeys, signIntent, view, type Vault } from '../../sdk/index.ts';
+import { actions, base58, base64, execute, makeIntent, nearAmount, outcome, pqHandle, publicKeys, signIntent, submit, view, type Vault } from '../../sdk/index.ts';
 import { edKeyString, precheckUpgrade, seedFromPrivateKey, upgradeInPlace } from '../../sdk/upgrade.ts';
 import { createWithHelper } from '../../sdk/drillflow.ts';
 import { random } from '../../sdk/index.ts';
@@ -51,6 +51,11 @@ const Pill = ({ text, tone = 'gray' }: { text: string; tone?: 'gray' | 'blue' | 
   return <View style={[styles.pill, { backgroundColor: m[0] }]}><T style={{ color: m[1], fontSize: 12, fontWeight: '600' }}>{text}</T></View>;
 };
 const open = (h: string) => Linking.openURL(txUrl(h));
+/** Who pays gas: the execute-only classical key, or, once that key is removed after Q-Day, the native ML-DSA-65 key. */
+const feeSigner = (vault: Vault, live: Live | null) => {
+  const edOnChain = live?.keys.some(k => k.scheme === 'ed25519');
+  return edOnChain === false && live?.status?.migrated ? { account: vault.wallet, seed: vault.keys.pq, pq: true } : vault.relay;
+};
 
 /* ---------- onboarding ---------- */
 function Onboarding({ onDone }: { onDone: (v: Vault) => void }) {
@@ -212,7 +217,7 @@ function SendTab({ vault, live, refresh }: P) {
       const s = await view(vault.wallet);
       const signed = signIntent(makeIntent(vault.wallet, s.nonce, { kind: 'send', receiver: id, amount: y.toString() }), vault.keys);
       setStage('sending');
-      const r = await execute(vault.relay, vault.wallet, signed);
+      const r = await execute(feeSigner(vault, live), vault.wallet, signed);
       setRes(r); setStage('done'); Haptics.notificationAsync(r.success ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Error); refresh();
     } catch (e: any) { setErr(friendlyError(String(e.message))); setStage('form'); }
   };
@@ -272,6 +277,16 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
   const on = !!live?.status?.migrated;
   const [busy, setBusy] = useState(''); const [res, setRes] = useState<{ hash: string; success: boolean; error: string } | null>(null);
   const handle = useMemo(() => pqHandle(publicKeys(vault.keys).pq), [vault]);
+  const edKey = live?.keys.find(k => k.scheme === 'ed25519');
+  const dropClassical = () => Alert.alert('Remove the classical key?', 'Your ML-DSA-65 key signs this itself. After it, NEAR lists only post-quantum keys for this account.', [
+    { text: 'Cancel', style: 'cancel' },
+    { text: 'Remove', style: 'destructive', onPress: async () => {
+      try {
+        setBusy('Signing with ML-DSA-65 only…'); await new Promise(r => setTimeout(r, 60));
+        const r = outcome(await submit({ account: vault.wallet, seed: vault.keys.pq, pq: true }, vault.wallet, [actions.deleteKey(base58.decode(edKey!.publicKey.slice(8)))]));
+        setRes(r); Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); setTimeout(refresh, 2500);
+      } catch (e: any) { setRes({ hash: '', success: false, error: String(e.message) }); } finally { setBusy(''); }
+    } }]);
   const flip = () => Alert.alert('Turn on the Q-Day switch?', 'Your ML-DSA-65 key becomes a native NEAR full-access key. After this, it alone controls the account at the protocol level.', [
     { text: 'Cancel', style: 'cancel' },
     { text: 'Turn on', onPress: async () => {
@@ -280,7 +295,7 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
         const s = await view(vault.wallet);
         const signed = signIntent(makeIntent(vault.wallet, s.nonce, { kind: 'migrate' }), vault.keys);
         setBusy('Adding the native key on NEAR…');
-        const r = await execute(vault.relay, vault.wallet, signed); setRes(r);
+        const r = await execute(feeSigner(vault, live), vault.wallet, signed); setRes(r);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         setTimeout(refresh, 2500);
       } catch (e: any) { setRes({ hash: '', success: false, error: String(e.message) }); } finally { setBusy(''); }
@@ -291,13 +306,15 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
       <Image source={require('./assets/lattice-lock.png')} style={{ position: 'absolute', right: -6, top: 8, width: 110, height: 110, opacity: .9 }} />
       <Pill tone={on ? 'blue' : 'ink'} text={on ? 'Switched on' : 'Off'} />
       <T style={{ color: '#fff', fontSize: 24, fontWeight: '600', letterSpacing: -.6, maxWidth: 230 }}>{on ? 'Your post-quantum key is native on NEAR.' : 'Q-Day switch'}</T>
-      <T style={{ color: C.onInk2, fontSize: 14.5, lineHeight: 21 }}>{on ? 'NEAR lists your ML-DSA-65 key in the account’s access keys.' : 'One switch adds your ML-DSA-65 key as a native NEAR key. Same account, same balance.'}</T>
+      <T style={{ color: C.onInk2, fontSize: 14.5, lineHeight: 21, maxWidth: 250 }}>{on ? 'NEAR lists your ML-DSA-65 key in the account’s access keys.' : 'One switch adds your ML-DSA-65 key as a native NEAR key. Same account, same balance.'}</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,.06)' }}>
         <Switch value={on} onValueChange={() => !on && flip()} disabled={on || !!busy} trackColor={{ true: C.cobalt, false: '#3a4250' }} />
         <View style={{ flex: 1 }}><T style={{ color: '#fff', fontWeight: '600' }}>{on ? 'Native ML-DSA-65 key: on' : 'Add native ML-DSA-65 key'}</T><T style={{ color: C.onInk2, fontSize: 12.5 }}>{busy || 'Signed with both locks'}</T></View>
         {!!busy && <ActivityIndicator color="#fff" />}
       </View>
-      {res?.hash ? <Pressable onPress={() => open(res.hash)}><T style={{ color: '#b9c8ff', fontWeight: '600' }}>{res.success ? 'Switch transaction' : friendlyError(res.error)} {short(res.hash)} ↗</T></Pressable> : null}
+      {res?.hash ? <Pressable onPress={() => open(res.hash)}><T style={{ color: '#b9c8ff', fontWeight: '600' }}>{res.success ? 'Transaction' : friendlyError(res.error)} {short(res.hash)} ↗</T></Pressable> : null}
+      {on && edKey && <Btn title={busy ? busy : 'Remove the classical key'} kind="ghost" busy={!!busy} onPress={dropClassical} />}
+      {on && live && !edKey && <T style={{ color: '#b9c8ff', fontSize: 13.5 }}>Only post-quantum keys remain on this account.</T>}
     </View>
     <Card>
       <View style={styles.cardHead}><T style={styles.h2}>What NEAR sees</T><Pressable onPress={() => Linking.openURL(`https://testnet.near.rocks/account/${vault.wallet}`)}><ExternalLink color={C.cobalt} size={18} /></Pressable></View>

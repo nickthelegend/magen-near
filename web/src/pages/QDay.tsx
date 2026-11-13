@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Atom, ExternalLink, ShieldCheck, ShieldAlert, KeyRound } from 'lucide-react';
-import { useWallet } from '../lib/store.tsx';
+import { useWallet, feeSigner } from '../lib/store.tsx';
 import { friendlyError, keysUrl, short } from '../lib/chain.ts';
-import { actions, execute, makeIntent, nearAmount, outcome, pqHandle, publicKeys, signIntent, submit, view } from '../../../sdk/index.ts';
+import { actions, base58, execute, makeIntent, nearAmount, outcome, pqHandle, publicKeys, signIntent, submit, view } from '../../../sdk/index.ts';
 import { ReadOnlyBar, Spinner, TxLink } from '../ui/bits.tsx';
 
 export function QDay() {
@@ -19,7 +19,7 @@ export function QDay() {
       const s = await view(vault.wallet);
       const signed = signIntent(makeIntent(vault.wallet, s.nonce, { kind: 'migrate' }), vault.keys);
       setBusy('NEAR is checking both signatures and adding the native key…');
-      const r = await execute(vault.relay, vault.wallet, signed);
+      const r = await execute(feeSigner(vault, live), vault.wallet, signed);
       setRes(r); if (!r.success) setErr(friendlyError(r.error));
       await new Promise(x => setTimeout(x, 2500)); await refresh();
     } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
@@ -30,6 +30,15 @@ export function QDay() {
       setBusy('Signing a 0.01 NEAR self-transfer with the ML-DSA-65 key only…');
       const r = outcome(await submit({ account: vault.wallet, seed: vault.keys.pq, pq: true }, vault.wallet, [actions.transfer(BigInt(nearAmount('0.01')))]));
       setProof(r); refresh();
+    } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
+  };
+  const edKey = live?.keys.find(k => k.scheme === 'ed25519');
+  const dropClassical = async () => {
+    if (!vault || !edKey) return; setErr('');
+    try {
+      setBusy('Removing the classical key, signed with ML-DSA-65 only…');
+      const r = outcome(await submit({ account: vault.wallet, seed: vault.keys.pq, pq: true }, vault.wallet, [actions.deleteKey(base58.decode(edKey.publicKey.slice(8)))]));
+      setProof(r); await new Promise(x => setTimeout(x, 2500)); refresh();
     } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
   };
   const handle = vault ? pqHandle(publicKeys(vault.keys).pq) : nativeKey?.publicKey;
@@ -63,6 +72,8 @@ export function QDay() {
           <div><b>Before</b>Two signatures in a contract. Strongest while classical keys still hold.</div>
           <div><b>After</b>Plus a native post-quantum key NEAR checks itself, at 100 Ggas per signature.</div>
         </div>
+        {on && vault && edKey && <button className="btn btn-dark" onClick={dropClassical} disabled={!!busy}>{busy ? <Spinner /> : <KeyRound size={17} />}Remove the classical key</button>}
+        {on && live && !edKey && <div className="banner banner-blue"><Atom size={18} /><div>Only post-quantum keys remain on this account.</div></div>}
         {on && vault && <button className="btn btn-light" onClick={prove} disabled={!!busy}>{busy ? <Spinner /> : <ShieldCheck size={17} />}Prove it: sign a transaction with the native key</button>}
         {proof && (proof.success ? <div className="banner banner-green"><ShieldCheck size={18} /><div><strong>Signed by ML-DSA-65 alone and accepted.</strong><TxLink hash={proof.hash} /></div></div>
           : <div className="banner banner-red"><ShieldAlert size={18} /><div>{friendlyError(proof.error)}</div></div>)}

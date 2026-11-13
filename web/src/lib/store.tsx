@@ -56,3 +56,9 @@ export function downloadJson(data: any, name: string) {
   a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
   a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
+
+/** Who pays gas: the execute-only classical key, or the native ML-DSA-65 key once the classical key was removed after Q-Day. */
+export function feeSigner(vault: Vault, live: { keys: KeyInfo[]; status: any } | null) {
+  const edOnChain = live?.keys.some(k => k.scheme === 'ed25519');
+  return edOnChain === false && live?.status?.migrated ? { account: vault.wallet, seed: vault.keys.pq, pq: true } : vault.relay;
+}

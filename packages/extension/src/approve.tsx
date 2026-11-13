@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { KeyRound, Atom, Check, ShieldCheck, ShieldAlert, LockOpen, Link2 } from 'lucide-react';
 import '../../../web/src/styles.css';
 import './ext.css';
-import { WalletProvider, useWallet } from '../../../web/src/lib/store.tsx';
+import { WalletProvider, useWallet, feeSigner } from '../../../web/src/lib/store.tsx';
 import { friendlyError, near } from '../../../web/src/lib/chain.ts';
 import { Spinner, TxLink } from '../../../web/src/ui/bits.tsx';
 import { base64, execute, makeIntent, signIntent, utf8, view, type Action } from '../../../sdk/index.ts';
@@ -22,7 +22,7 @@ function toAction(tx: any): Action {
 }
 
 function Approve() {
-  const { ready, vault, unlock, hasBackup } = useWallet();
+  const { ready, vault, unlock, hasBackup, live } = useWallet();
   const [req, setReq] = useState<Req | null>(null); const [err, setErr] = useState(''); const [busy, setBusy] = useState('');
   const [pw, setPw] = useState(''); const [signed, setSigned] = useState(false);
   const [res, setRes] = useState<{ hash: string; success: boolean; error: string } | null>(null);
@@ -47,7 +47,7 @@ function Approve() {
       await new Promise(r => setTimeout(r, 30));
       const both = signIntent(intent, vault.keys); setSigned(true);
       setBusy('NEAR is checking both signatures…');
-      const r = await execute(vault.relay, vault.wallet, both);
+      const r = await execute(feeSigner(vault, live), vault.wallet, both);
       setRes(r);
       await answer({ result: { transactionHash: r.hash, success: r.success, error: r.success ? '' : friendlyError(r.error) } });
       setTimeout(() => window.close(), 6000);
