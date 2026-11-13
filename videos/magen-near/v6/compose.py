@@ -106,7 +106,7 @@ def seg_phone(out, parts, name, title, sub):
 
 def seg_dapp(out, t0, t1, open_at):
     """The demo dApp full frame with Magen's approval window over it, where Chrome puts extension pop-ups."""
-    s = 1.42; w, h = int(400 * s), int(628 * s); x, y = W - w - 80, 70
+    s = 1.42; w, h = int(400 * s), int(668 * s); x, y = W - w - 80, 50
     sh = f'{WORK}/popshadow.png'
     if not os.path.exists(sh):
         im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); m = Image.new('L', (W, H), 0)
@@ -115,7 +115,7 @@ def seg_dapp(out, t0, t1, open_at):
     d = open_at - t0
     run(['-ss', str(t0), '-to', str(t1), '-i', f'{RAW}/dapp.webm', '-i', f'{RAW}/approve.webm', '-loop', '1', '-i', sh, '-filter_complex',
          f'[0]scale={W}:1200,crop={W}:{H}:0:0,setpts=PTS-STARTPTS,fps={FPS}[d];'
-         f'[1]crop=400:628:0:0,scale={w}:{h},setpts=PTS-STARTPTS+{d}/TB,fps={FPS}[a];'
+         f'[1]crop=400:668:0:0,scale={w}:{h},setpts=PTS-STARTPTS+{d}/TB,fps={FPS}[a];'
          f'[d][2]overlay=0:0:shortest=1:enable=\'gte(t,{d})\'[ds];[ds][a]overlay={x}:{y}:eof_action=pass:enable=\'gte(t,{d})\'', *ENC, out])
 
 def still(out, img, dur):
@@ -133,7 +133,7 @@ parts_src = {'s4': 'phone.mov', 's5': 'phone.mov', 's6a': 'phone2.mov'}
 S = {}
 # s1: landing → dApp approval signed twice → drill (all within ~15 s)
 seg_web(f'{WORK}/s1a.mp4', 'landing.webm', 1.4, 3.8)
-seg_dapp(f'{WORK}/s1b.mp4', 6.7, 13.3, M['dapp']['approveOpen'] / 1000)
+seg_dapp(f'{WORK}/s1b.mp4', 4.3, 11.2, M['dapp']['approveOpen'] / 1000)
 seg_web(f'{WORK}/s1c.mp4', 'drill.webm', 4.9, 17.6, speed=1.7)
 cat(f'{WORK}/s1.mp4', [f'{WORK}/s1a.mp4', f'{WORK}/s1b.mp4', f'{WORK}/s1c.mp4'])
 # s2: readiness scan of root.near

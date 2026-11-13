@@ -16,7 +16,7 @@ chrome.runtime.onConnect.addListener(port => {
       if (!['connect', 'signAndSendTransaction'].includes(msg.method)) return port.postMessage({ error: `Magen does not support ${msg.method}.` });
       const id = crypto.randomUUID();
       await S.set({ [`req-${id}`]: { id, origin, method: msg.method, params: msg.params ?? null, at: Date.now() } });
-      const win = await chrome.windows.create({ url: `approve.html#${id}`, type: 'popup', width: 400, height: 660, focused: true });
+      const win = await chrome.windows.create({ url: `approve.html#${id}`, type: 'popup', width: 400, height: 700, focused: true });
       const done = async (answer) => {
         chrome.storage.onChanged.removeListener(onChange); chrome.windows.onRemoved.removeListener(onClosed);
         await S.remove([`req-${id}`, `res-${id}`]);

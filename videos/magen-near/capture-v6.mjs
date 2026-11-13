@@ -60,14 +60,21 @@ await withChromeLock(async () => {
     await p.goto(`chrome-extension://${id}/popup.html#/app`); await W(6000); mark('home'); await W(3000);
   });
 
+  if (want('dapp')) {   // unlock the wallet first (a new browser session starts locked)
+    const u = await ctx.newPage(); await u.goto(`chrome-extension://${id}/popup.html#/start/unlock`); await W(800);
+    await u.locator('input[type=password]').fill(pw); await u.getByRole('button', { name: 'Unlock' }).click(); await W(1500);
+    const uv = u.video(); await u.close(); if (uv) await uv.delete().catch(() => {});
+  }
   await take('dapp', async (p, mark) => {
     await p.goto('http://localhost:5340/dapp/index.html'); await W(2500); mark('open');
-    const [c] = await Promise.all([ctx.waitForEvent('page'), p.getByRole('button', { name: 'Connect Magen' }).click()]);
-    await c.setViewportSize({ width: 400, height: 660 }); await W(1800); await c.getByRole('button', { name: 'Connect' }).click();
+    if (await p.locator('#connect').isVisible()) {
+      const [c] = await Promise.all([ctx.waitForEvent('page'), p.getByRole('button', { name: 'Connect Magen' }).click()]);
+      await c.setViewportSize({ width: 400, height: 700 }); await W(1800); await c.getByRole('button', { name: 'Connect' }).click();
+    }
     await p.getByText('Connected: magen-leo.testnet').waitFor({ timeout: 20000 }); mark('connected'); await W(1500);
     await p.getByRole('button', { name: '0.1', exact: true }).click(); await W(600);
     const [a] = await Promise.all([ctx.waitForEvent('page'), p.getByRole('button', { name: /Send 0.1 NEAR tip/ }).click()]);
-    mark('approveOpen'); await a.setViewportSize({ width: 400, height: 660 });
+    mark('approveOpen'); await a.setViewportSize({ width: 400, height: 700 });
     const av = a.video();
     await W(2600); mark('approveClick'); await a.getByRole('button', { name: /Approve/ }).click();
     await a.getByText(/Both signatures verified|Refused/).waitFor({ timeout: 60000 }); mark('approveDone');

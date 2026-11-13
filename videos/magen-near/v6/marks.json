@@ -15,13 +15,13 @@
   "home": 18046
  },
  "dapp": {
-  "open": 2561,
-  "connected": 4687,
-  "approveOpen": 7180,
-  "approveClick": 9814,
-  "approveDone": 12142,
-  "dappDone": 12146,
-  "tx": "https://testnet.nearblocks.io/txns/BpGJ8H33LWKiewXqkJHeF9xjVnownshJp1xq55qYitbh"
+  "open": 2558,
+  "connected": 2574,
+  "approveOpen": 4810,
+  "approveClick": 7415,
+  "approveDone": 10734,
+  "dappDone": 10736,
+  "tx": "https://testnet.near.rocks/tx/BLvEz3QdfSuSyeDgsZGaJfyb6GWZcoJjbsz8LKM5RFKG"
  },
  "drill": {
   "ready": 5149,
