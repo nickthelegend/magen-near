@@ -494,3 +494,5 @@ textarea.input { height: auto; min-height: 96px; padding: 12px 14px; resize: ver
   .hide-m { display: none !important; }
 }
 @media (min-width: 761px) { .only-m { display: none !important; } }
+
+.masked { -webkit-text-security: disc; }

@@ -98,7 +98,7 @@ function Upgrade({ preset = '', create = false, back }: { preset?: string; creat
         <label className="field"><span>Account</span><input className="input" value={account} onChange={e => { setAccount(e.target.value); setCheck(null); }} placeholder="alice.testnet" autoCapitalize="off" spellCheck={false} /></label>
         <div className="segs" role="tablist"><button className={kind === 'key' ? 'on' : ''} onClick={() => { setKind('key'); setCheck(null); }}>Private key</button><button className={kind === 'phrase' ? 'on' : ''} onClick={() => { setKind('phrase'); setCheck(null); }}>Recovery phrase</button></div>
         <label className="field"><span>{kind === 'key' ? 'Full-access private key' : '12 or 24-word recovery phrase'}</span>
-          <textarea className="input mono" value={secret} onChange={e => { setSecret(e.target.value); setCheck(null); }} placeholder={kind === 'key' ? 'ed25519:…' : 'word word word …'} autoCapitalize="off" spellCheck={false} style={{ minHeight: 76 }} />
+          <textarea className="input mono masked" value={secret} onChange={e => { setSecret(e.target.value); setCheck(null); }} placeholder={kind === 'key' ? 'ed25519:…' : 'word word word …'} autoCapitalize="off" spellCheck={false} style={{ minHeight: 76 }} />
           <span className="hint">Stays on this device. Magen never sends it anywhere; it only signs the upgrade.</span></label>
         {!check && <button className="btn btn-dark btn-lg btn-block" onClick={verify} disabled={!account || !secret || !!busy}>{busy ? <><Spinner />{busy}</> : 'Check this account'}</button>}
         {check && !check.ok && <div className="banner banner-red"><ShieldAlert size={18} /><div><strong>Can’t upgrade this account</strong>{check.problems.join(' ')}</div></div>}

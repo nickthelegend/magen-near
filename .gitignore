@@ -12,3 +12,4 @@ packages/mobile/ios/
 packages/mobile/build-out/*.zip
 packages/extension/dist/
 .tools/
+videos/magen-near/v*/raw/
