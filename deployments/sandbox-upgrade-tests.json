@@ -1,0 +1,87 @@
+{
+  "ranAt": "2026-11-13T15:20:21.054Z",
+  "node": "neard 2.14.0-rc.4 sandbox (protocol 88)",
+  "count": 16,
+  "results": [
+    {
+      "name": "precheck accepts a plain funded account",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "precheck refuses a key the account does not hold",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "upgrade in place: one tx, same account, old key now execute-only",
+      "passed": true,
+      "detail": "CdTo4hBxdrKVNA6EkoxUJmRA4jVRwqGQpn8hTrjd8Fai"
+    },
+    {
+      "name": "precheck refuses to upgrade twice",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "old key cannot transfer natively",
+      "passed": true,
+      "detail": "{\"name\":\"HANDLER_ERROR\",\"cause\":{\"info\":{},\"name\":\"INVALID_TRANSACTION\"},\"code\":"
+    },
+    {
+      "name": "dual-signed send via the execute-only key",
+      "passed": true,
+      "detail": "5YQE85XD5igZAZLs1ushDVJqKTkj8MZXExQ4c6cgd2Jn"
+    },
+    {
+      "name": "attacker recovers both weak keys from public data",
+      "passed": true,
+      "detail": "32398 ms"
+    },
+    {
+      "name": "plain account drained with the recovered key",
+      "passed": true,
+      "detail": "3.5 NEAR -> attacker"
+    },
+    {
+      "name": "same attack on the Magen account refused on chain",
+      "passed": true,
+      "detail": "quantum half missing"
+    },
+    {
+      "name": "attacker with a self-made ML-DSA key refused",
+      "passed": true,
+      "detail": "quantum half missing or invalid"
+    },
+    {
+      "name": "Magen keeps the 5 NEAR; only attempt gas is charged (sandbox gas price)",
+      "passed": true,
+      "detail": "0.101113 NEAR gas"
+    },
+    {
+      "name": "Q-Day switch adds the native ML-DSA-65 key",
+      "passed": true,
+      "detail": "ml-dsa-65-hash:9WLK1caMHmgY86hmJ…"
+    },
+    {
+      "name": "readiness scan scores the upgraded, switched account 100",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "readiness scan scores a one-key account 15 (exposed)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "recovery phrase derives an ed25519 key",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "invalid recovery phrase refused",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}

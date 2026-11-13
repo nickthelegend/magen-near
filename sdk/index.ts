@@ -4,7 +4,9 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { sha3_256 } from '@noble/hashes/sha3.js';
 import { base58, base64 } from '@scure/base';
 export { base64, base58, ed25519, ml_dsa65, sha256 };
-export const RPC='https://test.rpc.fastnear.com';
+export let RPC='https://test.rpc.fastnear.com';
+/** Point every helper at another RPC (the local sandbox in tests). */
+export function useRpc(url:string){RPC=url;}
 export const utf8=(s:string)=>new TextEncoder().encode(s);
 export const decode=(b:Uint8Array)=>new TextDecoder().decode(b);
 export const concat=(...v:Uint8Array[])=>{const out=new Uint8Array(v.reduce((n,x)=>n+x.length,0));let p=0; for(const x of v){out.set(x,p);p+=x.length;}return out;};
@@ -27,7 +29,10 @@ export const formatNear=(s:string,places=4)=>{const n=BigInt(s);const a=n/10n**2
 const le=(n:bigint|number,size:number)=>{let v=BigInt(n);const a=new Uint8Array(size);for(let i=0;i<size;i++){a[i]=Number(v&255n);v>>=8n;}if(v)throw Error('integer overflow');return a;};
 const vec=(b:Uint8Array)=>concat(le(b.length,4),b);
 const str=(s:string)=>vec(utf8(s));
-export const actions={create:()=>new Uint8Array([0]),deploy:(wasm:Uint8Array)=>concat(new Uint8Array([1]),vec(wasm)),call:(method:string,args:any,gas=100_000_000_000_000n,deposit=0n)=>concat(new Uint8Array([2]),str(method),vec(utf8(JSON.stringify(args))),le(gas,8),le(deposit,16)),transfer:(amount:bigint)=>concat(new Uint8Array([3]),le(amount,16)),addKey:(pk:Uint8Array,tag=0)=>concat(new Uint8Array([5,tag]),pk,le(0,8),new Uint8Array([1])),deleteKey:(pk:Uint8Array)=>concat(new Uint8Array([6,0]),pk)};
+export const actions={create:()=>new Uint8Array([0]),deploy:(wasm:Uint8Array)=>concat(new Uint8Array([1]),vec(wasm)),call:(method:string,args:any,gas=100_000_000_000_000n,deposit=0n)=>concat(new Uint8Array([2]),str(method),vec(utf8(JSON.stringify(args))),le(gas,8),le(deposit,16)),transfer:(amount:bigint)=>concat(new Uint8Array([3]),le(amount,16)),addKey:(pk:Uint8Array,tag=0)=>concat(new Uint8Array([5,tag]),pk,le(0,8),new Uint8Array([1])),deleteKey:(pk:Uint8Array)=>concat(new Uint8Array([6,0]),pk),
+ /** AddKey with a FunctionCall permission: the key may only call `methods` on `receiver`, spending at most `allowance` yocto on fees. */
+ addFnKey:(pk:Uint8Array,receiver:string,methods:string[],allowance:bigint)=>concat(new Uint8Array([5,0]),pk,le(0,8),new Uint8Array([0,1]),le(allowance,16),str(receiver),le(methods.length,4),...methods.map(str)),
+ deleteAccount:(beneficiary:string)=>concat(new Uint8Array([7]),str(beneficiary))};
 export type Signer={account:string;seed:string;pq?:boolean};
 export function signerPublic(s:Signer){return s.pq?ml_dsa65.keygen(base64.decode(s.seed)).publicKey:ed25519.getPublicKey(base64.decode(s.seed));}
 export const keyString=(s:Signer)=>(s.pq?'ml-dsa-65:':'ed25519:')+base58.encode(signerPublic(s));

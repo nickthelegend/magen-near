@@ -7,3 +7,4 @@ target/
 dist/
 .loom/
 .vercel
+.tools/
