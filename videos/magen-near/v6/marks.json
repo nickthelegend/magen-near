@@ -45,5 +45,11 @@
  "webapp": {
   "home": 6153,
   "activity": 12160
+ },
+ "p2": {
+  "chains": 6816,
+  "private": 11831,
+  "swap": 19305,
+  "guardians": 27837
  }
 }

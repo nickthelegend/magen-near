@@ -13,19 +13,19 @@
  },
  {
   "id": "s4",
-  "text": "On the phone, it feels like any wallet. Send signs twice, right on the device, and Near checks both signatures inside the wallet contract. Receiving is just your account name, as a QR code."
+  "text": "On the phone, Magen upgrades an account the same way, with keys made on the device. Send signs twice, right here, and Near checks both. After the upgrade, Near lists no classical key at all. Even the key that pays fees is post quantum."
  },
  {
   "id": "s5",
-  "text": "When classical keys stop being safe, the Q Day switch adds the post quantum key as a native Near access key. The switch itself needs both signatures, and the name, balance and history stay."
+  "text": "One quantum safe key also controls every chain. Through Near chain signatures, this account has Ethereum, Bitcoin, Solana and Cosmos addresses. Ask with one signature, and Near refuses before the signer is ever called. Those chains stay classical. The control is quantum safe."
  },
  {
   "id": "s6",
-  "text": "Then the post quantum key removes the old classical key, by itself. The explorer now shows a single key, and marks the account quantum safe."
+  "text": "When classical keys stop being safe, the Q Day switch adds a native post quantum key to the same account. The explorer then lists only post quantum keys, and marks the account quantum safe."
  },
  {
   "id": "s7",
-  "text": "In the browser, the extension holds the same wallet. Balance, activity with every refusal on record, and your keys. Any dApp can connect through window dot magen, and every request shows both signatures before you approve."
+  "text": "The web wallet adds private sends to one time accounts, live swap quotes from Near intents, and two of three guardians who can move your locks to a new phone. The extension carries the same wallet into every dApp."
  },
  {
   "id": "s8",

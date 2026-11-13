@@ -15,7 +15,7 @@ VERSION = sys.argv[1] if len(sys.argv) > 1 else 'v6'
 
 def run(args):
     r = subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', *args], capture_output=True, text=True)
-    if r.returncode: raise SystemExit('FFMPEG FAILED: ' + ' '.join(args)[-600:] + '\n' + r.stderr[-1500:] + r.stdout[-500:])
+    if r.returncode: raise SystemExit('FFMPEG FAILED: ' + r.stderr[-1500:])
 
 def font(size, weight=500):
     f = ImageFont.truetype(FONT, size)
@@ -98,7 +98,7 @@ def seg_phone(out, parts, name, title, sub):
     pieces = []
     for i, (a, b, sp) in enumerate(parts):
         o = f'{WORK}/{name}-p{i}.mp4'
-        run(['-ss', str(a), '-to', str(b), '-i', f'{RAW}/' + parts_src[name], '-vf', f'scale={pw}:{ph},setpts=(PTS-STARTPTS)/{sp},fps={FPS}', *ENC, o]); pieces.append(o)
+        run(['-ss', str(a), '-to', str(b), '-i', f'{RAW}/' + parts_src[name], '-vf', f'scale={pw}:{ph},setpts=(PTS-STARTPTS)/{sp},fps={FPS}', '-t', f'{(b - a) / sp:.3f}', *ENC, o]); pieces.append(o)
     lst = f'{WORK}/{name}-list.txt'; open(lst, 'w').write(''.join(f"file '{p}'\n" for p in pieces))
     joined = f'{WORK}/{name}-joined.mp4'; run(['-f', 'concat', '-safe', '0', '-i', lst, '-c', 'copy', joined])
     run(['-i', joined, '-loop', '1', '-i', fr, '-loop', '1', '-i', lb, '-filter_complex',
@@ -129,7 +129,7 @@ def dur(f):
     return float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).decode())
 
 M = json.load(open(f'{HERE}/marks.json'))
-parts_src = {'s4': 'phone.mov', 's5': 'phone.mov', 's6a': 'phone2.mov'}
+parts_src = {}
 S = {}
 # s1: landing → dApp approval signed twice → drill (all within ~15 s)
 L = {k: v / 1000 for k, v in M['landing'].items()}
@@ -144,16 +144,21 @@ seg_popup(f'{WORK}/s3a.mp4', 'upgrade.webm', 1.0, 12.0, 's3', 'Upgrade in place.
 seg_web(f'{WORK}/s3b.mp4', 'landing.webm', L['how'] + 4.3, L['how'] + 8.5)
 seg_popup(f'{WORK}/s3c.mp4', 'tour.webm', 3.2, 6.8, 's3c', 'Two locks on.', 'ed25519 + ML-DSA-65,\nchecked on chain.')
 cat(f'{WORK}/s3.mp4', [f'{WORK}/s3a.mp4', f'{WORK}/s3b.mp4', f'{WORK}/s3c.mp4'])
-# s4/s5/s6: the phone app
-seg_phone(f'{WORK}/s4.mp4', [(3, 6, 1), (6, 21, 3), (21, 26, 1)], 's4', 'Send.\nSigned twice.', 'Both signatures made on the phone.\nNEAR checks both.')
-seg_phone(f'{WORK}/s5.mp4', [(31.5, 34, 1), (47.5, 52, 1), (52, 58, 3), (58, 62.5, 1)], 's5', 'The Q-Day\nswitch.', 'Your ML-DSA-65 key becomes\na native NEAR key.')
-parts_src['s6'] = 'phone2.mov'
-seg_phone(f'{WORK}/s6a.mp4', [(9, 13, 1), (13, 17, 2), (17, 21, 1)], 's6', 'Classical key,\nremoved.', 'Signed by the post-quantum\nkey alone.')
+# s4/s5/s6: the phone app (final build, magen-noa.testnet), then the explorer
+parts_src.update({'s4': 'phone3.mov', 's5': 'phone3.mov', 's6': 'phone3.mov'})
+seg_phone(f'{WORK}/s4.mp4', [(29, 33, 1), (45, 50, 1), (58, 66, 2), (66, 76, 1)], 's4', 'Upgrade. Send.\nSigned twice.', 'Keys made on the phone.\nZero classical keys on NEAR.')
+seg_phone(f'{WORK}/s5.mp4', [(98, 106, 1), (113, 121, 2), (121, 132, 1)], 's5', 'Every chain,\none quantum key.', 'ETH · BTC · SOL · Cosmos via\nNEAR Chain Signatures.')
+seg_phone(f'{WORK}/s6a.mp4', [(146, 152, 1), (152, 162, 2), (162, 168, 1)], 's6', 'The Q-Day\nswitch.', 'A native post-quantum key\non the same account.')
 seg_web(f'{WORK}/s6b.mp4', 'explorer.webm', 2.0, 4.6, zoom=(130, 0, 1180, 664))
-seg_web(f'{WORK}/s6c.mp4', 'explorer.webm', 4.6, 8.2, zoom=(150, 40, 1067, 600))  # z = 1.35, keeps account name, balance and the Quantum-safe key badge
+seg_web(f'{WORK}/s6c.mp4', 'explorer.webm', 4.6, 8.2, zoom=(150, 40, 1067, 600))
 cat(f'{WORK}/s6.mp4', [f'{WORK}/s6a.mp4', f'{WORK}/s6b.mp4', f'{WORK}/s6c.mp4'])
-# s7: the extension popup tour
-seg_popup(f'{WORK}/s7.mp4', 'tour.webm', 7.6, 24.2, 's7', 'In your browser.', 'dApps connect with window.magen.\nEvery request: signed twice.', speed=1.25)
+# s7: web phase 2 (private send, swap quote, guardians) and the extension popup
+P2 = {k: v / 1000 for k, v in M['p2'].items()}
+seg_web(f'{WORK}/s7a.mp4', 'p2.webm', P2['private'] - 3.5, P2['private'], speed=1.0)
+seg_web(f'{WORK}/s7b.mp4', 'p2.webm', P2['swap'] - 2.5, P2['swap'], speed=1.0)
+seg_web(f'{WORK}/s7c.mp4', 'p2.webm', P2['guardians'] - 3.0, P2['guardians'], speed=1.0)
+seg_popup(f'{WORK}/s7d.mp4', 'tour.webm', 7.6, 11.0, 's7', 'In your browser.', 'dApps connect with window.magen.\nEvery request: signed twice.')
+cat(f'{WORK}/s7.mp4', [f'{WORK}/s7a.mp4', f'{WORK}/s7b.mp4', f'{WORK}/s7c.mp4', f'{WORK}/s7d.mp4'])
 # s8: get Magen + end card
 seg_web(f'{WORK}/s8a.mp4', 'landing.webm', L['get'] + 0.25, L['get'] + 5.75)
 still(f'{WORK}/s8b.mp4', endcard(), 6.0)

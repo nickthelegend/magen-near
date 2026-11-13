@@ -102,6 +102,13 @@ await withChromeLock(async () => {
     }
   });
 
+  await take('p2', async (p, mark) => {
+    await p.goto('http://localhost:5340/#/app/chains'); await W(6500); mark('chains');
+    await p.goto('http://localhost:5340/#/app/private'); await W(5000); mark('private');
+    await p.goto('http://localhost:5340/#/app/swap'); await W(2500);
+    await p.getByRole('button', { name: /Get a live quote/ }).click(); await p.getByText('Quote only — mainnet funding required').nth(1).waitFor({ timeout: 30000 }).catch(() => {}); await W(3500); mark('swap');
+    await p.goto('http://localhost:5340/#/app/security'); await W(4500); await p.mouse.wheel(0, 760); await W(4000); mark('guardians');
+  });
   await take('webapp', async (p, mark) => {
     await p.goto('http://localhost:5340/#/app'); await W(6000); mark('home');
     await p.goto('http://localhost:5340/#/app/activity'); await W(6000); mark('activity');
