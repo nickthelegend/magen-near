@@ -1,15 +1,24 @@
 # Flow QA
 
-Fresh scaffold had no UI to capture before implementation. Private leader captures: orchestration/shots/magen/leader-refs (Phantom, Rabby, Zerion; Rainbow navigation aborted, not claimed captured).
+Captured with `node scripts/shots.mjs v4` (Playwright Chrome under the shared Chrome lock) at **1440×900** and **375×812 (2x)**, full page.
+Screens live outside the repo in `orchestration/shots/magen/v4/` (qa.json records overflow and runtime errors per route).
 
-App routes: /#home, /#send, /#receive, /#activity, /#security, /#contacts, /#create, /#unlock, /#call.
+| Route | What it shows | 1440 | 375 |
+|---|---|---|---|
+| `#/` | Landing: hero + readiness scan, Get Magen (extension zip, iOS build, web), drill duel with live receipts, one-transaction upgrade, stats, features, limits, FAQ, CTA | ✓ | ✓ |
+| `#/scan/root.near` | Scan result: score gauge 15/100, checklist, keys, upgrade CTA | ✓ | ✓ |
+| `#/app` | Overview: balance card, readiness, two locks, assets, recent activity | ✓ | ✓ |
+| `#/app/send` | Send with the two-signature panel and the "leave out the quantum half" test | ✓ | ✓ |
+| `#/app/receive` | QR + address | ✓ | ✓ |
+| `#/app/activity` | Decoded on-chain history with filters (sent / received / refused / security) | ✓ | ✓ |
+| `#/app/security` | What NEAR sees (live key list), the two locks, readiness checklist, backup, limits | ✓ | ✓ |
+| `#/app/qday` | Q-Day switch, native key preview, remove-classical-key, native-key proof | ✓ | ✓ |
+| `#/app/drill` | Key-recovery drill: plain vs Magen, attacker panel | ✓ | ✓ |
+| `#/start`, `#/start/upgrade/<acct>`, `#/start/unlock` | Onboarding: upgrade in place, start fresh, unlock/restore | ✓ | ✓ |
 
-Screenshots and overflow results pending capture under the shared Chrome lock. Full evidence: deployments/ui-qa.json. Screenshots outside the repository at ../../orchestration/shots/magen/.
+**Result (Nov 14):** 24/24 captures, **0 horizontal overflow, 0 runtime errors**.
 
-Read-only mode is explicit. Signing requires encrypted-backup unlock. Creation generates both seeds locally, downloads an encrypted backup before deployment and deletes the deploy key atomically with initialization. Native migration explicitly discloses single PQ full-access control.
+Phone layout: floating icon-only tab bar (Home, Activity, raised lattice-shield Send, Security, Drill) with a springing glow; labels kept for screen readers. The Chrome extension popup (380 px) reuses these screens; its approval window is 400×700.
 
-Initial capture complete: 9 routes × 2 widths = 18 screenshots; 0 horizontal overflow; 0 runtime errors. See deployments/ui-qa.json. Paths: ../../orchestration/shots/magen/{home,send,receive,activity,security,contacts,create,unlock,call}-{1440,375}.png. Native key screenshot: native-rpc-key-1440.png. NearBlocks screenshot shows an external bot-verification page; no explorer-key rendering is claimed.
-
-Confirmation capture after contrast correction: all 18 screenshots re-captured, same routes and viewport sizes; zero overflow and runtime errors again. Browser film also exercised actual unlock, successful send, forged-half rejection, account creation and native migration. Creation and migration occurred once, not mocked.
-
-About/source-download route added in the same design language. Before snapshots: before-about-home-{1440,375}.png. After snapshots: home-{1440,375}.png and about-{1440,375}.png. The route matrix now covers10 routes ×2 widths =20 passes, zero overflow and runtime errors. Source archive download exercised in a browser and its34-file SHA256 manifest verified; no secrets/footage included. Existing receipt verification now displays real action names and rejects a receipt unrelated to the displayed wallet.
+Extension: `scripts/ext-e2e.mjs` drives the real extension in Chromium (`--load-extension`): popup upgrade-in-place, demo dApp connect, approval window "Signed twice", testnet result.
+Phone: Release build on the iOS Simulator (iPhone 17 Pro): onboarding upgrade, send, receive, activity, Q-Day switch, remove classical key.

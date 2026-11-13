@@ -15,7 +15,7 @@ export function Start({ mode: initial = 'choose', account: preset = '' }: { mode
   return <div className="start">
     <aside className="start-art">
       <a className="brand" href="#/"><img src="/art/icon.webp" alt="" />magen</a>
-      <img src="/art/hero.webp" alt="" style={{ width: '120%', maxWidth: 'none', marginLeft: '-20%' }} />
+      <img src="/art/hero.webp" alt="" />
       <p>Your account keeps its name, balance and history. It gains a second lock that a quantum computer can’t pick, and NEAR checks both on every payment.</p>
     </aside>
     <main className="start-main"><div className="start-box rise">

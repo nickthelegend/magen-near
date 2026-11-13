@@ -410,8 +410,8 @@ textarea.input { height: auto; min-height: 96px; padding: 12px 14px; resize: ver
 /* Onboarding */
 .start { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .start-art { background: radial-gradient(700px 400px at 60% 60%, rgba(51, 102, 255, .25), transparent 70%), var(--ink); color: var(--on-ink); padding: 40px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-.start-art .brand { color: #fff; }
-.start-art img { width: min(520px, 90%); margin: auto; }
+.start-art .brand { color: #fff; } .start-art .brand img { width: 30px; height: 30px; margin: 0; }
+.start-art > img { width: 125%; max-width: none; margin: auto 0 auto -18%; -webkit-mask-image: radial-gradient(ellipse 55% 60% at 62% 52%, #000 50%, transparent 100%); mask-image: radial-gradient(ellipse 55% 60% at 62% 52%, #000 50%, transparent 100%); }
 .start-art p { color: var(--on-ink-2); font-size: 15px; line-height: 1.6; max-width: 44ch; }
 .start-main { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
 .start-box { width: 100%; max-width: 480px; margin: 0 auto; display: grid; gap: 22px; }
