@@ -27,7 +27,7 @@ try {
   const helper = await mk('helper', '2');
   const helperSigner: Signer = { account: helper.id, seed: base64.encode(helper.seed) };
   const keys0 = (await accessKeys(owner.id)).keys.map((k: any) => k.public_key);
-  const up = await upgradeInPlace(owner.id, owner.seed, wasm, keys0);
+  const up = await upgradeInPlace(owner.id, owner.seed, wasm, keys0, undefined, undefined, 'ed25519');
   assert(up.result.success, up.result.error); pass('upgrade in place with magen-2');
   const fee: Signer = { account: owner.id, seed: base64.encode(owner.seed) };
   const s0 = await view(owner.id); assert.equal(s0.version, 'magen-2'); assert.equal(s0.threshold, 0);

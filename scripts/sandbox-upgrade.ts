@@ -39,7 +39,7 @@ try {
 
   // Upgrade in place: same account, old key becomes the classical half and an execute-only key.
   const before = await query('view_account', magen);
-  const up = await upgradeInPlace(magen, drillSeed(magenIdx), wasm, pre.keys.map(k => k.public_key));
+  const up = await upgradeInPlace(magen, drillSeed(magenIdx), wasm, pre.keys.map(k => k.public_key), undefined, undefined, 'ed25519');
   assert(up.result.success, up.result.error);
   const keys = (await accessKeys(magen)).keys;
   assert.equal(keys.length, 1);
@@ -104,6 +104,20 @@ try {
   assert.equal(sc.score, 100); assert.equal(sc.level, 'native'); pass('readiness scan scores the upgraded, switched account 100');
   const exposed = grade({ account: 'x.testnet', network: 'testnet', implicit: false, balance: 10n ** 24n, storageUsage: 0, hasContract: false, isMagen: false, keys: [{ publicKey: 'ed25519:x', scheme: 'ed25519', fullAccess: true }] });
   assert.equal(exposed.level, 'exposed'); assert.equal(exposed.score, 15); pass('readiness scan scores a one-key account 15 (exposed)');
+
+  // Default upgrade: the execute-only fee key is ML-DSA-65, so NEAR lists zero classical access keys.
+  const fresh = await make('fresh', 77_001, '5');
+  const upQ = await upgradeInPlace(fresh, drillSeed(77_001), wasm, [drillKeyString(77_001)]);
+  assert(upQ.result.success, upQ.result.error);
+  const kq = (await accessKeys(fresh)).keys;
+  assert.equal(kq.length, 1); assert(kq[0].public_key.startsWith('ml-dsa-65-hash:'), kq[0].public_key);
+  assert.deepEqual(kq[0].access_key.permission.FunctionCall.method_names, ['execute']);
+  pass('default upgrade leaves zero classical access keys (ML-DSA-65 execute-only fee key)', upQ.result.hash);
+  const sq = await view(fresh);
+  const okQ = await execute(upQ.fee, fresh, signIntent(makeIntent(fresh, sq.nonce, { kind: 'send', receiver: attacker.account, amount: nearAmount('0.1') }), upQ.keys));
+  assert(okQ.success, okQ.error); pass('dual-signed send paid by the ML-DSA-65 fee key', okQ.hash);
+  const migQ = await execute(upQ.fee, fresh, signIntent(makeIntent(fresh, (await view(fresh)).nonce, { kind: 'migrate' }), upQ.keys));
+  assert(migQ.success, migQ.error); assert.equal((await accessKeys(fresh)).keys.length, 2); pass('Q-Day switch still adds the native full-access key alongside the fee key');
 
   // Phrase derivation matches the NEAR standard path (vector from near-seed-phrase docs is not used: we check determinism and format).
   const s = seedFromPhrase('abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about');

@@ -43,7 +43,7 @@ const vec=(b:Uint8Array)=>concat(le(b.length,4),b);
 const str=(s:string)=>vec(utf8(s));
 export const actions={create:()=>new Uint8Array([0]),deploy:(wasm:Uint8Array)=>concat(new Uint8Array([1]),vec(wasm)),call:(method:string,args:any,gas=100_000_000_000_000n,deposit=0n)=>concat(new Uint8Array([2]),str(method),vec(utf8(JSON.stringify(args))),le(gas,8),le(deposit,16)),transfer:(amount:bigint)=>concat(new Uint8Array([3]),le(amount,16)),addKey:(pk:Uint8Array,tag=0)=>concat(new Uint8Array([5,tag]),pk,le(0,8),new Uint8Array([1])),deleteKey:(pk:Uint8Array)=>concat(new Uint8Array([6,0]),pk),
  /** AddKey with a FunctionCall permission: the key may only call `methods` on `receiver`, spending at most `allowance` yocto on fees. */
- addFnKey:(pk:Uint8Array,receiver:string,methods:string[],allowance:bigint)=>concat(new Uint8Array([5,0]),pk,le(0,8),new Uint8Array([0,1]),le(allowance,16),str(receiver),le(methods.length,4),...methods.map(str)),
+ addFnKey:(pk:Uint8Array,receiver:string,methods:string[],allowance:bigint,tag=0)=>concat(new Uint8Array([5,tag]),pk,le(0,8),new Uint8Array([0,1]),le(allowance,16),str(receiver),le(methods.length,4),...methods.map(str)),
  deleteAccount:(beneficiary:string)=>concat(new Uint8Array([7]),str(beneficiary))};
 export type Signer={account:string;seed:string;pq?:boolean};
 export function signerPublic(s:Signer){return s.pq?ml_dsa65.keygen(base64.decode(s.seed)).publicKey:ed25519.getPublicKey(base64.decode(s.seed));}

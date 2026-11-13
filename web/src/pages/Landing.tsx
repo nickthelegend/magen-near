@@ -133,14 +133,14 @@ await window.magen.signAndSendTransaction({
           <div className="act"><span className="act-ico"><FileCode2 size={20} /></span><div><h4>Deploy the wallet contract <code>DeployContract</code></h4><p>Your account starts running Magen’s open-source contract. Funds stay where they are.</p></div></div>
           <div className="act"><span className="act-ico"><Lock size={20} /></span><div><h4>Set both locks <code>new(ed25519, ML-DSA-65)</code></h4><p>Your current key becomes the first lock. A new ML-DSA-65 key, made in your browser, becomes the second.</p></div></div>
           <div className="act"><span className="act-ico"><Trash2 size={20} /></span><div><h4>Take away the master key <code>DeleteKey</code></h4><p>No key can move funds by itself any more. Not yours, not a thief’s.</p></div></div>
-          <div className="act"><span className="act-ico"><KeyRound size={20} /></span><div><h4>Give it back as a doorbell <code>AddKey · execute only</code></h4><p>Your old key returns with one permission: ask the contract to act. The contract still checks both signatures.</p></div></div>
+          <div className="act"><span className="act-ico"><KeyRound size={20} /></span><div><h4>Add a post-quantum doorbell <code>AddKey · ML-DSA-65 · execute only</code></h4><p>A new ML-DSA-65 key that can only ask the contract to act and pay its fee. NEAR now lists zero classical keys for your account.</p></div></div>
         </div>
       </div>
       <div className="stats">
         <div className="stat"><b>2</b><span>signatures checked on chain for every payment</span></div>
         <div className="stat"><b>3,309</b><span>bytes in each ML-DSA-65 signature, verified by NEAR itself</span></div>
         <div className="stat"><b>{d ? '1' : '…'}</b><span>transaction to upgrade, no funds moved</span></div>
-        <div className="stat"><b>71</b><span>automated tests, 43 of them against a real local NEAR node</span></div>
+        <div className="stat"><b>74</b><span>automated tests, 46 of them against a real local NEAR node</span></div>
       </div>
     </section>
 

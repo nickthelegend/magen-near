@@ -20,7 +20,7 @@ const seed = base64.decode(st.seed);
 await step('create account (testnet registrar)', async () => outcome(await submit(live.relay, 'testnet', [actions.call('create_account', { new_account_id: st.account, new_public_key: 'ed25519:' + base58.encode(ed25519.getPublicKey(seed)) }, 100_000_000_000_000n, BigInt(nearAmount('3')))])));
 for (let i = 0; i < 20 && !(await query('view_account', st.account).then(() => true, () => false)); i++) await new Promise(r => setTimeout(r, 1500));
 await step('upgrade in place (magen-2)', async () => {
-  const up = await upgradeInPlace(st.account, seed, new Uint8Array(readFileSync('target/near/magen_wallet.wasm')), (await accessKeys(st.account)).keys.map((k: any) => k.public_key));
+  const up = await upgradeInPlace(st.account, seed, new Uint8Array(readFileSync('target/near/magen_wallet.wasm')), (await accessKeys(st.account)).keys.map((k: any) => k.public_key), undefined, undefined, 'ed25519');
   st.keys = up.keys; save(); return up.result;
 });
 const fee = { account: st.account, seed: st.seed };

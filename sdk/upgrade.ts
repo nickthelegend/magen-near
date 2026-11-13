@@ -11,7 +11,7 @@ import { sha512 } from '@noble/hashes/sha2.js';
 import { mnemonicToSeedSync, validateMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 import { base58, base64 } from '@scure/base';
-import { actions, accessKeys, concat, generateKeys, outcome, publicKeys, query, submit, utf8, type Keys, type Signer } from './index.ts';
+import { actions, accessKeys, concat, generateKeys, outcome, publicKeys, query, random, signerPublic, submit, utf8, type Keys, type Signer } from './index.ts';
 
 export const EMPTY_CODE = '11111111111111111111111111111111';
 /** Fee allowance for the execute-only key: the most an attacker holding the classical key alone could burn in gas. */
@@ -83,17 +83,25 @@ const edBytes = (k: string) => base58.decode(k.slice('ed25519:'.length));
  * The upgrade transaction. `keys.ed` is set to the account's existing key, so the key the
  * user already has stays the first lock. Returns the outcome plus the vault material.
  */
-export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Uint8Array, existingKeys: string[], pqSeed?: string, onSigned?: (h: string) => void) {
+/**
+ * `feeKey: 'ml-dsa'` (default) gives the account a separate ML-DSA-65 function-call key that may only call `execute`,
+ * so NEAR lists zero classical access keys from the first block after the upgrade (NEP-645 allows ML-DSA FC keys).
+ * `feeKey: 'ed25519'` re-adds the old key as the execute-only key (used by the key-recovery drill).
+ * Returns `fee`, the signer that pays gas for `execute` afterwards.
+ */
+export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Uint8Array, existingKeys: string[], pqSeed?: string, onSigned?: (h: string) => void, feeKey: 'ml-dsa' | 'ed25519' = 'ml-dsa') {
   const keys: Keys = { ed: base64.encode(seed), pq: pqSeed ?? generateKeys().pq };
   const pk = publicKeys(keys);
   const signer: Signer = { account, seed: base64.encode(seed) };
   const own = edKeyString(seed);
+  const feeSeed = feeKey === 'ml-dsa' ? base64.encode(random()) : base64.encode(seed);
+  const fee: Signer = feeKey === 'ml-dsa' ? { account, seed: feeSeed, pq: true } : { account, seed: base64.encode(seed) };
   const ops = [
     actions.deploy(wasm),
     actions.call('new', { ed: base64.encode(pk.ed), pq: base64.encode(pk.pq) }, 30_000_000_000_000n),
     ...existingKeys.map(k => actions.deleteKey(edBytes(k))),
-    actions.addFnKey(edBytes(own), account, ['execute'], FEE_ALLOWANCE),
+    feeKey === 'ml-dsa' ? actions.addFnKey(signerPublic(fee), account, ['execute'], FEE_ALLOWANCE, 2) : actions.addFnKey(edBytes(own), account, ['execute'], FEE_ALLOWANCE),
   ];
   const result = outcome(await submit(signer, account, ops, onSigned));
-  return { result, keys, signer };
+  return { result, keys, signer, fee };
 }

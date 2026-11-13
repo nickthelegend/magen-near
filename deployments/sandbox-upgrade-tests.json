@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-11-13T20:48:05.347Z",
+  "ranAt": "2026-11-13T21:12:43.473Z",
   "node": "neard 2.14.0-rc.4 sandbox (protocol 88)",
-  "count": 16,
+  "count": 19,
   "results": [
     {
       "name": "precheck accepts a plain funded account",
@@ -16,7 +16,7 @@
     {
       "name": "upgrade in place: one tx, same account, old key now execute-only",
       "passed": true,
-      "detail": "5viHLdSxdS1RZ5mz9bQ3nuHXS7hcLwcBxBykA7fUBvAa"
+      "detail": "DFxCgsjzzGHFRStch2CmjzQDTiRJWvuXJeT8Etorgu8"
     },
     {
       "name": "precheck refuses to upgrade twice",
@@ -31,12 +31,12 @@
     {
       "name": "dual-signed send via the execute-only key",
       "passed": true,
-      "detail": "4apQwKjRpMcTUfPJvbdbAnuDnitraFfywzTqBn2aHJKo"
+      "detail": "5KpgFcXUezwLMJGN3L8dr3hxoi2c2yUdjFoASYrqUDHE"
     },
     {
       "name": "attacker recovers both weak keys from public data",
       "passed": true,
-      "detail": "33769 ms"
+      "detail": "36042 ms"
     },
     {
       "name": "plain account drained with the recovered key",
@@ -61,7 +61,7 @@
     {
       "name": "Q-Day switch adds the native ML-DSA-65 key",
       "passed": true,
-      "detail": "ml-dsa-65-hash:DRNfNrM8T4WohNEum…"
+      "detail": "ml-dsa-65-hash:7Vhcda7YVNMo9jiXd…"
     },
     {
       "name": "readiness scan scores the upgraded, switched account 100",
@@ -70,6 +70,21 @@
     },
     {
       "name": "readiness scan scores a one-key account 15 (exposed)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "default upgrade leaves zero classical access keys (ML-DSA-65 execute-only fee key)",
+      "passed": true,
+      "detail": "7wWgnARhRQY7WeDSTEuLVqDzAQ43WTYc1Vensh7dNeNF"
+    },
+    {
+      "name": "dual-signed send paid by the ML-DSA-65 fee key",
+      "passed": true,
+      "detail": "6u7bjMvAtnz6Mf5wuWwwrtD9CYm3E5vYXG5JxGASftmb"
+    },
+    {
+      "name": "Q-Day switch still adds the native full-access key alongside the fee key",
       "passed": true,
       "detail": ""
     },

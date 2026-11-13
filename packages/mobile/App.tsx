@@ -86,7 +86,7 @@ function Onboarding({ onDone }: { onDone: (v: Vault) => void }) {
       setBusy('Adding the second lock (one transaction)…');
       const up = await upgradeInPlace(id, seed, wasm, keys);
       if (!up.result.success) throw Error(friendlyError(up.result.error));
-      onDone({ wallet: id, keys: up.keys, relay: { account: id, seed: base64.encode(seed) } });
+      onDone({ wallet: id, keys: up.keys, relay: up.fee });
     } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
   };
   return <View style={{ flex: 1, backgroundColor: C.ink }}><SafeAreaView style={{ flex: 1 }}>

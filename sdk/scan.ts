@@ -79,11 +79,11 @@ export function grade(s: Omit<Scan, 'score' | 'level' | 'headline' | 'checks'>):
       detail: s.isMagen ? 'Magen contract checks ed25519 and ML-DSA-65 on every spend.' : pq.length ? 'A native ML-DSA-65 key is present.' : 'Nothing on this account checks a post-quantum signature.' },
     { label: 'Limited keys cannot spend', ok: classicalLimited.length === 0 || executeOnly, points: 15,
       detail: classicalLimited.length === 0 ? 'No function-call keys.' : executeOnly ? 'The only limited key can ask the contract to act, never authorise.' : `${classicalLimited.length} classical function-call key${classicalLimited.length > 1 ? 's' : ''} for apps.` },
-    { label: 'Native ML-DSA-65 key ready for Q-Day', ok: pq.length > 0, points: 15,
-      detail: pq.length ? 'NEAR shows an ml-dsa-65-hash key in the access-key list.' : 'Not yet. Magen’s Q-Day switch adds one.' },
+    { label: 'Native ML-DSA-65 key ready for Q-Day', ok: pq.some(k => k.fullAccess), points: 15,
+      detail: pq.some(k => k.fullAccess) ? 'NEAR lists a full-access ml-dsa-65-hash key.' : 'Not yet. Magen’s Q-Day switch adds one.' },
   ];
   const score = checks.reduce((n, c) => n + (c.ok ? c.points : 0), 0);
-  const level: Scan['level'] = classicalFull.length ? 'exposed' : pq.length && s.isMagen ? 'native' : s.isMagen || pq.length ? 'protected' : 'limited';
+  const level: Scan['level'] = classicalFull.length ? 'exposed' : pq.some(k => k.fullAccess) && s.isMagen ? 'native' : s.isMagen || pq.length ? 'protected' : 'limited';
   const near = Number(s.balance / 10n ** 21n) / 1000;
   const amount = near.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
   const headline = level === 'exposed'

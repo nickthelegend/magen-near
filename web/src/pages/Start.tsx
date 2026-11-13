@@ -75,7 +75,7 @@ function Upgrade({ preset = '', create = false, back }: { preset?: string; creat
       const wasm = new Uint8Array(await (await fetch('/wallet.wasm')).arrayBuffer());
       const up = await upgradeInPlace(id, s, wasm, keys);
       if (!up.result.success) throw Error(friendlyError(up.result.error));
-      const vault = { wallet: id, keys: up.keys, relay: { account: id, seed: base64.encode(s) } };
+      const vault = { wallet: id, keys: up.keys, relay: up.fee };
       setBusy('Encrypting your backup…');
       const sealed = await adopt(vault, pw);
       downloadJson(sealed, `magen-${id}-backup.json`);
@@ -110,7 +110,7 @@ function Upgrade({ preset = '', create = false, back }: { preset?: string; creat
         <div><code>DeployContract</code>Magen wallet contract (167 kB)</div>
         <div><code>new</code>Lock 1 = your key · Lock 2 = new ML-DSA-65 key</div>
         <div><code>DeleteKey</code>Every full-access key</div>
-        <div><code>AddKey</code>Your key again, allowed only to call execute</div>
+        <div><code>AddKey</code>An ML-DSA-65 key that may only call execute (pays fees)</div>
       </div>
       <label className="field"><span>Backup password</span><input className="input" type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="At least 10 characters" autoComplete="new-password" /></label>
       <label className="field"><span>Repeat password</span><input className="input" type="password" value={pw2} onChange={e => setPw2(e.target.value)} autoComplete="new-password" /></label>

@@ -53,7 +53,7 @@ export async function prepareDrill(funder: Signer, wasm: Uint8Array, log: Log = 
   await create('create attacker account', attacker.account, ed25519.getPublicKey(base64.decode(attacker.seed)), '0.5');
   log('upgrade Magen account in place', st.magen.account);
   const keys = (await accessKeys(st.magen.account)).keys.map((k: any) => k.public_key);
-  const up = await upgradeInPlace(st.magen.account, base64.decode(drillSeedB64(magenIdx)), wasm, keys, pqSeed);
+  const up = await upgradeInPlace(st.magen.account, base64.decode(drillSeedB64(magenIdx)), wasm, keys, pqSeed, undefined, 'ed25519');
   st.txs['upgrade in place'] = up.result; if (!up.result.success) throw Error('upgrade failed: ' + up.result.error);
   st.magen.pq = up.keys.pq;
   return st;
