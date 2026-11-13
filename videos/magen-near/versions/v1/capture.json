@@ -1,0 +1,57 @@
+{
+  "marks": [
+    {
+      "name": "opening",
+      "start": 2.498,
+      "end": 12.84
+    },
+    {
+      "name": "why",
+      "start": 12.844,
+      "end": 22.662
+    },
+    {
+      "name": "near",
+      "start": 22.663,
+      "end": 30.099
+    },
+    {
+      "name": "create",
+      "start": 30.1,
+      "end": 44.331
+    },
+    {
+      "name": "lock",
+      "start": 44.332,
+      "end": 53.744
+    },
+    {
+      "name": "activity",
+      "start": 53.744,
+      "end": 62.565
+    },
+    {
+      "name": "qday",
+      "start": 62.566,
+      "end": 76.512
+    }
+  ],
+  "evidence": [
+    {
+      "name": "Browser send 1 NEAR",
+      "href": "https://testnet.nearblocks.io/txns/CvFE8r631MTG9XTiaW6SFZ7tKLLXhaeFKRthv8KycMR9"
+    },
+    {
+      "name": "Browser forged quantum rejection",
+      "href": "https://testnet.nearblocks.io/txns/HEuLRJTGzWgdRfq2C3zD3z8G53odVxSFK81XBuQWddp3"
+    },
+    {
+      "name": "Created in browser",
+      "account": "shield.magen-film-mwf2kq5t.testnet"
+    },
+    {
+      "name": "Q-Day migration",
+      "href": "https://testnet.nearblocks.io/txns/9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr"
+    }
+  ]
+}

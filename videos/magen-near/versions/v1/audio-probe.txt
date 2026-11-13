@@ -1,0 +1,37 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'videos/magen-near/versions/v1/magen-near-film.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf62.12.101
+  Duration: 00:02:35.71, start: 0.000000, bitrate: 452 kb/s
+  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080 [SAR 1:1 DAR 16:9], 265 kb/s, 30 fps, 30 tbr, 15360 tbn, start 0.010026 (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc62.28.101 libx264
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 96000 Hz, mono, fltp, 178 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+[Parsed_volumedetect_0 @ 0xa10c48600] n_samples: 0
+Stream mapping:
+  Stream #0:1 -> #0:0 (aac (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf62.12.101
+  Stream #0:0(und): Audio: pcm_s16le, 96000 Hz, mono, s16, 1536 kb/s (default)
+    Metadata:
+      encoder         : Lavc62.28.101 pcm_s16le
+      handler_name    : SoundHandler
+[Parsed_volumedetect_0 @ 0xa10c48a80] n_samples: 14934016
+[Parsed_volumedetect_0 @ 0xa10c48a80] mean_volume: -17.1 dB
+[Parsed_volumedetect_0 @ 0xa10c48a80] max_volume: 0.0 dB
+[Parsed_volumedetect_0 @ 0xa10c48a80] histogram_0db: 49
+[Parsed_volumedetect_0 @ 0xa10c48a80] histogram_1db: 2499
+[Parsed_volumedetect_0 @ 0xa10c48a80] histogram_2db: 8364
+[Parsed_volumedetect_0 @ 0xa10c48a80] histogram_3db: 18509
+[out#0/null @ 0xa10c48300] video:0KiB audio:29168KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+size=N/A time=00:02:35.70 bitrate=N/A speed=1.03e+03x elapsed=0:00:00.15    

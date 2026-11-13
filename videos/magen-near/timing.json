@@ -1,0 +1,56 @@
+[
+  {
+    "scene": 0,
+    "speech": 11.370666666666667,
+    "duration": 15,
+    "file": "videos/magen-near/assets/voice-00.wav"
+  },
+  {
+    "scene": 1,
+    "speech": 15.552,
+    "duration": 16.752,
+    "file": "videos/magen-near/assets/voice-01.wav"
+  },
+  {
+    "scene": 2,
+    "speech": 14.592,
+    "duration": 15.792,
+    "file": "videos/magen-near/assets/voice-02.wav"
+  },
+  {
+    "scene": 3,
+    "speech": 15.466666666666667,
+    "duration": 16.666666666666668,
+    "file": "videos/magen-near/assets/voice-03.wav"
+  },
+  {
+    "scene": 4,
+    "speech": 17.088,
+    "duration": 18.288,
+    "file": "videos/magen-near/assets/voice-04.wav"
+  },
+  {
+    "scene": 5,
+    "speech": 11.797333333333333,
+    "duration": 12.997333333333332,
+    "file": "videos/magen-near/assets/voice-05.wav"
+  },
+  {
+    "scene": 6,
+    "speech": 17.450666666666667,
+    "duration": 18.650666666666666,
+    "file": "videos/magen-near/assets/voice-06.wav"
+  },
+  {
+    "scene": 7,
+    "speech": 17.728,
+    "duration": 18.928,
+    "file": "videos/magen-near/assets/voice-07.wav"
+  },
+  {
+    "scene": 8,
+    "speech": 16.192,
+    "duration": 17.392,
+    "file": "videos/magen-near/assets/voice-08.wav"
+  }
+]
