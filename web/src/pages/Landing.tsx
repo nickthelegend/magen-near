@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Search, ShieldCheck, ShieldAlert, Check, X, FileCode2, KeyRound, Trash2, Lock, ExternalLink, Github } from 'lucide-react';
+import { ArrowRight, Search, ShieldCheck, ShieldAlert, Check, X, FileCode2, KeyRound, Trash2, Lock, ExternalLink, Chrome, Smartphone, Globe, Download } from 'lucide-react';
 import { scanAccount, type Scan } from '../../../sdk/scan.ts';
 import { networkStatus, short, txUrl } from '../lib/chain.ts';
 import { Gauge, Spinner, useAsync } from '../ui/bits.tsx';
@@ -28,8 +28,8 @@ export function Landing({ initial }: { initial?: string }) {
   return <div className="landing">
     <nav className="nav"><div className="nav-in">
       <a className="brand" href="#/"><img src="/art/icon.webp" alt="" />magen</a>
-      <div className="nav-links"><a href="#drill">The drill</a><a href="#how">How it works</a><a href="#limits">Security</a><a href="#faq">FAQ</a></div>
-      <div className="nav-right"><a className="btn btn-ghost-dark btn-sm hide-sm" href="#/app/drill">Run the drill</a><a className="btn btn-primary btn-sm" href="#/app">Open wallet</a></div>
+      <div className="nav-links"><a href="#get">Get Magen</a><a href="#drill">The drill</a><a href="#how">How it works</a><a href="#limits">Security</a><a href="#faq">FAQ</a></div>
+      <div className="nav-right"><a className="btn btn-ghost-dark btn-sm hide-sm" href="/downloads/magen-extension.zip">Get the extension</a><a className="btn btn-primary btn-sm" href="#/app">Open wallet</a></div>
     </div></nav>
 
     <header className="hero"><div className="hero-in">
@@ -58,7 +58,41 @@ export function Landing({ initial }: { initial?: string }) {
         : scan && <ScanCard s={scan} />}
     </section>}
 
-    <section className="section" id="drill">
+    <section className="section" id="get">
+      <p className="eyebrow">Get Magen</p>
+      <h2 className="h2">In your browser and on your phone.</h2>
+      <p className="lede">The same two locks everywhere. Keys are made on your device and never leave it.</p>
+      <div className="get-grid">
+        <div className="get-card dark">
+          <span className="get-ico"><Chrome size={22} /></span>
+          <h3>Chrome extension</h3>
+          <p>Unlock, send, receive and flip the Q-Day switch from the toolbar. dApps connect through <code>window.magen</code>, and every request shows “Signed twice: classical + quantum-safe”.</p>
+          <div className="get-actions"><a className="btn btn-primary" href="/downloads/magen-extension.zip" download><Download size={17} />Download .zip</a><a className="link" style={{ color: '#8fa8ff' }} href="/dapp/index.html">Try the demo dApp</a></div>
+          <small>chrome://extensions → Developer mode → Load unpacked</small>
+        </div>
+        <div className="get-card">
+          <span className="get-ico"><Smartphone size={22} /></span>
+          <h3>iPhone app</h3>
+          <p>Upgrade, send with both signatures, receive by QR and flip the Q-Day switch. Keys live in the iOS keychain; ML-DSA-65 signs on the phone.</p>
+          <div className="get-actions"><a className="btn btn-dark" href="/downloads/Magen-NEAR-iOS-Simulator.zip" download><Download size={17} />iOS Simulator build</a></div>
+          <small>Unzip, then xcrun simctl install booted Magen.app</small>
+        </div>
+        <div className="get-card">
+          <span className="get-ico"><Globe size={22} /></span>
+          <h3>Web wallet</h3>
+          <p>The readiness scan, the key-recovery drill and a full wallet in any browser. Nothing to install.</p>
+          <div className="get-actions"><a className="btn btn-light" href="#/app">Open the web wallet</a></div>
+          <small>NEAR testnet preview</small>
+        </div>
+      </div>
+      <pre className="snippet"><code>{`const { accountId } = await window.magen.connect();
+await window.magen.signAndSendTransaction({
+  receiverId: 'bob.testnet',
+  actions: [{ type: 'Transfer', params: { deposit: '100000000000000000000000' } }],
+}); // signed with ed25519 + ML-DSA-65, both checked on chain`}</code></pre>
+    </section>
+
+    <section className="section section-tight" id="drill">
       <p className="eyebrow">Steal the key, still get nothing</p>
       <h2 className="h2">Same stolen key. One account emptied. One didn’t move.</h2>
       <p className="lede">We ran a key-recovery drill on NEAR testnet. Both accounts started with one classical key, weakened on purpose so a laptop can play the quantum computer. The attacker read each public key from the chain and worked out the private key.</p>

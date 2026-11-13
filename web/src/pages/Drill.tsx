@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Crosshair, ShieldAlert, ShieldCheck, Check, Eye, Cpu, Zap, RotateCcw, FlaskConical, KeyRound, Atom } from 'lucide-react';
 import { base64, keyString, random } from '../../../sdk/index.ts';
 import { DRILL_SPACE } from '../../../sdk/drill.ts';
-import { attackMagen, balanceOf, createWithHelper, drainPlain, prepareDrill, readTargets, type DrillState } from '../../../sdk/drillflow.ts';
+import { attackMagen, balanceOf, spendableOf, createWithHelper, drainPlain, prepareDrill, readTargets, type DrillState } from '../../../sdk/drillflow.ts';
 import { crackInBrowser } from '../lib/crack.ts';
 import { friendlyError, near, short, txUrl } from '../lib/chain.ts';
 import { Spinner } from '../ui/bits.tsx';
@@ -21,7 +21,7 @@ export function Drill() {
   const [run, setRun] = useState<Run>(st?.run ?? { phase: 'idle', checked: 0, ms: 0 });
   const t0 = useRef(0);
   const save = (s: DrillState & { run?: Run }) => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch {} setSt({ ...s }); };
-  const readBalances = async (s = st) => { if (!s) return; const [plain, magen, attacker] = await Promise.all([balanceOf(s.plain.account), balanceOf(s.magen.account), balanceOf(s.attacker.account)]); setBal({ plain, magen, attacker }); };
+  const readBalances = async (s = st) => { if (!s) return; const [plain, magen, attacker] = await Promise.all([spendableOf(s.plain.account), spendableOf(s.magen.account), balanceOf(s.attacker.account)]); setBal({ plain, magen, attacker }); };
   useEffect(() => { readBalances(); }, [st?.funder.account]);
 
   const prepare = async () => {

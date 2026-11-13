@@ -6,7 +6,9 @@ import { drillPublic, drillSeedB64, randomDrillIndex } from './drill.ts';
 import { upgradeInPlace } from './upgrade.ts';
 
 export const HELPER = 'https://helper.nearprotocol.com/account';
-export const DRILL_FUND = '4';
+export const DRILL_FUND = '2';
+/** Contract code plus wallet state, in bytes, that the upgrade stakes for storage (measured: 169,619 B for a 167,326 B wasm). */
+const STATE_BYTES = 2300;
 
 export type DrillState = {
   version: 1; funder: Signer; created: string;
@@ -45,7 +47,9 @@ export async function prepareDrill(funder: Signer, wasm: Uint8Array, log: Log = 
     st.txs[name] = r; if (!r.success) throw Error(`${name} failed: ${r.error}`);
   };
   await create('create plain account', st.plain.account, drillPublic(plainIdx), DRILL_FUND);
-  await create('create Magen account', st.magen.account, drillPublic(magenIdx), '4.005');
+  // Same spendable balance as the plain account once the contract's storage is staked.
+  const magenFund = (BigInt(nearAmount(DRILL_FUND)) + BigInt(wasm.length + STATE_BYTES) * 10n ** 19n + 2n * 10n ** 21n).toString();
+  await create('create Magen account', st.magen.account, drillPublic(magenIdx), (Number(BigInt(magenFund) / 10n ** 18n) / 1e6).toString());
   await create('create attacker account', attacker.account, ed25519.getPublicKey(base64.decode(attacker.seed)), '0.5');
   log('upgrade Magen account in place', st.magen.account);
   const keys = (await accessKeys(st.magen.account)).keys.map((k: any) => k.public_key);
@@ -86,6 +90,11 @@ export async function attackMagen(st: DrillState, recoveredIndex: number, onSign
   st.txs['attacker tries the Magen account'] = r; return r;
 }
 
+/** Balance minus the NEAR staked for storage, so a plain and a contract account compare fairly. null = gone. */
+export const spendableOf = async (account: string) => {
+  try { const v = await rpc('query', { request_type: 'view_account', account_id: account, finality: 'final' }); return BigInt(v.amount) - BigInt(v.storage_usage) * 10n ** 19n; }
+  catch (e: any) { if (/UNKNOWN_ACCOUNT|does not exist/i.test(String(e.message))) return null; throw e; }
+};
 /** Final-finality balance, so pending gas refunds do not show up as losses. null = the account no longer exists. */
 export const balanceOf = async (account: string) => {
   try { return BigInt((await rpc('query', { request_type: 'view_account', account_id: account, finality: 'final' })).amount); }
