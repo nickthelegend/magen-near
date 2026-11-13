@@ -1,0 +1,13 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {generateKeys,publicKeys,makeIntent,signIntent,verifyIntent,base64,pqHandle,nearAmount,formatNear,sealVault,openVault} from './index.ts';
+const keys=generateKeys(),pk=publicKeys(keys),i=makeIntent('wallet.testnet','0',{kind:'send',receiver:'recipient.testnet',amount:nearAmount('1')});
+test('both signatures verify',()=>assert(verifyIntent(signIntent(i,keys),pk)));
+test('forged classical half rejected',()=>{const s=signIntent(i,keys);s.ed_sig=base64.encode(new Uint8Array(64));assert(!verifyIntent(s,pk));});
+test('forged quantum half rejected',()=>{const s=signIntent(i,keys);s.pq_sig=base64.encode(new Uint8Array(3309));assert(!verifyIntent(s,pk));});
+test('changed recipient invalidates signatures',()=>{const s=signIntent(i,keys);s.intent=i.replace('recipient','attacker');assert(!verifyIntent(s,pk));});
+test('different instance invalidates signatures',()=>{const s=signIntent(i,keys);s.intent=i.replace('wallet.testnet','other.testnet');assert(!verifyIntent(s,pk));});
+test('native handle is compact domain-separated SHA3',()=>assert.match(pqHandle(pk.pq),/^ml-dsa-65-hash:[1-9A-HJ-NP-Za-km-z]{43,44}$/));
+test('amounts retain all 24 decimal places',()=>assert.equal(nearAmount('1.000000000000000000000001'),'1000000000000000000000001'));
+test('amount parser refuses exponent and negatives',()=>{for(const x of ['-1','1e3','NaN','01','1.0000000000000000000000001'])assert.throws(()=>nearAmount(x));});
+test('display includes units-independent exact truncation',()=>assert.equal(formatNear(nearAmount('1234.56789')),'1,234.5678'));
+test('encrypted backup roundtrip and wrong password',async()=>{const v={wallet:'w.testnet',keys,relay:{account:'r.testnet',seed:keys.ed}};const b=await sealVault(v,'magen-test-password');assert(!JSON.stringify(b).includes(keys.ed));assert.deepEqual(await openVault(b,'magen-test-password'),v);await assert.rejects(openVault(b,'wrong-password'));});
