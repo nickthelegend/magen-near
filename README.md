@@ -29,6 +29,8 @@ One atomic transaction, signed by the account's own key:
 3. `DeleteKey` — every full-access key goes.
 4. `AddKey` — your old key comes back as a **function-call key that may only call `execute`**: it can ask, never authorise.
 
+**Guardians (magen-2):** the owner can name up to five ML-DSA-65 guardian keys with a k-of-n threshold (dual-signed). If the device is lost, `recover()` takes k valid guardian signatures over a nonce- and expiry-bound request, swaps both locks to keys made on the new device, removes the old key and installs the new execute-only key. Guardians can never spend.
+
 Every spend is an intent `{network, wallet, nonce, expires, action}`; both keys sign `sha256("magen:v1:" + intent)`. The contract rejects a wrong or missing half, a replay (nonce), an expired or edited intent, the wrong wallet, and calls to itself. `migrate` (the Q-Day switch, also dual-signed) adds the ML-DSA-65 key as a native full-access key; NEAR then lists it as `ml-dsa-65-hash:…` and [NEAR Rocks](https://testnet.near.rocks) marks the account **Quantum-safe**.
 
 ## The drill: steal the key, still get nothing
@@ -52,11 +54,12 @@ Real ed25519 keys come from 2^256 seeds; the drill never claims a real quantum a
 | Phone: in-place upgrade of `magen-maya.testnet` | [4xgu9Bw…](https://testnet.near.rocks/tx/4xgu9Bw4546vCYs3szXq3sfrxyTiXMNjUcSESB6Cgq6p) | upgraded on the iOS Simulator app |
 | Phone: send 0.25 NEAR, signed twice on the device | [4m9usua…](https://testnet.near.rocks/tx/4m9usuaJ4uggvEcmyAuYh8NfTusV3XPQfKGnRfUf7kS6) | both signatures verified |
 | Phone: Q-Day switch, then classical key removed by the ML-DSA-65 key alone | [28Hidbr…](https://testnet.near.rocks/tx/28HidbrhKeqQ1UwCwVvdPgTPrEKRLxS8QoorK4LMoyyu) → [Gt78Zw1…](https://testnet.near.rocks/tx/Gt78Zw1DFf21xMWCY3BfkwvEKZbmGt8BTQ9ExSASKURD) | [account](https://testnet.near.rocks/account/magen-maya.testnet): 1 key, Quantum-safe |
+| Guardians (magen-2): `magen-ana.testnet` sets 2-of-3 ML-DSA-65 guardians, loses its device, two guardians rotate both locks, new device spends | [3C65TEu…](https://testnet.near.rocks/tx/3C65TEuFyepW73Cpq7QUbkBA3m8P8K8oxFrXXhjLeDXj) → [3Hzh5f9…](https://testnet.near.rocks/tx/3Hzh5f9MzmvT2pkdCwf2zkzLddeMtzPxrTsYGAPRqBFN) → [1TKFy7g…](https://testnet.near.rocks/tx/1TKFy7gesuvYudcNL2cFhMpiNk6Yk4PqtLJ5DRs3WFF) | old keys removed, funds untouched |
 | First wallet (`shield.magen-mwf26bd5.testnet`): deploy + lock | [sJhhvMH…](https://testnet.near.rocks/tx/sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ) | zero access keys |
 | Dual-signed transfer / forged quantum half / replay | [GF8RDJD…](https://testnet.near.rocks/tx/GF8RDJDRET3PTYrvayvcPHQyZqFaWby4xLrUfE91r1LS) / [9kq5W4u…](https://testnet.near.rocks/tx/9kq5W4uBpJy24eK5hpjRiq7VCpggRK4oBGA5QrbqHg6d) / [EnvaSeF…](https://testnet.near.rocks/tx/EnvaSeFb9TLUZvZc2bvf1c8Dwz61TXNDnFzs6UNF2k6A) | accepted / refused / refused |
 | Q-Day switch → native ML-DSA-65 key → native-signed transfer | [9kaxHA4…](https://testnet.near.rocks/tx/9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr) → [8EGTshv…](https://testnet.near.rocks/tx/8EGTshvxxVGKrXgcTftXjWZ4sGVKr8ukDBwnNtiQgu8F) | [account](https://testnet.near.rocks/account/shield.magen-film-mwf2kq5t.testnet) shows "Quantum-safe" |
 
-Wallet contract code hash `BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3` (rebuilt from source with the pinned toolchain; matches every deployed copy). Full records in [`deployments/`](deployments) (surfaces: [`surfaces-live.json`](deployments/surfaces-live.json)). Film: [`videos/magen-near/magen-near-film.mp4`](videos/magen-near/magen-near-film.mp4). Test counts in [TESTING.md](TESTING.md).
+Wallet contract code hashes (rebuilt from source with the pinned toolchain): magen-1 `BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3`, magen-2 with guardians `84P7CKENx6FNQDWktEfr1KiSDfGFo4Bq9cZgM41zj7yV`. Full records in [`deployments/`](deployments) (surfaces: [`surfaces-live.json`](deployments/surfaces-live.json)). Film: [`videos/magen-near/magen-near-film.mp4`](videos/magen-near/magen-near-film.mp4). Test counts in [TESTING.md](TESTING.md).
 
 ## Build and run
 
@@ -89,7 +92,7 @@ It follows wallet-selector's action shape (one `Transfer` or `FunctionCall` per 
 - The execute-only key pays fees; a thief holding only it can burn at most its 1 NEAR fee allowance, never move funds.
 - After the Q-Day switch the ML-DSA-65 key alone controls the account at the protocol level (by design).
 - **Chain Signatures and validator keys stay classical** on NEAR today; Magen does not make BTC/ETH addresses or consensus quantum-safe.
-- In-place upgrade refuses accounts that already run a contract or hold non-ed25519 keys. Testnet only; no audit; no guardians yet.
+- In-place upgrade refuses accounts that already run a contract or hold non-ed25519 keys. Testnet only; no audit. Guardian recovery is scripted (`scripts/live-guardians.ts`); the in-app flow sets guardians and shows them, an in-app recovery screen is next. The phone app still embeds magen-1 (no guardians).
 - The testnet faucet was rate-limiting during the build, so demo accounts were created through the `testnet` registrar contract or as sub-accounts, paid by our own testnet account.
 
 ## Prior work
