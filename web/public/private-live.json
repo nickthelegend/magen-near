@@ -1,0 +1,25 @@
+{
+  "network": "testnet",
+  "sender": "magen-ana.testnet",
+  "recipient_main": "shield.magen-mwf26bd5.testnet",
+  "recipient_meta_key": "magen-meta:2hYDa5LLKAJQoBnNND3KuyMtBEeuj43kTuTvTucYbt6D",
+  "one_time_account": "3ba3d62002d603625aa362770ecd218533d032dfc38587cd759684a2290bcabc",
+  "note_published_to_recipient_only": "magen-note:EfeeC…",
+  "send_signed_twice": {
+    "hash": "8qnSy8uAV17d4mJvEHVeErCDde6mnzo382BEJz1ZuWNE",
+    "success": true,
+    "amount": "0.1 NEAR"
+  },
+  "one_time_balance_seen_by_recipient": "100000000000000000000000",
+  "recipient_spends_from_one_time_account": {
+    "hash": "6sCQAxJ89tiDroyxoUgD9uTZfVqY8LkqxvomLAQr9FW8",
+    "success": true,
+    "to": "tips.magen-mwf26bd5.testnet"
+  },
+  "hidden": "link between the payment and the recipient main account",
+  "not_hidden": [
+    "sender account",
+    "amount",
+    "timing"
+  ]
+}
