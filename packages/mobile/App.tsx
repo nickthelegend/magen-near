@@ -6,7 +6,9 @@ import { useFonts } from 'expo-font';
 import * as SecureStore from 'expo-secure-store';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import { ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Power, ExternalLink, ChevronLeft, ScanLine } from 'lucide-react-native';
+import { ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Power, ExternalLink, ChevronLeft, ScanLine, Network, EyeOff, Repeat, ChevronRight, Copy } from 'lucide-react-native';
+import { chainAddresses, signCrossChain, stealthSend, stealthScan, stealthSweep, intentsQuote, metaKey, INTENT_ROUTES, type EthTx } from '../../sdk/phase2.ts';
+import { evm } from '../../sdk/chains.ts';
 import { actions, base58, base64, execute, makeIntent, nearAmount, outcome, pqHandle, publicKeys, signIntent, submit, view, type Vault } from '../../sdk/index.ts';
 import { edKeyString, precheckUpgrade, seedFromPrivateKey, upgradeInPlace } from '../../sdk/upgrade.ts';
 import { createWithHelper } from '../../sdk/drillflow.ts';
@@ -177,6 +179,9 @@ function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
       {tab === 'send' && <SendTab {...props} prefill={prefill} />}
       {tab === 'activity' && <ActivityTab {...props} />}
       {tab === 'security' && <SecurityTab {...props} onReset={onReset} />}
+      {tab === 'chains' && <ChainsTab {...props} />}
+      {tab === 'private' && <PrivateTab {...props} />}
+      {tab === 'swap' && <SwapTab {...props} />}
     </Animated.ScrollView>}
     {tab === 'scan' && <Animated.View style={[StyleSheet.absoluteFill, { opacity: fade }]}>
       <ScanScreen wallet={vault.wallet} mode={scanMode} setMode={m => { setSheet(null); setScanMode(m); }} sheet={sheet} onCode={route}
@@ -207,6 +212,11 @@ function HomeTab({ vault, live, acts, go, receive }: P) {
       <LockRow pq icon={<Atom color={C.cobalt} size={18} />} title="Lock 2 · ML-DSA-65" sub="Post-quantum. Checked on chain." ok={!!live?.status} />
       <LockRow pq icon={<Power color={C.cobalt} size={18} />} title="Native post-quantum key" sub={migrated ? 'On. In NEAR’s key list.' : 'Off. Flip the Q-Day switch.'} ok={migrated} last />
     </Card>
+    <View style={{ flexDirection: 'row', gap: 10 }}>
+      <Tile icon={<Network color={C.cobalt} size={20} />} title="Every chain" onPress={() => go('chains')} />
+      <Tile icon={<EyeOff color={C.cobalt} size={20} />} title="Private send" onPress={() => go('private')} />
+      <Tile icon={<Repeat color={C.cobalt} size={20} />} title="Swap" onPress={() => go('swap')} />
+    </View>
     <Card>
       <View style={styles.cardHead}><T style={styles.h2}>Recent activity</T><Pressable onPress={() => go('activity')}><T style={{ color: C.cobalt, fontWeight: '600' }}>All</T></Pressable></View>
       {acts === null ? <ActivityIndicator style={{ padding: 20 }} /> : acts.length ? acts.slice(0, 4).map(a => <ActRow key={a.hash} a={a} />) : <Empty />}
@@ -353,7 +363,124 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
   </>;
 }
 
+/* ---------- phase 2: every chain, private send, swap ---------- */
+const Tile = ({ icon, title, onPress }: any) => <Pressable onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); onPress(); }} style={({ pressed }) => [styles.tile, { transform: [{ scale: pressed ? 0.96 : 1 }] }]} accessibilityRole="button" accessibilityLabel={title}>
+  <View style={[styles.ico, { backgroundColor: C.cobaltSoft }]}>{icon}</View><T style={{ fontWeight: '600', fontSize: 14 }}>{title}</T></Pressable>;
+const Back = ({ go, title, sub }: any) => <View style={{ gap: 6 }}>
+  <Pressable onPress={() => go('home')} style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }} hitSlop={8}><ChevronLeft color={C.text3} size={18} /><T style={{ color: C.text3 }}>Home</T></Pressable>
+  <T style={styles.h1}>{title}</T>{sub ? <T style={{ color: C.text2, fontSize: 14.5, lineHeight: 21 }}>{sub}</T> : null}</View>;
+const GLYPH: Record<string, string> = { ethereum: 'Ξ', bitcoin: '₿', solana: 'S', cosmos: 'A' };
+const feeOf = (vault: Vault, live: Live | null) => live?.keys.some(k => k.scheme === 'ed25519') === false && live?.status?.migrated ? { account: vault.wallet, seed: vault.keys.pq, pq: true } : vault.relay;
+
+function ChainsTab({ vault, live, go }: P) {
+  const [addrs, setAddrs] = useState<any[] | null>(null); const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(''); const [res, setRes] = useState<any>(null);
+  useEffect(() => { chainAddresses(vault.wallet).then(setAddrs).catch(e => setErr(String(e.message))); }, [vault.wallet]);
+  const ask = async (dropPq: boolean) => {
+    const eth = addrs?.find(a => a.id === 'ethereum'); if (!eth) return; setRes(null); setErr('');
+    try {
+      setBusy(dropPq ? 'Asking with the classical signature only…' : 'Signing twice, then asking the MPC…'); await new Promise(r => setTimeout(r, 60));
+      const RPC = 'https://ethereum-sepolia-rpc.publicnode.com';
+      const [nonce, gp, bal] = await Promise.all([evm(RPC, 'eth_getTransactionCount', [eth.address, 'latest']), evm(RPC, 'eth_gasPrice', []), evm(RPC, 'eth_getBalance', [eth.address, 'latest'])]);
+      const tx: EthTx = { chainId: 11155111n, nonce: BigInt(nonce), maxPriorityFeePerGas: 1_000_000_000n, maxFeePerGas: BigInt(gp) * 2n + 1_000_000_000n, gas: 21000n, to: eth.address, value: 1_000_000_000_000_000n };
+      const r = await signCrossChain(feeOf(vault, live), vault.wallet, vault.keys, { chain: 'ethereum', tx, from: eth.address }, { dropPq });
+      setRes({ ...r, needsGas: BigInt(bal) < 21000n * tx.maxFeePerGas + tx.value });
+      Haptics.notificationAsync(r.success ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Error);
+    } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
+  };
+  return <>
+    <Back go={go} title="Every chain" sub="NEAR's MPC signs for these addresses only after your Magen wallet verifies both signatures. The chains themselves stay classical." />
+    <Card>{addrs === null ? <ActivityIndicator style={{ padding: 24 }} /> : addrs.map((a, i) => <View key={a.id} style={[styles.row, i === addrs.length - 1 && { borderBottomWidth: 0 }]}>
+      <View style={[styles.ico, { backgroundColor: C.ink }]}><T style={{ color: '#fff', fontSize: 18, fontWeight: '700' }}>{GLYPH[a.id]}</T></View>
+      <View style={{ flex: 1 }}><T style={{ fontWeight: '600', fontSize: 15 }}>{a.name} <T style={{ color: C.text3, fontSize: 12.5, fontWeight: '400' }}>{a.network}</T></T>
+        <T numberOfLines={1} style={{ color: C.text2, fontSize: 12.5, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 2 }}>{short(a.address, 12, 8)}</T>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 5 }}><Atom color={C.cobalt} size={12} /><T style={{ color: '#1739a8', fontSize: 11.5, fontWeight: '600' }}>Guarded by your quantum key</T></View></View>
+      <Pressable onPress={() => Clipboard.setStringAsync(a.address)} hitSlop={8} accessibilityLabel={`Copy ${a.name} address`}><Copy color={C.text3} size={17} /></Pressable>
+    </View>)}</Card>
+    <View style={[styles.balance, { gap: 12 }]}>
+      <T style={{ color: '#fff', fontSize: 18, fontWeight: '600' }}>Ask for an Ethereum signature</T>
+      <T style={{ color: C.onInk2, fontSize: 13.5, lineHeight: 20 }}>A 0.001 Sepolia ETH transfer. NEAR checks ed25519 and ML-DSA-65, then asks v1.signer-prod.testnet.</T>
+      <Btn title={busy && !busy.includes('classical') ? busy : 'Sign twice, ask the MPC'} busy={!!busy && !busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(false)} icon={<ShieldSend size={20} />} />
+      <Btn title={busy.includes('classical') ? busy : 'Try with one signature'} kind="ghost" busy={busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(true)} />
+    </View>
+    {res && (res.success ? <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: C.greenSoft }]}><ShieldCheck color={C.green} size={20} />
+        <View style={{ flex: 1, gap: 4 }}><T style={{ fontWeight: '600', color: '#0b5c3c', fontSize: 15 }}>MPC signature returned after both your signatures verified.</T>
+          <T style={{ color: '#0b5c3c', fontSize: 13 }}>{res.needsGas ? 'Needs Sepolia gas to broadcast: fund your Ethereum address above.' : 'Ready to broadcast on Sepolia.'}</T>
+          <T style={{ color: C.cobalt, fontWeight: '600' }}>NEAR request {short(res.hash)}</T></View></Pressable>
+      : <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={20} />
+        <View style={{ flex: 1, gap: 4 }}><T style={{ fontWeight: '600', color: '#8e1d22', fontSize: 15 }}>{friendlyError(res.error)}</T><T style={{ color: '#8e1d22', fontSize: 13 }}>NEAR never asked the MPC, so nothing was signed.</T>
+          <T style={{ color: C.cobalt, fontWeight: '600' }}>Refusal {short(res.hash)}</T></View></Pressable>)}
+    {!!err && <View style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={18} /><T style={{ color: '#8e1d22', flex: 1 }}>{err}</T></View>}
+  </>;
+}
+
+function PrivateTab({ vault, live, go, refresh }: P) {
+  const [mode, setMode] = useState<'send' | 'receive'>('send');
+  const [meta, setMeta] = useState(''); const [amt, setAmt] = useState('0.1'); const [busy, setBusy] = useState(''); const [err, setErr] = useState('');
+  const [sent, setSent] = useState<any>(null); const [note, setNote] = useState(''); const [opened, setOpened] = useState<any>(null); const [dest, setDest] = useState(''); const [swept, setSwept] = useState<any>(null);
+  const mine = useMemo(() => metaKey(vault.keys), [vault]);
+  const run = async (fn: () => Promise<void>) => { setErr(''); try { await fn(); } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); } };
+  return <>
+    <Back go={go} title="Private send" sub="The payment lands in a one-time account only the recipient can open. Hidden: who it really belongs to. Public: your account, the amount, the time." />
+    <View style={styles.seg}>{(['send', 'receive'] as const).map(m => <Pressable key={m} onPress={() => setMode(m)} style={[styles.segBtn, mode === m && styles.segOn]}><T style={{ fontWeight: '600', color: mode === m ? C.text : C.text3 }}>{m === 'send' ? 'Send privately' : 'Receive privately'}</T></Pressable>)}</View>
+    {mode === 'send' ? <Card style={{ padding: 18, gap: 12 }}>
+      <T style={styles.label}>Recipient's meta-key</T>
+      <View style={{ flexDirection: 'row', gap: 8 }}><TextInput style={[styles.input, { flex: 1 }]} placeholder="magen-meta:…" value={meta} onChangeText={setMeta} autoCapitalize="none" autoCorrect={false} />
+        <Pressable onPress={async () => setMeta((await Clipboard.getStringAsync()).trim())} style={[styles.input, { width: 70, alignItems: 'center', justifyContent: 'center' }]}><T style={{ color: C.cobalt, fontWeight: '600' }}>Paste</T></Pressable></View>
+      <T style={styles.label}>Amount (NEAR)</T>
+      <TextInput style={styles.input} keyboardType="decimal-pad" value={amt} onChangeText={t => setAmt(t.replace(/[^\d.]/g, ''))} />
+      <Btn title={busy || 'Sign twice and send privately'} busy={!!busy} disabled={!meta} icon={<ShieldSend size={20} />} onPress={() => run(async () => { setBusy('Signing twice…'); await new Promise(r => setTimeout(r, 60)); const r = await stealthSend(feeOf(vault, live), vault.wallet, vault.keys, meta, amt); setSent(r); refresh(); })} />
+      {sent && <View style={[styles.banner, { backgroundColor: sent.success ? C.greenSoft : C.redSoft, flexDirection: 'column' }]}>
+        <T style={{ fontWeight: '600', fontSize: 15, color: sent.success ? '#0b5c3c' : '#8e1d22' }}>{sent.success ? 'Sent to a one-time account.' : friendlyError(sent.error)}</T>
+        {sent.success && <><T style={{ color: '#0b5c3c', fontSize: 13 }}>Give the recipient this note:</T><Pressable onPress={() => Clipboard.setStringAsync(sent.note)}><T style={{ fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', fontSize: 12, color: C.text }}>{short(sent.note, 22, 6)}  (tap to copy)</T></Pressable></>}
+        <Pressable onPress={() => open(sent.hash)}><T style={{ color: C.cobalt, fontWeight: '600' }}>Transaction {short(sent.hash)}</T></Pressable></View>}
+    </Card> : <Card style={{ padding: 18, gap: 12 }}>
+      <T style={styles.label}>Your meta-key (safe to share)</T>
+      <Pressable onPress={() => Clipboard.setStringAsync(mine)} style={[styles.input, { justifyContent: 'center' }]}><T numberOfLines={1} style={{ fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', fontSize: 12.5 }}>{short(mine, 24, 6)}</T></Pressable>
+      <T style={styles.label}>Open a payment note</T>
+      <View style={{ flexDirection: 'row', gap: 8 }}><TextInput style={[styles.input, { flex: 1 }]} placeholder="magen-note:…" value={note} onChangeText={setNote} autoCapitalize="none" autoCorrect={false} />
+        <Pressable onPress={async () => setNote((await Clipboard.getStringAsync()).trim())} style={[styles.input, { width: 70, alignItems: 'center', justifyContent: 'center' }]}><T style={{ color: C.cobalt, fontWeight: '600' }}>Paste</T></Pressable></View>
+      <Btn title="Open note" kind="dark" disabled={!note} onPress={() => run(async () => { setSwept(null); setOpened(await stealthScan(vault.keys, note)); })} />
+      {opened && <T style={{ color: C.text2 }}>One-time account {short(opened.account, 8, 6)}: {opened.balance === null ? 'empty or already spent.' : `${near(opened.balance, 4)} NEAR`}</T>}
+      {opened?.balance != null && <><TextInput style={styles.input} placeholder="Spend it to (any account)" value={dest} onChangeText={setDest} autoCapitalize="none" autoCorrect={false} />
+        <T style={{ color: C.text3, fontSize: 12.5 }}>Spending to your own main account links the two again.</T>
+        <Btn title={busy || 'Spend from the one-time account'} busy={!!busy} disabled={!dest} onPress={() => run(async () => { setBusy('Spending…'); setSwept(await stealthSweep(opened, dest.trim().toLowerCase())); })} /></>}
+      {swept && <Pressable onPress={() => open(swept.hash)}><T style={{ color: swept.success ? C.green : C.red, fontWeight: '600' }}>{swept.success ? 'Spent' : 'Failed'} · {short(swept.hash)}</T></Pressable>}
+    </Card>}
+    {!!err && <View style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={18} /><T style={{ color: '#8e1d22', flex: 1 }}>{err}</T></View>}
+  </>;
+}
+
+function SwapTab({ go }: P) {
+  const [from, setFrom] = useState('wNEAR'); const [to, setTo] = useState('ZEC'); const [amt, setAmt] = useState('10');
+  const [busy, setBusy] = useState(false); const [q, setQ] = useState<any>(null); const [err, setErr] = useState('');
+  const quote = async () => { setErr(''); setQ(null); setBusy(true); try { if (from === to) throw Error('Pick two different assets.'); setQ(await intentsQuote(from, to, amt, to === 'SOL' ? 'KD18rb7mrVBP7eJpn6EbULRkSupGQPmf56es7fubDrZ' : to === 'ETH' ? '0xf06d7f1851db534a680e6e856697cbbd4557a38b' : to === 'BTC' ? 'bc1qxm4wpa7kfqmpgxa3sr8j2kvef30sjsz72wjsks' : 'near')); } catch (e: any) { setErr(String(e.message)); } finally { setBusy(false); } };
+  const Chips = ({ v, set }: any) => <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>{INTENT_ROUTES.map(r => <Pressable key={r.symbol} onPress={() => { set(r.symbol); setQ(null); }} style={[styles.chip, v === r.symbol && styles.chipOn]}><T style={{ fontWeight: '600', color: v === r.symbol ? '#fff' : C.text2 }}>{r.label}</T></Pressable>)}</View>;
+  return <>
+    <Back go={go} title="Swap & bridge" sub="Live prices from NEAR Intents. Quote only — mainnet funding required." />
+    <Card style={{ padding: 18, gap: 12 }}>
+      <T style={styles.label}>You pay</T><Chips v={from} set={setFrom} />
+      <TextInput style={[styles.input, { fontSize: 28, height: 64, fontWeight: '600' }]} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(t.replace(/[^\d.]/g, '')); setQ(null); }} />
+      <T style={styles.label}>You get</T><Chips v={to} set={setTo} />
+      <Btn title={busy ? 'Asking NEAR Intents…' : 'Get a live quote'} busy={busy} disabled={!amt} icon={<Repeat color="#fff" size={18} />} onPress={quote} />
+    </Card>
+    {q && <View style={[styles.balance, { gap: 8 }]}>
+      <T style={{ color: C.onInk2 }}>{q.amountIn} {q.from.symbol} →</T>
+      <T style={{ color: '#fff', fontSize: 40, fontWeight: '600', letterSpacing: -1.5 }}>{q.amountOut} <T style={{ color: C.onInk2, fontSize: 18 }}>{q.to.symbol}</T></T>
+      <T style={{ color: C.onInk2, fontSize: 13 }}>${Number(q.usdIn).toFixed(2)} → ${Number(q.usdOut).toFixed(2)} · about {q.seconds} s</T>
+      <Pill tone="ink" text={q.status} />
+    </View>}
+    {!!err && <View style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={18} /><T style={{ color: '#8e1d22', flex: 1 }}>{err}</T></View>}
+  </>;
+}
+
 const styles = StyleSheet.create({
+  tile: { flex: 1, backgroundColor: C.paper, borderRadius: 18, borderWidth: 1, borderColor: C.line, padding: 14, gap: 10, alignItems: 'flex-start' },
+  seg: { flexDirection: 'row', backgroundColor: '#e9ecf1', borderRadius: 14, padding: 4 },
+  segBtn: { flex: 1, height: 40, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
+  segOn: { backgroundColor: C.paper },
+  chip: { paddingHorizontal: 14, height: 36, borderRadius: 18, borderWidth: 1, borderColor: C.line, justifyContent: 'center', backgroundColor: C.paper },
+  chipOn: { backgroundColor: C.ink, borderColor: C.ink },
   btnGlow: { shadowColor: '#3366ff', shadowOpacity: 0.35, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
   lockChip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, height: 28, borderRadius: 14, backgroundColor: '#ebf0ff' },
   btn: { height: 54, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderColor: C.line },

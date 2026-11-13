@@ -12,7 +12,7 @@ const EXPLORERS: Record<string, (a: string) => string> = {
   solana: a => `https://explorer.solana.com/address/${a}?cluster=devnet`,
   cosmos: a => `https://www.mintscan.io/cosmoshub-testnet/address/${a}`,
 };
-const GLYPH: Record<string, string> = { ethereum: 'Ξ', bitcoin: '₿', solana: 'S', cosmos: '⚛' };
+const GLYPH: Record<string, string> = { ethereum: 'Ξ', bitcoin: '₿', solana: 'S', cosmos: 'A' };
 
 function CopyText({ text }: { text: string }) {
   const [ok, setOk] = useState(false);

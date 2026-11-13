@@ -8,7 +8,8 @@ import * as Haptics from 'expo-haptics';
 import Svg, { Path, Line } from 'react-native-svg';
 import { House, History, ArrowUpRight, ShieldCheck } from 'lucide-react-native';
 
-export type Tab = 'home' | 'activity' | 'scan' | 'send' | 'security';
+/** The five tab-bar tabs, plus screens opened from Home (no tab highlighted). */
+export type Tab = 'home' | 'activity' | 'scan' | 'send' | 'security' | 'chains' | 'private' | 'swap';
 const SIDE: { key: Tab; label: string; Icon: any }[] = [
   { key: 'home', label: 'Home', Icon: House },
   { key: 'activity', label: 'Activity', Icon: History },
@@ -63,7 +64,7 @@ export function TabBar({ tab, onChange, bottom }: { tab: Tab; onChange: (t: Tab)
   const onScan = tab === 'scan';
   return <View pointerEvents="box-none" style={[s.wrap, { bottom: bottom + 10 }]}>
     <View style={s.bar} onLayout={(e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width)} accessibilityRole="tablist">
-      {slot > 0 && !onScan && <Animated.View style={[s.glow, { transform: [{ translateX: x }, { scale: pop }] }]} />}
+      {slot > 0 && !onScan && ORDER.includes(tab) && <Animated.View style={[s.glow, { transform: [{ translateX: x }, { scale: pop }] }]} />}
       {ORDER.map(k => {
         if (k === 'scan') return <View key={k} style={s.slot}>
           {onScan && <Animated.View pointerEvents="none" style={[s.halo, { opacity: halo.interpolate({ inputRange: [0, 1], outputRange: [0.7, 0] }), transform: [{ scale: halo.interpolate({ inputRange: [0, 1], outputRange: [1, 1.55] }) }] }]} />}
