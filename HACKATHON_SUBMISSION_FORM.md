@@ -1,24 +1,31 @@
-# Magen — NEAR HACKATHON
+# Magen · NEAR HACKATHON 2026 submission
 
-Project: Magen (מגן, Hebrew for shield)
-Track: Quantum-resistant blockchain / post-quantum account security
-Built: November 13–14, 2026, fresh codebase.
+**Project:** Magen (מגן, Hebrew for "shield")
+**One line:** Keep your NEAR account. Add a second lock a quantum computer can't pick.
+**Tracks:** security (primary), open.
+**Built:** Nov 13–14 2026, fresh codebase (see Prior work).
 
-Your NEAR account, safe from quantum computers. Magen is a real testnet wallet that requires a classical ed25519 signature AND a post-quantum ML-DSA-65 signature before its contract authorizes any send or contract call. Both sign the same domain-bound, expiring, nonce-protected intent. The deploy key is deleted atomically with initialization. A forged half or replay is rejected on chain and shown in activity.
+## What it is
+A quantum-safe NEAR wallet on three surfaces that share one SDK:
+- **Chrome extension (MV3):** popup wallet plus a `window.magen` dApp provider; every dApp request opens an approval window that shows "Signed twice: classical + quantum-safe".
+- **iPhone app (Expo, Release build for the iOS Simulator):** upgrade, send, receive QR, activity, Q-Day switch; keys in the iOS keychain, ML-DSA-65 signs on the device.
+- **Web:** a read-only quantum readiness scan of any NEAR account (the front door), the "steal the key, still get nothing" drill, and the full wallet.
 
-A Q-Day switch adds the owner's PQ key as a native ML-DSA-65 full-access key, keeping the account while explicitly changing its control model to PQ-only. The app shows the resulting access-key hash and links the explorer. Native PQ signing can be demonstrated after migration.
+Magen upgrades an existing account **in place** in one transaction (DeployContract + new + DeleteKey + AddKey execute-only). After that, every payment needs the account's existing ed25519 key **and** a new ML-DSA-65 key; the wallet contract checks both with `env::ed25519_verify` and `env::ml_dsa_verify`. The **Q-Day switch** adds the ML-DSA-65 key as a native NEAR access key (NEP-645); the post-quantum key can then remove the classical key itself, and NEAR Rocks labels the account "Quantum-safe".
 
-Browser-generated independent seeds, AES-GCM encrypted password backup, real balances, send/receive, contacts, contract calls and receipt-linked activity. Native protocol support and in-contract verification are both used.
+## NEAR technology used
+`env::ml_dsa_verify` (protocol 87+) and `env::ed25519_verify` in one contract · native ML-DSA-65 access keys (NEP-645) added from a contract promise · ML-DSA-65-signed transactions · function-call access key restricted to `execute` with a fee allowance · atomic multi-action upgrade transaction on a user's own account · `view_access_key_list` for the readiness scan (mainnet and testnet) · the `testnet` registrar contract for account creation.
 
-Scope: NEAR testnet; unaudited preview. No consensus-level quantum-safety claim. Guardians/recovery deferred. A native full-access key can bypass the contract and change it. Local activity journal is not a complete chain indexer.
+## Proof
+- Live testnet transactions for every flow: README table and `deployments/` (`surfaces-live.json`, `drill-live.json`, `attacks.json`, `verified-live.json`).
+- Tests: 39 automated (10 SDK + 29 on a local neard 2.14 sandbox, protocol 88) plus live testnet runs; see TESTING.md.
+- Film: `videos/magen-near/magen-near-film.mp4` (2:19), share copy `magen-near-film-share.mp4` (720p, 3.9 MB).
 
-Prior work: An October 2026 prototype (near-hybrid-pq-wallet) explored dual-signature verification; Magen is a new codebase written Nov 13-14 for NEAR HACKATHON.
+## Honest limits
+Testnet preview, not audited. Both keys live on one device (protects against broken cryptography, not a stolen unlocked device). Chain Signatures and validator keys stay classical. The drill uses deliberately weakened keys (2^18 seeds) to simulate a quantum attacker; it never claims a real quantum attack. `window.magen` follows wallet-selector's action shape; a full wallet-selector module is future work.
 
-Live demo: https://magen-near.vercel.app
-Contract: shield.magen-mwf26bd5.testnet (hybrid, keyless)
-Native migration proof: shield.magen-film-mwf2kq5t.testnet
-Film: magen-near-film-share.mp4 (2:35, H264/AAC, 720p)
-Project repository: session owner must push and supply the public repository URL; no push performed by this agent.
-Testing: 10 SDK tests, 13 sandbox cases, 18 viewport/route checks; 19 final live receipts verified over RPC.
-Explorer rendering caveat: NearBlocks blocks automated capture; direct protocol RPC proof is shown honestly in the film.
-License: MIT. Copyright (c) 2026 Nivesh Gajengi.
+## Prior work
+An October 2026 prototype (near-hybrid-pq-wallet) explored dual-signature verification; Magen is a new codebase written Nov 13-14 for NEAR HACKATHON.
+
+**Repository:** github.com/nickthelegend/magen-near (private until Nick makes it public).
+**License:** MIT, Copyright (c) 2026 Nivesh Gajengi.

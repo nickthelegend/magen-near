@@ -50,11 +50,13 @@ Real ed25519 keys come from 2^256 seeds; the drill never claims a real quantum a
 | Extension: in-place upgrade of `magen-leo.testnet` | [9C476mF…](https://testnet.near.rocks/tx/9C476mFyCnZtLJqx8tNw9QSRyX5uuSCc2z5yEaxFyyeL) | Deploy + new + DeleteKey + AddKey(execute) |
 | Extension: dApp tip via `window.magen`, signed twice | [BpGJ8H3…](https://testnet.near.rocks/tx/BpGJ8H33LWKiewXqkJHeF9xjVnownshJp1xq55qYitbh) | both signatures verified |
 | Phone: in-place upgrade of `magen-maya.testnet` | [4xgu9Bw…](https://testnet.near.rocks/tx/4xgu9Bw4546vCYs3szXq3sfrxyTiXMNjUcSESB6Cgq6p) | upgraded on the iOS Simulator app |
+| Phone: send 0.25 NEAR, signed twice on the device | [4m9usua…](https://testnet.near.rocks/tx/4m9usuaJ4uggvEcmyAuYh8NfTusV3XPQfKGnRfUf7kS6) | both signatures verified |
+| Phone: Q-Day switch, then classical key removed by the ML-DSA-65 key alone | [28Hidbr…](https://testnet.near.rocks/tx/28HidbrhKeqQ1UwCwVvdPgTPrEKRLxS8QoorK4LMoyyu) → [Gt78Zw1…](https://testnet.near.rocks/tx/Gt78Zw1DFf21xMWCY3BfkwvEKZbmGt8BTQ9ExSASKURD) | [account](https://testnet.near.rocks/account/magen-maya.testnet): 1 key, Quantum-safe |
 | First wallet (`shield.magen-mwf26bd5.testnet`): deploy + lock | [sJhhvMH…](https://testnet.near.rocks/tx/sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ) | zero access keys |
 | Dual-signed transfer / forged quantum half / replay | [GF8RDJD…](https://testnet.near.rocks/tx/GF8RDJDRET3PTYrvayvcPHQyZqFaWby4xLrUfE91r1LS) / [9kq5W4u…](https://testnet.near.rocks/tx/9kq5W4uBpJy24eK5hpjRiq7VCpggRK4oBGA5QrbqHg6d) / [EnvaSeF…](https://testnet.near.rocks/tx/EnvaSeFb9TLUZvZc2bvf1c8Dwz61TXNDnFzs6UNF2k6A) | accepted / refused / refused |
 | Q-Day switch → native ML-DSA-65 key → native-signed transfer | [9kaxHA4…](https://testnet.near.rocks/tx/9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr) → [8EGTshv…](https://testnet.near.rocks/tx/8EGTshvxxVGKrXgcTftXjWZ4sGVKr8ukDBwnNtiQgu8F) | [account](https://testnet.near.rocks/account/shield.magen-film-mwf2kq5t.testnet) shows "Quantum-safe" |
 
-Wallet contract code hash `BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3` (rebuilt from source with the pinned toolchain; matches every deployed copy). Full records in [`deployments/`](deployments). Test counts in [TESTING.md](TESTING.md).
+Wallet contract code hash `BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3` (rebuilt from source with the pinned toolchain; matches every deployed copy). Full records in [`deployments/`](deployments) (surfaces: [`surfaces-live.json`](deployments/surfaces-live.json)). Film: [`videos/magen-near/magen-near-film.mp4`](videos/magen-near/magen-near-film.mp4). Test counts in [TESTING.md](TESTING.md).
 
 ## Build and run
 

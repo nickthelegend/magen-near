@@ -1,0 +1,26 @@
+{
+  "network": "testnet",
+  "note": "Real transactions from the Chrome extension (Playwright Chromium, --load-extension), the iOS Simulator Release app and the web drill, Nov 13-14 2026. Explorer: https://testnet.near.rocks/tx/<hash>",
+  "extension": {
+    "account": "magen-leo.testnet",
+    "upgrade_in_place": "9C476mFyCnZtLJqx8tNw9QSRyX5uuSCc2z5yEaxFyyeL",
+    "dapp_tip_signed_twice": "BpGJ8H33LWKiewXqkJHeF9xjVnownshJp1xq55qYitbh",
+    "e2e_account": "ext-mwfe70jt.magen-mwf26bd5.testnet",
+    "e2e_upgrade": "HtSbAdB3jc4xeJz6BRAVuWZKcpDitZ3MFkCko3KvLVQj",
+    "e2e_dapp_tip": "9GBY5dE1YP5oidCD9cRJuFMopKjjsu25DCwPJMFSgrdV"
+  },
+  "phone": {
+    "account": "magen-maya.testnet",
+    "upgrade_in_place": "4xgu9Bw4546vCYs3szXq3sfrxyTiXMNjUcSESB6Cgq6p",
+    "send_0_25_signed_twice": "4m9usuaJ4uggvEcmyAuYh8NfTusV3XPQfKGnRfUf7kS6",
+    "qday_switch_native_ml_dsa_key": "28HidbrhKeqQ1UwCwVvdPgTPrEKRLxS8QoorK4LMoyyu",
+    "native_key": "ml-dsa-65-hash:6wY8XDgyVMrf4poKxQwEqbgjfuFf629sX9vmnhzRSVHr",
+    "classical_key_removed_by_ml_dsa_signature": "Gt78Zw1DFf21xMWCY3BfkwvEKZbmGt8BTQ9ExSASKURD"
+  },
+  "film_drill": {
+    "plain": "plain.qday-drill.testnet", "magen": "magen.qday-drill.testnet", "attacker": "attacker.qday-drill.testnet",
+    "create_plain": "BHadJEiqR3PnPFntKwTV8pSz2U3Hfq9NxkNEKmpGXBDH", "create_magen": "HtLKTSLvDMKbXqoF8KEYpoPxHN2VmbpHhiLjmtENZv3s",
+    "create_attacker": "FZD8yeJ89V9hU6s1XC8eQE6GVX18hpW9hZifC13vZk5z", "upgrade_magen": "FKscF9hLaiZvfkthJ8AQ7ayE5PMZziXRwtf63fvGCY8K",
+    "drain_plain": "2UiFv27dFmzVp8MzeNChhm6TKMGqxpFVm8NhHGhLGFH8", "attack_magen_refused": "E7ikQaX5yqGJEyA3gcZJkkWPtvtgkNwm7rmjebprKso"
+  }
+}
