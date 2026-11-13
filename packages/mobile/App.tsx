@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Animated, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
@@ -7,18 +7,19 @@ import * as SecureStore from 'expo-secure-store';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import QRCode from 'react-native-qrcode-svg';
-import { Home, ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Copy, Power, ExternalLink, ChevronLeft } from 'lucide-react-native';
+import { ArrowUpRight, ArrowDownLeft, History, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Copy, Power, ExternalLink, ChevronLeft } from 'lucide-react-native';
 import { base64, execute, makeIntent, nearAmount, pqHandle, publicKeys, signIntent, view, type Vault } from '../../sdk/index.ts';
 import { edKeyString, precheckUpgrade, seedFromPrivateKey, upgradeInPlace } from '../../sdk/upgrade.ts';
 import { createWithHelper } from '../../sdk/drillflow.ts';
 import { random } from '../../sdk/index.ts';
 import { ago, friendlyError, near, readAccount, readActivity, readKeys, readStatus, short, txUrl, type Activity, type KeyInfo } from '../../web/src/lib/chain.ts';
 import { WALLET_WASM_B64 } from './src/wasm';
+import { TabBar, ShieldSend, type Tab } from './src/TabBar';
 
 const C = { ink: '#0b0e14', graphite: '#1b212b', bg: '#f3f4f6', paper: '#ffffff', line: '#e4e7ec', text: '#0e131c', text2: '#4b5466', text3: '#7a8394', onInk: '#eef1f6', onInk2: '#9aa3b4', cobalt: '#3366ff', cobaltSoft: '#ebf0ff', red: '#d93036', redSoft: '#fdeeee', green: '#138a5c', greenSoft: '#e5f5ee' };
 const F = 'Commissioner';
 const VAULT = 'magen-vault';
-type Tab = 'home' | 'send' | 'receive' | 'activity' | 'security';
+const CACHE = 'magen-cache';
 
 export default function App() {
   const [fonts] = useFonts({ Commissioner: require('./assets/commissioner.ttf') });
@@ -36,8 +37,12 @@ const T = ({ s, style, ...p }: any) => <Text {...p} style={[{ fontFamily: F, col
 function Btn({ title, onPress, kind = 'primary', icon, disabled, busy }: { title: string; onPress: () => void; kind?: 'primary' | 'dark' | 'light' | 'ghost'; icon?: any; disabled?: boolean; busy?: boolean }) {
   const bg = kind === 'primary' ? C.cobalt : kind === 'dark' ? C.ink : kind === 'ghost' ? 'rgba(255,255,255,.1)' : C.paper;
   const fg = kind === 'light' ? C.text : '#fff';
-  return <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} disabled={disabled || busy} style={({ pressed }) => [styles.btn, { backgroundColor: bg, opacity: disabled ? 0.45 : pressed ? 0.85 : 1, borderWidth: kind === 'light' ? 1 : 0 }]}>
-    {busy ? <ActivityIndicator color={fg} /> : icon}<T style={{ color: fg, fontWeight: '600', fontSize: 16 }}>{title}</T>
+  const sc = useRef(new Animated.Value(1)).current;
+  const to = (v: number) => Animated.spring(sc, { toValue: v, useNativeDriver: true, damping: 14, stiffness: 320 }).start();
+  return <Pressable onPressIn={() => to(0.96)} onPressOut={() => to(1)} onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); onPress(); }} disabled={disabled || busy} accessibilityRole="button" accessibilityLabel={title}>
+    <Animated.View style={[styles.btn, { backgroundColor: bg, opacity: disabled ? 0.45 : 1, borderWidth: kind === 'light' ? 1 : 0, transform: [{ scale: sc }] }, kind === 'primary' && styles.btnGlow]}>
+      {busy ? <ActivityIndicator color={fg} /> : icon}<T style={{ color: fg, fontWeight: '600', fontSize: 16 }}>{title}</T>
+    </Animated.View>
   </Pressable>;
 }
 const Card = ({ children, style }: any) => <View style={[styles.card, style]}>{children}</View>;
@@ -82,7 +87,7 @@ function Onboarding({ onDone }: { onDone: (v: Vault) => void }) {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Image source={require('./assets/icon.png')} style={{ width: 32, height: 32, borderRadius: 9 }} /><T style={{ color: '#fff', fontSize: 20, fontWeight: '700' }}>magen</T></View>
         {mode === 'intro' ? <>
           <Image source={require('./assets/shield-wallet.png')} style={{ width: 240, height: 240, alignSelf: 'center', marginVertical: 28 }} />
-          <T style={{ color: '#fff', fontSize: 34, fontWeight: '650', letterSpacing: -1, lineHeight: 38 }}>Keep your NEAR account. Add a second lock.</T>
+          <T style={{ color: '#fff', fontSize: 34, fontWeight: '600', letterSpacing: -1, lineHeight: 38 }}>Keep your NEAR account. Add a second lock.</T>
           <T style={{ color: C.onInk2, fontSize: 16, lineHeight: 24, marginTop: 12 }}>Every payment needs your usual key and a post-quantum ML-DSA-65 key. NEAR checks both.</T>
           <View style={{ flex: 1 }} />
           <View style={{ gap: 10, marginTop: 28 }}>
@@ -92,7 +97,7 @@ function Onboarding({ onDone }: { onDone: (v: Vault) => void }) {
           </View>
         </> : <View style={{ gap: 14, marginTop: 24 }}>
           <Pressable onPress={() => setMode('intro')} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><ChevronLeft color={C.onInk2} size={18} /><T style={{ color: C.onInk2 }}>Back</T></Pressable>
-          <T style={{ color: '#fff', fontSize: 28, fontWeight: '650', letterSpacing: -.8 }}>{mode === 'create' ? 'Start fresh, upgraded.' : 'Upgrade in place.'}</T>
+          <T style={{ color: '#fff', fontSize: 28, fontWeight: '600', letterSpacing: -.8 }}>{mode === 'create' ? 'Start fresh, upgraded.' : 'Upgrade in place.'}</T>
           <T style={{ color: C.onInk2, fontSize: 15, lineHeight: 22 }}>{mode === 'create' ? 'We create the account with 10 test NEAR, then add the second lock.' : 'Your key signs one transaction. It stays your first lock; a new ML-DSA-65 key becomes the second.'}</T>
           {mode === 'create' ? <TextInput style={styles.inputDark} placeholder="yourname" placeholderTextColor={C.onInk2} value={name} onChangeText={t => setName(t.toLowerCase())} autoCapitalize="none" autoCorrect={false} />
             : <><TextInput style={styles.inputDark} placeholder="alice.testnet" placeholderTextColor={C.onInk2} value={account} onChangeText={setAccount} autoCapitalize="none" autoCorrect={false} />
@@ -116,31 +121,35 @@ function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
   const [live, setLive] = useState<Live | null>(null);
   const [acts, setActs] = useState<Activity[] | null>(null);
   const insets = useSafeAreaInsets();
+  const fade = useRef(new Animated.Value(1)).current;
+  // Last known balance shows instantly on launch (no skeletons); fresh chain data replaces it in a second.
+  useEffect(() => { SecureStore.getItemAsync(CACHE).then(c => { if (c && !live) { const j = JSON.parse(c); setLive({ amount: BigInt(j.amount), storage: j.storage, keys: j.keys, status: j.status }); } }).catch(() => {}); }, []);
   const refresh = useCallback(async () => {
     try {
       const [a, k, s] = await Promise.all([readAccount(vault.wallet), readKeys(vault.wallet).catch(() => []), readStatus(vault.wallet)]);
       setLive({ amount: a?.amount ?? null, storage: a?.storage ?? 0, keys: k, status: s });
+      if (a) SecureStore.setItemAsync(CACHE, JSON.stringify({ amount: a.amount.toString(), storage: a.storage, keys: k.slice(0, 3), status: s ? { nonce: s.nonce, migrated: s.migrated } : null })).catch(() => {});
       readActivity(vault.wallet, 15).then(setActs).catch(() => setActs(x => x ?? []));
     } catch { /* keep the last values; the next tick retries */ }
   }, [vault.wallet]);
   useEffect(() => { refresh(); const t = setInterval(refresh, 30000); return () => clearInterval(t); }, [refresh]);
-  const props = { vault, live, acts, refresh, go: setTab };
+  const go = (t: Tab) => { if (t === tab) return; fade.setValue(0); setTab(t); Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start(); };
+  const props = { vault, live, acts, refresh, go };
   return <View style={{ flex: 1, backgroundColor: C.bg }}>
     <View style={{ paddingTop: insets.top, backgroundColor: C.bg }}>
-      <View style={styles.top}><Image source={require('./assets/icon.png')} style={{ width: 28, height: 28, borderRadius: 8 }} /><T style={{ fontSize: 18, fontWeight: '700' }}>magen</T>
-        <View style={{ flex: 1 }} /><Pill text="NEAR testnet" tone="green" /></View>
+      <View style={styles.top}><Image source={require('./assets/icon.png')} style={{ width: 30, height: 30, borderRadius: 9 }} />
+        <View style={{ flex: 1 }}><T style={{ fontSize: 15, fontWeight: '600' }} numberOfLines={1}>{vault.wallet}</T><T style={{ fontSize: 12, color: C.text3 }}>NEAR testnet</T></View>
+        <View style={styles.lockChip}><Atom color={C.cobalt} size={14} /><T style={{ color: '#1739a8', fontSize: 12, fontWeight: '600' }}>{live?.status?.migrated ? 'PQ native' : '2 locks'}</T></View>
+      </View>
     </View>
-    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 110, gap: 14 }} keyboardShouldPersistTaps="handled">
+    <Animated.ScrollView style={{ opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }} contentContainerStyle={{ padding: 16, paddingBottom: 130, gap: 14 }} keyboardShouldPersistTaps="handled">
       {tab === 'home' && <HomeTab {...props} />}
       {tab === 'send' && <SendTab {...props} />}
       {tab === 'receive' && <ReceiveTab {...props} />}
       {tab === 'activity' && <ActivityTab {...props} />}
       {tab === 'security' && <SecurityTab {...props} onReset={onReset} />}
-    </ScrollView>
-    <View style={[styles.tabbar, { paddingBottom: insets.bottom || 10 }]}>
-      {([['home', 'Home', Home], ['send', 'Send', ArrowUpRight], ['receive', 'Receive', ArrowDownLeft], ['activity', 'Activity', History], ['security', 'Security', ShieldCheck]] as const).map(([k, l, I]) =>
-        <Pressable key={k} style={styles.tab} onPress={() => { Haptics.selectionAsync(); setTab(k); }}><I color={tab === k ? C.cobalt : C.text3} size={23} /><T style={{ fontSize: 11, fontWeight: '600', color: tab === k ? C.cobalt : C.text3 }}>{l}</T></Pressable>)}
-    </View>
+    </Animated.ScrollView>
+    <TabBar tab={tab} onChange={go} bottom={insets.bottom} />
   </View>;
 }
 type P = { vault: Vault; live: Live | null; acts: Activity[] | null; refresh: () => void; go: (t: Tab) => void };
@@ -151,7 +160,7 @@ function HomeTab({ vault, live, acts, go }: P) {
     <View style={styles.balance}>
       <Image source={require('./assets/shield-wallet.png')} style={{ position: 'absolute', right: -14, top: 6, width: 130, height: 130, opacity: .9 }} />
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><T style={{ color: C.onInk2, fontSize: 14 }}>Total balance</T><Pill tone="ink" text={migrated ? 'Native PQ key on' : 'Two locks on'} /></View>
-      <T style={{ color: '#fff', fontSize: 52, fontWeight: '650', letterSpacing: -2.4, marginTop: 14 }}>{near(live?.amount ?? null, 2)}<T style={{ color: C.onInk2, fontSize: 18, fontWeight: '500', letterSpacing: 0 }}>{'\u2002'}NEAR</T></T>
+      <T style={{ color: '#fff', fontSize: 64, fontWeight: '600', letterSpacing: -3, marginTop: 14, lineHeight: 70 }}>{near(live?.amount ?? null, 2)}<T style={{ color: C.onInk2, fontSize: 18, fontWeight: '500', letterSpacing: 0 }}>{'\u2002'}NEAR</T></T>
       <T style={{ color: C.onInk2, fontSize: 13.5, marginTop: 6 }}>{vault.wallet}</T>
       <View style={{ flexDirection: 'row', gap: 8, marginTop: 22 }}>
         <View style={{ flex: 1 }}><Btn title="Send" icon={<ArrowUpRight color="#fff" size={18} />} onPress={() => go('send')} /></View>
@@ -215,23 +224,24 @@ function SendTab({ vault, live, refresh }: P) {
       <TextInput style={styles.input} placeholder="bob.testnet" value={to} onChangeText={setTo} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} />
       <T style={styles.label}>Amount</T>
       <View style={[styles.input, { flexDirection: 'row', alignItems: 'center', height: 72 }]}>
-        <TextInput style={{ flex: 1, fontFamily: F, fontSize: 36, fontWeight: '650', color: C.text }} keyboardType="decimal-pad" placeholder="0" value={amt} onChangeText={t => setAmt(t.replace(/[^\d.]/g, ''))} editable={stage === 'form'} />
+        <TextInput style={{ flex: 1, fontFamily: F, fontSize: 36, fontWeight: '600', color: C.text }} keyboardType="decimal-pad" placeholder="0" value={amt} onChangeText={t => setAmt(t.replace(/[^\d.]/g, ''))} editable={stage === 'form'} />
         <T style={{ color: C.text3, fontSize: 17, fontWeight: '600' }}>NEAR</T>
       </View>
       <T style={{ color: C.text3, fontSize: 13 }}>Available {near(spendable > 0n ? spendable : 0n, 4)} NEAR</T>
     </Card>
     <View style={[styles.balance, { padding: 16, gap: 10 }]}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><ShieldCheck color="#fff" size={17} /><T style={{ color: '#fff', fontWeight: '650', fontSize: 15 }}>Signed twice on this phone</T></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><ShieldCheck color="#fff" size={17} /><T style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>Signed twice on this phone</T></View>
       <SigRow icon={<KeyRound color={C.onInk} size={16} />} title="ed25519" sub={signedYet ? '64 bytes · signed' : stage === 'signing' ? 'signing…' : 'classical'} done={signedYet} />
       <SigRow pq icon={<Atom color="#b9c8ff" size={16} />} title="ML-DSA-65" sub={signedYet ? '3,309 bytes · signed' : stage === 'signing' ? 'signing…' : 'post-quantum'} done={signedYet} />
     </View>
     {!!err && <View style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={18} /><T style={{ color: '#8e1d22', flex: 1 }}>{err}</T></View>}
     {res && <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: res.success ? C.greenSoft : C.redSoft }]}>
       {res.success ? <ShieldCheck color={C.green} size={20} /> : <ShieldAlert color={C.red} size={20} />}
-      <View style={{ flex: 1 }}><T style={{ fontWeight: '650', fontSize: 15.5, color: res.success ? '#0b5c3c' : '#8e1d22' }}>{res.success ? `Sent ${amt} NEAR. NEAR verified both signatures.` : friendlyError(res.error)}</T>
-        <T style={{ color: C.cobalt, fontWeight: '600', marginTop: 4 }}>View transaction {short(res.hash)}</T></View></Pressable>}
+      <View style={{ flex: 1 }}><T style={{ fontWeight: '600', fontSize: 15.5, color: res.success ? '#0b5c3c' : '#8e1d22' }}>{res.success ? `Sent ${amt} NEAR. NEAR verified both signatures.` : friendlyError(res.error)}</T>
+        <T style={{ color: C.cobalt, fontWeight: '600', marginTop: 4 }}>View transaction {short(res.hash)}</T></View>
+      {res.success && <Image source={require('./assets/lattice-lock.png')} style={{ width: 54, height: 54 }} />}</Pressable>}
     {stage === 'done' ? <Btn title="New payment" kind="light" onPress={() => { setStage('form'); setRes(null); setAmt(''); }} />
-      : <Btn title={stage === 'signing' ? 'Signing with both keys…' : stage === 'sending' ? 'NEAR is checking both…' : 'Sign twice and send'} busy={stage !== 'form'} disabled={!to || !amt} onPress={send} />}
+      : <Btn title={stage === 'signing' ? 'Signing with both keys…' : stage === 'sending' ? 'NEAR is checking both…' : 'Sign twice and send'} icon={<ShieldSend size={22} />} busy={stage !== 'form'} disabled={!to || !amt} onPress={send} />}
   </>;
 }
 const SigRow = ({ icon, title, sub, done, pq }: any) => <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 12, backgroundColor: 'rgba(255,255,255,.06)' }}>
@@ -280,7 +290,7 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
     <View style={[styles.balance, { gap: 12 }]}>
       <Image source={require('./assets/lattice-lock.png')} style={{ position: 'absolute', right: -6, top: 8, width: 110, height: 110, opacity: .9 }} />
       <Pill tone={on ? 'blue' : 'ink'} text={on ? 'Switched on' : 'Off'} />
-      <T style={{ color: '#fff', fontSize: 24, fontWeight: '650', letterSpacing: -.6, maxWidth: 230 }}>{on ? 'Your post-quantum key is native on NEAR.' : 'Q-Day switch'}</T>
+      <T style={{ color: '#fff', fontSize: 24, fontWeight: '600', letterSpacing: -.6, maxWidth: 230 }}>{on ? 'Your post-quantum key is native on NEAR.' : 'Q-Day switch'}</T>
       <T style={{ color: C.onInk2, fontSize: 14.5, lineHeight: 21 }}>{on ? 'NEAR lists your ML-DSA-65 key in the account’s access keys.' : 'One switch adds your ML-DSA-65 key as a native NEAR key. Same account, same balance.'}</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,.06)' }}>
         <Switch value={on} onValueChange={() => !on && flip()} disabled={on || !!busy} trackColor={{ true: C.cobalt, false: '#3a4250' }} />
@@ -302,10 +312,12 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
 }
 
 const styles = StyleSheet.create({
-  btn: { height: 52, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderColor: C.line },
+  btnGlow: { shadowColor: '#3366ff', shadowOpacity: 0.35, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
+  lockChip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, height: 28, borderRadius: 14, backgroundColor: '#ebf0ff' },
+  btn: { height: 54, borderRadius: 999, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderColor: C.line },
   card: { backgroundColor: C.paper, borderRadius: 18, borderWidth: 1, borderColor: C.line, overflow: 'hidden' },
   cardHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 6 },
-  h1: { fontSize: 28, fontWeight: '650', letterSpacing: -.8, marginTop: 4 },
+  h1: { fontSize: 28, fontWeight: '600', letterSpacing: -.8, marginTop: 4 },
   h2: { fontSize: 17, fontWeight: '600' },
   label: { fontSize: 13.5, fontWeight: '600', color: C.text2 },
   pill: { alignSelf: 'flex-start', paddingHorizontal: 10, height: 24, borderRadius: 999, justifyContent: 'center' },

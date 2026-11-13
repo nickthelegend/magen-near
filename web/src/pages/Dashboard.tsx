@@ -31,7 +31,7 @@ export function Dashboard() {
         <div className="quick">
           <a className="btn btn-primary" href="#/app/send"><ArrowUpRight size={18} />Send</a>
           <a className="btn btn-ghost-dark" href="#/app/receive"><ArrowDownLeft size={18} />Receive</a>
-          <a className="btn btn-ghost-dark" href="#/app/qday"><Power size={17} />Q-Day switch</a>
+          <a className="btn btn-ghost-dark hide-m" href="#/app/qday"><Power size={17} />Q-Day switch</a>
         </div>
       </section>
       <section className="card">

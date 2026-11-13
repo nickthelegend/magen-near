@@ -15,9 +15,15 @@ const PROTECT = [
   { to: 'drill', label: 'Key-recovery drill', icon: Crosshair },
 ];
 const TABS = [
-  { to: '', label: 'Home', icon: Home }, { to: 'send', label: 'Send', icon: ArrowUpRight }, { to: 'activity', label: 'Activity', icon: History },
-  { to: 'security', label: 'Security', icon: ShieldCheck }, { to: 'drill', label: 'Drill', icon: Crosshair },
+  { to: '', label: 'Home', icon: Home }, { to: 'activity', label: 'Activity', icon: History }, { to: 'send', label: 'Send, signed twice', icon: ArrowUpRight },
+  { to: 'security', label: 'Keys and security', icon: ShieldCheck }, { to: 'drill', label: 'Key-recovery drill', icon: Crosshair },
 ];
+/** Magen's quantum-shield mark: a lattice shield with a send arrow. */
+export const ShieldSend = ({ size = 26 }: { size?: number }) => <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <path d="M16 3.5 26 7.2v7.6c0 6.3-4.2 11.2-10 13.7C10.2 26 6 21.1 6 14.8V7.2L16 3.5Z" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" />
+  <path d="M11 10v11M21 10v11M8.5 15.5h15" stroke="#fff" strokeOpacity=".45" strokeWidth="1.2" />
+  <path d="M12.5 19.5 19.5 12.5M14 12.5h5.5V18" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+</svg>;
 const TITLES: Record<string, string> = { '': 'Overview', send: 'Send', receive: 'Receive', activity: 'Activity', security: 'Keys & security', qday: 'Q-Day switch', drill: 'Key-recovery drill' };
 
 export function AppShell({ route, children }: { route: string; children: ReactNode }) {
@@ -59,7 +65,11 @@ export function AppShell({ route, children }: { route: string; children: ReactNo
         </div>
       </header>
       <main className="page">{children}</main>
-      <nav className="tabbar">{TABS.map(t => <a key={t.to} href={`#/app${t.to ? '/' + t.to : ''}`} className={route === t.to ? 'on' : ''}><t.icon size={21} />{t.label}</a>)}</nav>
+      <nav className="tabbar" aria-label="Wallet" style={{ ['--i' as any]: Math.max(0, TABS.findIndex(t => t.to === route)) }} data-send={route === 'send' ? '1' : undefined}>
+        {TABS.map(t => <a key={t.to} href={`#/app${t.to ? '/' + t.to : ''}`} aria-label={t.label} aria-current={route === t.to ? 'page' : undefined} className={`${route === t.to ? 'on' : ''} ${t.to === 'send' ? 'tab-send' : ''}`}>
+          {t.to === 'send' ? <span className="fab"><ShieldSend /></span> : <t.icon size={22} strokeWidth={route === t.to ? 2 : 1.6} fill={route === t.to ? 'rgba(143,168,255,.35)' : 'none'} />}
+        </a>)}
+      </nav>
     </div>
   </div>;
 }
