@@ -6,7 +6,7 @@ export type Net = 'mainnet' | 'testnet';
 export const RPCS: Record<Net, string> = { mainnet: 'https://rpc.mainnet.fastnear.com', testnet: 'https://test.rpc.fastnear.com' };
 export const EXPLORER: Record<Net, string> = { mainnet: 'https://nearblocks.io', testnet: 'https://testnet.nearblocks.io' };
 /** Code hashes of the Magen wallet contract builds (base58 sha256 of the wasm). */
-export const MAGEN_CODE = ['BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3'];
+export const MAGEN_CODE = ['BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3', '84P7CKENx6FNQDWktEfr1KiSDfGFo4Bq9cZgM41zj7yV'];
 
 export type ScanKey = { publicKey: string; scheme: 'ed25519' | 'secp256k1' | 'ml-dsa-65' | 'other'; fullAccess: boolean; receiver?: string; methods?: string[] };
 export type Check = { label: string; ok: boolean; detail: string; points: number };

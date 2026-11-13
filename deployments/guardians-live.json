@@ -1,0 +1,38 @@
+{
+  "network": "testnet",
+  "contract": "magen-2",
+  "account": "magen-ana.testnet",
+  "guardians": [
+    "Ana’s sister",
+    "Ana’s laptop",
+    "Ana’s lawyer"
+  ],
+  "threshold": 2,
+  "transactions": {
+    "create account (testnet registrar)": {
+      "hash": "A187g4k6Tw5F9UufmwmWUqdt4NXDSkzWiDH6bNBEnY15",
+      "success": true
+    },
+    "upgrade in place (magen-2)": {
+      "hash": "5NopX9ghWaEK3KedmrdTZpMzGPV2WsWaaXJ3yYazzFnv",
+      "success": true
+    },
+    "set 2-of-3 guardians (dual-signed)": {
+      "hash": "3C65TEuFyepW73Cpq7QUbkBA3m8P8K8oxFrXXhjLeDXj",
+      "success": true
+    },
+    "recovery by 2 of 3 guardians": {
+      "hash": "3Hzh5f9MzmvT2pkdCwf2zkzLddeMtzPxrTsYGAPRqBFN",
+      "success": true
+    },
+    "old device refused after recovery": {
+      "hash": "(rejected before inclusion: old key removed)",
+      "success": true,
+      "error": "\"access key ed25519:2aHrqyWagTozjPBVKg7KxRVCXBCg54uYGfK5ayufEXt4 does not exist while viewing\""
+    },
+    "new device sends 0.1 NEAR, signed twice": {
+      "hash": "1TKFy7gesuvYudcNL2cFhMpiNk6Yk4PqtLJ5DRs3WFF",
+      "success": true
+    }
+  }
+}

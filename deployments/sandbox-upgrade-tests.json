@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-11-13T15:20:21.054Z",
+  "ranAt": "2026-11-13T20:48:05.347Z",
   "node": "neard 2.14.0-rc.4 sandbox (protocol 88)",
   "count": 16,
   "results": [
@@ -16,7 +16,7 @@
     {
       "name": "upgrade in place: one tx, same account, old key now execute-only",
       "passed": true,
-      "detail": "CdTo4hBxdrKVNA6EkoxUJmRA4jVRwqGQpn8hTrjd8Fai"
+      "detail": "5viHLdSxdS1RZ5mz9bQ3nuHXS7hcLwcBxBykA7fUBvAa"
     },
     {
       "name": "precheck refuses to upgrade twice",
@@ -31,12 +31,12 @@
     {
       "name": "dual-signed send via the execute-only key",
       "passed": true,
-      "detail": "5YQE85XD5igZAZLs1ushDVJqKTkj8MZXExQ4c6cgd2Jn"
+      "detail": "4apQwKjRpMcTUfPJvbdbAnuDnitraFfywzTqBn2aHJKo"
     },
     {
       "name": "attacker recovers both weak keys from public data",
       "passed": true,
-      "detail": "32398 ms"
+      "detail": "33769 ms"
     },
     {
       "name": "plain account drained with the recovered key",
@@ -56,12 +56,12 @@
     {
       "name": "Magen keeps the 5 NEAR; only attempt gas is charged (sandbox gas price)",
       "passed": true,
-      "detail": "0.101113 NEAR gas"
+      "detail": "0.101115 NEAR gas"
     },
     {
       "name": "Q-Day switch adds the native ML-DSA-65 key",
       "passed": true,
-      "detail": "ml-dsa-65-hash:9WLK1caMHmgY86hmJ…"
+      "detail": "ml-dsa-65-hash:DRNfNrM8T4WohNEum…"
     },
     {
       "name": "readiness scan scores the upgraded, switched account 100",

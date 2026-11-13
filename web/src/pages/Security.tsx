@@ -1,9 +1,11 @@
-import { KeyRound, Atom, ExternalLink, Download, Check, X, ShieldCheck } from 'lucide-react';
-import { useWallet, downloadJson } from '../lib/store.tsx';
-import { keysUrl, short } from '../lib/chain.ts';
-import { base64, pqHandle, sha256 } from '../../../sdk/index.ts';
+import { useState } from 'react';
+import { KeyRound, Atom, ExternalLink, Download, Check, X, ShieldCheck, Users } from 'lucide-react';
+import { useWallet, downloadJson, feeSigner } from '../lib/store.tsx';
+import { friendlyError, keysUrl, short } from '../lib/chain.ts';
+import { base64, execute, makeIntent, pqHandle, sha256, signIntent, view } from '../../../sdk/index.ts';
+import { newGuardian, guardianPublic, setGuardians } from '../../../sdk/guardians.ts';
 import { base58 } from '@scure/base';
-import { ReadOnlyBar } from '../ui/bits.tsx';
+import { ReadOnlyBar, Spinner, TxLink } from '../ui/bits.tsx';
 import { readiness } from './Dashboard.tsx';
 
 export function Security() {
@@ -39,7 +41,7 @@ export function Security() {
           <div><span>As a native NEAR key</span><b className="mono">{pqId ? short(pqId, 22, 6) : '—'}</b></div>
           <div><span>Payments signed so far</span><b>{st ? st.nonce : '—'}</b></div>
           <div><span>Native PQ key</span><b>{st?.migrated ? 'On' : 'Off'}</b></div>
-          <div><span>Contract</span><b>magen-1, open source (MIT)</b></div>
+          <div><span>Contract</span><b>{st?.version ?? 'magen-1'}, open source (MIT)</b></div>
         </div>
       </section>
     </div>
@@ -49,10 +51,11 @@ export function Security() {
         {(r?.checks ?? []).map(c => <div className="check-row" key={c.label}>{c.ok ? <Check size={20} className="ico-ok" /> : <X size={20} className="ico-bad" />}<div><b>{c.label}</b><p>{c.detail}</p></div><span className="pts">{c.ok ? `+${c.points}` : `0 / ${c.points}`}</span></div>)}
       </div>
     </section>
+    <Guardians />
     <div className="grid2">
       <section className="card card-pad rise" style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
         <h2 style={{ fontSize: 17, fontWeight: 600 }}>Encrypted backup</h2>
-        <p className="hint" style={{ fontSize: 14 }}>Both keys are sealed with your password (PBKDF2, 310,000 rounds, AES-256-GCM). There is no recovery service: keep the file and the password.</p>
+        <p className="hint" style={{ fontSize: 14 }}>Both keys are sealed with your password (PBKDF2, 310,000 rounds, AES-256-GCM). Keep the file and the password. Without them, only guardians (if you set them) can move your locks to a new device.</p>
         <button className="btn btn-dark" disabled={!vault || !backup()} onClick={() => downloadJson(backup(), 'magen-encrypted-backup.json')}><Download size={17} />{vault ? 'Download encrypted backup' : 'Unlock to download'}</button>
       </section>
       <section className="card card-pad rise" style={{ display: 'grid', gap: 12, alignContent: 'start' }}>
@@ -65,4 +68,41 @@ export function Security() {
       </section>
     </div>
   </>;
+}
+
+const fp = (b64: string) => base58.encode(sha256(base64.decode(b64))).slice(0, 10);
+/** Guardians (contract magen-2): k-of-n ML-DSA-65 keys that can rotate both locks if this device is lost. */
+function Guardians() {
+  const { live, vault, refresh, account } = useWallet();
+  const [busy, setBusy] = useState(''); const [err, setErr] = useState(''); const [hash, setHash] = useState('');
+  const st = live?.status;
+  if (!st) return null;
+  const v2 = st.version === 'magen-2';
+  const setup = async () => {
+    if (!vault) return; setErr('');
+    try {
+      setBusy('Making three guardian keys on this device…');
+      const gs = ['Guardian 1', 'Guardian 2', 'Guardian 3'].map(newGuardian);
+      gs.forEach((g, i) => downloadJson({ kind: 'magen-guardian-kit', wallet: account, index: i, name: g.name, seed: g.seed, note: 'Give this file to someone you trust. Two of three can restore this wallet.' }, `magen-guardian-${i + 1}-${account}.json`));
+      setBusy('Signing the guardian set with both keys…');
+      const s = await view(vault.wallet);
+      const r = await execute(feeSigner(vault, live), vault.wallet, signIntent(makeIntent(vault.wallet, s.nonce, setGuardians(gs.map(guardianPublic), 2)), vault.keys));
+      if (!r.success) throw Error(r.error);
+      setHash(r.hash); setTimeout(refresh, 2500);
+    } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
+  };
+  return <section className="card rise">
+    <div className="card-head"><h2 style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Users size={18} />Guardians</h2>
+      <span className={`pill ${st.threshold ? 'pill-blue' : 'pill-gray'}`}>{st.threshold ? `${st.threshold} of ${st.guardians?.length}` : 'Not set'}</span></div>
+    <div style={{ padding: '10px 24px 22px', display: 'grid', gap: 12 }}>
+      <p className="hint" style={{ fontSize: 14 }}>Lose this device and guardians can move both locks to a new one. Each guardian holds an ML-DSA-65 key; the contract needs two of three valid signatures, checked on chain. Guardians can never spend.</p>
+      {st.threshold ? <div className="keylist">{st.guardians!.map((g, i) => <div className="keyrow" key={g} style={{ padding: '10px 0' }}>
+        <span className="lock-ico pq"><Atom size={18} /></span><span style={{ minWidth: 0 }}><b>Guardian {i + 1}</b><span className="mono">ML-DSA-65 · {fp(g)}…</span></span><span className="pill pill-gray">can restore, can’t spend</span></div>)}</div>
+        : !v2 ? <div className="banner banner-gray"><Users size={18} /><div>This account runs wallet contract {st.version ?? 'magen-1'}. Guardians come with magen-2, used by accounts upgraded from Nov 14.</div></div>
+        : vault ? <button className="btn btn-dark" onClick={setup} disabled={!!busy} style={{ justifySelf: 'start' }}>{busy ? <><Spinner />{busy}</> : <><Users size={17} />Set up 2-of-3 guardians</>}</button>
+        : <p className="hint">Unlock the wallet to add guardians.</p>}
+      {hash && <TxLink hash={hash} label="View the guardian transaction" />}
+      {err && <div className="banner banner-red"><X size={18} /><div>{err}</div></div>}
+    </div>
+  </section>;
 }

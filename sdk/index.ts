@@ -15,7 +15,7 @@ export type Keys={ed:string;pq:string};
 export const generateKeys=():Keys=>({ed:base64.encode(random()),pq:base64.encode(random())});
 export function publicKeys(k:Keys){return {ed:ed25519.getPublicKey(base64.decode(k.ed)),pq:ml_dsa65.keygen(base64.decode(k.pq)).publicKey};}
 export const pqHandle=(pk:Uint8Array)=>'ml-dsa-65-hash:'+base58.encode(sha3_256(concat(utf8('near:ml-dsa-65-pubkey-hash:v1'),pk)));
-export type Action={kind:'send';receiver:string;amount:string}|{kind:'call';receiver:string;method:string;args:string;deposit:string}|{kind:'migrate'};
+export type Action={kind:'send';receiver:string;amount:string}|{kind:'call';receiver:string;method:string;args:string;deposit:string}|{kind:'migrate'}|{kind:'guardians';keys:string[];threshold:number};
 export function makeIntent(wallet:string,nonce:string,action:Action,expires=Date.now()+300000){return JSON.stringify({network:'testnet',wallet,nonce,expires:String(expires),action});}
 export const digest=(intent:string)=>sha256(utf8('magen:v1:'+intent));
 export function signIntent(intent:string,k:Keys){const m=digest(intent);return {intent,ed_sig:base64.encode(ed25519.sign(m,base64.decode(k.ed))),pq_sig:base64.encode(ml_dsa65.sign(m,ml_dsa65.keygen(base64.decode(k.pq)).secretKey))};}

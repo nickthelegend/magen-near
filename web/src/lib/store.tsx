@@ -4,7 +4,7 @@ import { readAccount, readKeys, readStatus, type AccountView, type KeyInfo } fro
 import { getBackup, getSession, setBackup, setSession } from './platform.ts';
 
 /** The public demo account shown read-only until a wallet is unlocked. */
-export const DEMO = { account: 'magen.drill-mwf4jsnn.testnet', label: 'Demo account' };
+export const DEMO = { account: 'magen-ana.testnet', label: 'Demo account' };
 
 type Live = { account: AccountView | null; keys: KeyInfo[]; status: Awaited<ReturnType<typeof readStatus>>; loadedAt: number; error?: string };
 type Ctx = {

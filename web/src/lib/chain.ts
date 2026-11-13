@@ -20,7 +20,7 @@ export async function readAccount(account: string): Promise<AccountView | null> 
     throw e;
   }
 }
-export async function readStatus(account: string): Promise<{ nonce: string; migrated: boolean; migration_pending: boolean; ed: string; pq: string } | null> {
+export async function readStatus(account: string): Promise<{ nonce: string; migrated: boolean; migration_pending: boolean; ed: string; pq: string; version?: string; guardians?: string[]; threshold?: number; recovery_nonce?: string } | null> {
   try { return await view(account); } catch { return null; }
 }
 export type KeyInfo = { publicKey: string; scheme: string; full: boolean; methods?: string[]; receiver?: string; allowance?: string | null };
@@ -91,6 +91,7 @@ async function readActivityFresh(account: string, limit: number): Promise<Activi
       out.push({ ...base, kind: 'received', title: 'Received', detail: `from ${row.signer_account_id}`, amount: dep(row.actions_agg?.deposit), counterparty: row.signer_account_id }); return;
     }
     if (names.includes('CREATE_ACCOUNT')) { out.push({ ...base, kind: 'received', title: 'Account created', detail: `by ${row.signer_account_id}`, amount: dep(row.actions_agg?.deposit) }); return; }
+    if ((row.actions ?? []).some((a: any) => a.method === 'recover')) { out.push({ ...base, kind: success ? 'upgrade' : 'refused', title: success ? 'Recovered by guardians' : 'Recovery refused', detail: success ? 'Both locks moved to a new device' : 'not enough valid guardian signatures' }); return; }
     const execute = (row.actions ?? []).some((a: any) => a.method === 'execute');
     if (!execute) { out.push({ ...base, kind: 'other', title: names.map(n => n.toLowerCase().replace(/_/g, ' ')).join(', ') || 'Transaction', detail: `${row.signer_account_id} → ${row.receiver_account_id}` }); return; }
     try {
@@ -106,6 +107,7 @@ async function readActivityFresh(account: string, limit: number): Promise<Activi
       if (!ok && failure) { out.push({ ...base, success: false, kind: 'refused', title: 'Refused on chain', detail: errText(failure), amount: a.kind === 'send' ? a.amount : undefined, counterparty: a.receiver }); return; }
       if (a.kind === 'send') out.push({ ...base, success: ok, kind: 'sent', title: 'Sent', detail: `to ${a.receiver} · signed twice`, amount: a.amount, counterparty: a.receiver });
       else if (a.kind === 'migrate') out.push({ ...base, success: ok, kind: 'qday', title: 'Q-Day switch', detail: 'Native ML-DSA-65 key added' });
+      else if (a.kind === 'guardians') out.push({ ...base, success: ok, kind: 'upgrade', title: 'Guardians set', detail: `${a.threshold} of ${a.keys.length} ML-DSA-65 guardians · signed twice` });
       else out.push({ ...base, success: ok, kind: 'call', title: `Called ${a.method}`, detail: `on ${a.receiver} · signed twice`, counterparty: a.receiver });
     } catch {
       out.push({ ...base, kind: success ? 'call' : 'refused', title: success ? 'Wallet action' : 'Refused on chain', detail: 'execute' });

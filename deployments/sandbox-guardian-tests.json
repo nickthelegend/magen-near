@@ -1,0 +1,78 @@
+{
+  "ranAt": "2026-11-13T20:46:36.393Z",
+  "node": "neard 2.14.0-rc.4 sandbox (protocol 88)",
+  "contract": "magen-2",
+  "count": 14,
+  "results": [
+    {
+      "name": "upgrade in place with magen-2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "recovery refused when no guardians are set",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "setting guardians with the classical key alone is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "owner sets 2-of-3 ML-DSA-65 guardians (dual-signed)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "one guardian alone cannot recover",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "the same guardian twice is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "a non-guardian signature is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "a signature over different new keys is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "an expired recovery is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "2-of-3 guardians rotate both locks; old key removed, new execute-only key added",
+      "passed": true,
+      "detail": "GU9DZ87W6D5nSD7dmgMMXq4yT9LnW1nogdxiHvfKrKeA"
+    },
+    {
+      "name": "funds untouched by recovery",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "a replayed recovery is refused",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "the lost device’s keys can no longer act",
+      "passed": true,
+      "detail": "\"access key ed25519:9pug7m8pL3z6v8x9V1GtbxP4bdN9Skv34PcqphXr"
+    },
+    {
+      "name": "the new device spends with the rotated locks",
+      "passed": true,
+      "detail": "7teTUduVYU6Tmkv2CjiCR44VuHb4LuA3akfAFjDifs6X"
+    }
+  ]
+}
