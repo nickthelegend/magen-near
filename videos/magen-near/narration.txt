@@ -1,10 +1,10 @@
 One NEAR. Signed twice. Magen checks a classical signature and a quantum safe signature before your money moves. Now forge the quantum half. NEAR rejects the transfer. Your funds stay put.
 
-If you hold NEAR for the long run, your account should not depend on one kind of key. Magen adds a second, quantum safe check behind a familiar wallet. Powerful quantum computers could eventually forge today’s signatures. Those computers do not exist today. Magen lets you prepare before they do.
+Imagine keeping NEAR for your child’s future. You want an account that still works years from now, even if today’s signature scheme is broken. Magen adds a quantum safe second key before funds can move. Powerful quantum computers do not exist today. This is preparation for a future risk.
 
 NEAR added post quantum keys at the protocol level, and signature verification inside smart contracts. Magen brings both into one account. Require two signatures today. Then choose when to move that same account to a native quantum key.
 
-Create an account in your browser. Two independent keys are generated here. An encrypted backup downloads before deployment. Your password unlocks it only on your device. Save both: there is no recovery service.
+Your browser creates two independent keys. An encrypted backup is prepared before deployment. Save it with your password. Here is that same backup, available to download again. Your keys stay on your device. There is no recovery service.
 
 Magen deploys a fresh contract and deletes its setup key in the same transaction. No access keys remain. Only the contract moves the funds. Your account, recipient, amount, nonce and expiry are signed together. Change a field or replay a payment, and the chain rejects it.
 
@@ -14,4 +14,4 @@ Then there is the Q Day switch. It keeps the account, but changes what controls 
 
 Here is the native access key, read directly from NEAR. The public explorer blocks our automated browser, so this view shows the actual access key response. ML DSA sixty five hash. The transfer we recorded uses this key alone. This read-only receipt check confirms the native signing scheme.
 
-Try the live wallet at magen near dot vercel dot app, or download the source to inspect the contract and signing code. This is a fresh hackathon build on NEAR testnet, not audited. It protects account authorization, not network consensus. Two signatures. One shield. Magen.
+Try Magen at magen near dot vercel dot app. Download the code and verify the receipts. NEAR testnet. Preview software, not audited. Two signatures. One shield. Magen.
