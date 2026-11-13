@@ -119,7 +119,7 @@ function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
       readActivity(vault.wallet, 15).then(setActs).catch(() => setActs(x => x ?? []));
     } catch { /* keep the last values; the next tick retries */ }
   }, [vault.wallet]);
-  useEffect(() => { refresh(); const t = setInterval(refresh, 15000); return () => clearInterval(t); }, [refresh]);
+  useEffect(() => { refresh(); const t = setInterval(refresh, 30000); return () => clearInterval(t); }, [refresh]);
   const props = { vault, live, acts, refresh, go: setTab };
   return <View style={{ flex: 1, backgroundColor: C.bg }}>
     <View style={{ paddingTop: insets.top, backgroundColor: C.bg }}>

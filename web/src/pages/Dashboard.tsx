@@ -66,6 +66,6 @@ export function Dashboard() {
         </div>
       </section>
     </div>
-    <p className="hint">Balances refresh every 15 seconds from NEAR testnet RPC. Account <span className="mono">{short(account, 20, 8)}</span>.</p>
+    <p className="hint">Balances refresh every 30 seconds from NEAR testnet RPC. Account <span className="mono">{short(account, 20, 8)}</span>.</p>
   </>;
 }

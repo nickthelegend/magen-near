@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-13T19:57:26.692Z",
+  "browser": "Playwright Chromium, --load-extension",
+  "log": [
+    {
+      "step": "profile",
+      "profile": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/.tools/chrome-ext-profile-1794599481484",
+      "account": "ext-mwfe70jt.magen-mwf26bd5.testnet"
+    },
+    {
+      "dappConsole": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "magen": true,
+      "hint": "Magen detected · every payment is signed twice."
+    },
+    {
+      "step": "dApp tip via window.magen",
+      "result": "Thank you! 0.1 NEAR sent. View transaction",
+      "tx": "https://testnet.nearblocks.io/txns/9GBY5dE1YP5oidCD9cRJuFMopKjjsu25DCwPJMFSgrdV"
+    }
+  ]
+}

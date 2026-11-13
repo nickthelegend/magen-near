@@ -24,7 +24,7 @@
 </style></head>
 <body><main class="card">
   <div class="top"><div class="logo">☕</div><div><h1>Tip Jar</h1><p style="font-size:13px">Buy a NEAR builder a coffee</p></div></div>
-  <p>Send a tip to <b>magen-tips.testnet</b>. This page is a demo dApp: it only talks to your wallet through <code>window.magen</code>.</p>
+  <p>Send a tip to <b>tips.magen-mwf26bd5.testnet</b>. This page is a demo dApp: it only talks to your wallet through <code>window.magen</code>.</p>
   <div class="who"><span id="who">Not connected</span><span id="net">NEAR testnet</span></div>
   <div class="amts"><button data-v="0.1">0.1</button><button data-v="0.5" class="on">0.5</button><button data-v="1">1</button></div>
   <button class="go" id="connect">Connect Magen</button>
@@ -33,7 +33,7 @@
   <small id="hint">Needs the Magen browser extension.</small>
 </main>
 <script>
-  const RECEIVER = 'magen-tips.testnet';
+  const RECEIVER = 'tips.magen-mwf26bd5.testnet';
   let amount = '0.5', account = null;
   const $ = id => document.getElementById(id);
   const yocto = s => { const [a, b = ''] = s.split('.'); return (BigInt(a) * 10n ** 24n + BigInt((b + '0'.repeat(24)).slice(0, 24))).toString(); };

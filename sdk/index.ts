@@ -20,7 +20,19 @@ export function makeIntent(wallet:string,nonce:string,action:Action,expires=Date
 export const digest=(intent:string)=>sha256(utf8('magen:v1:'+intent));
 export function signIntent(intent:string,k:Keys){const m=digest(intent);return {intent,ed_sig:base64.encode(ed25519.sign(m,base64.decode(k.ed))),pq_sig:base64.encode(ml_dsa65.sign(m,ml_dsa65.keygen(base64.decode(k.pq)).secretKey))};}
 export function verifyIntent(s:ReturnType<typeof signIntent>,pk:ReturnType<typeof publicKeys>){try{return ed25519.verify(base64.decode(s.ed_sig),digest(s.intent),pk.ed)&&ml_dsa65.verify(base64.decode(s.pq_sig),digest(s.intent),pk.pq);}catch{return false;}}
-export async function rpc(method:string,params:any,endpoint=RPC):Promise<any>{const res=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:'magen',method,params}),signal:AbortSignal.timeout(30000)});const j=await res.json();if(!res.ok||j.error||j.result?.error)throw new Error(JSON.stringify(j.error||j.result?.error||{http:res.status}));return j.result;}
+/** Public testnet RPCs tried in order when one rate-limits (HTTP 429) or drops the connection. */
+export const TESTNET_FALLBACKS=['https://rpc.testnet.fastnear.com','https://rpc.testnet.near.org'];
+export async function rpc(method:string,params:any,endpoint=RPC):Promise<any>{
+ const list=endpoint===RPC&&RPC.includes('fastnear.com')?[endpoint,...TESTNET_FALLBACKS]:[endpoint];let last:any;
+ for(let attempt=0;attempt<list.length*2;attempt++){const ep=list[attempt%list.length];
+  let res:Response,j:any;
+  try{res=await fetch(ep,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:'magen',method,params}),signal:AbortSignal.timeout(30000)});j=await res.json().catch(()=>({}));}
+  catch(e){last=e;continue;}
+  const limited=res.status===429||j?.code===-429||/rate limit|deprecated/i.test(JSON.stringify(j?.error??j?.message??''));
+  if(limited){last=new Error(JSON.stringify(j?.error||j||{http:res.status}));if(attempt>=list.length-1)await new Promise(r=>setTimeout(r,800*(attempt+1)));continue;}
+  if(!res.ok||j.error||j.result?.error)throw new Error(JSON.stringify(j.error||j.result?.error||{http:res.status}));
+  return j.result;}
+ throw new Error('NEAR RPC is rate-limiting right now. Try again in a moment. '+String(last?.message??'').slice(0,120));}
 export const query=(request_type:string,account_id:string,rest={})=>rpc('query',{request_type,account_id,finality:'optimistic',...rest});
 export async function view(account:string,method='status',args={}){const r=await query('call_function',account,{method_name:method,args_base64:base64.encode(utf8(JSON.stringify(args)))});return JSON.parse(decode(new Uint8Array(r.result)));}
 export const accessKeys=(account:string)=>query('view_access_key_list',account);

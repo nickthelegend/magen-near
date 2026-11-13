@@ -30,7 +30,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setLive({ account: a, keys: k, status: s, loadedAt: Date.now() });
     } catch (e: any) { setLive(l => ({ ...(l ?? { account: null, keys: [], status: null }), loadedAt: Date.now(), error: 'NEAR RPC did not answer. Retrying shortly.' })); }
   }, [account]);
-  useEffect(() => { setLive(null); refresh(); const t = setInterval(refresh, 15000); return () => clearInterval(t); }, [refresh]);
+  useEffect(() => { setLive(null); refresh(); const t = setInterval(refresh, 30000); return () => clearInterval(t); }, [refresh]);
   const notify = useCallback((s: string) => { setToast(s); setTimeout(() => setToast(''), 3600); }, []);
   const value = useMemo<Ctx>(() => ({
     vault, account, readOnly: !vault, live, refresh, toast, notify, hasBackup, ready,

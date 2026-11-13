@@ -1,0 +1,25 @@
+[
+  {
+    "from": "attacker.drill-mwf4jsnn.testnet",
+    "amount": "4479718896650000000000000",
+    "hash": "DxLWb61j18CbkSjV3f3JmRv2k8gnEqXS6o5yw63feBDT",
+    "success": true,
+    "error": ""
+  },
+  {
+    "from": "shield.magen-mwf26bd5.testnet",
+    "amount": "2782839276739545200000000",
+    "kind": "dual-signed",
+    "hash": "3Ro92nQvwWiUMDPDdBctXqZvS8zRW9dXFNgEmVarNu69",
+    "success": true,
+    "error": ""
+  },
+  {
+    "from": "magen.drill-mwf4jsnn.testnet",
+    "amount": "1787175685163420700000000",
+    "kind": "dual-signed",
+    "hash": "AB2Sdi6YhH3cniL9Dq5mF3zZ9XMY9bd8LCVsCKv2NxpM",
+    "success": true,
+    "error": ""
+  }
+]

@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && cp -R ../../web/public/art ../../web/public/commissioner.ttf ../../web/public/wallet.wasm ../../web/public/favicon.png dist/ && cd dist && rm -f ../magen-extension.zip && zip -qr ../magen-extension.zip ."
+    "build": "vite build && cp -R ../../web/public/art ../../web/public/commissioner.ttf ../../web/public/wallet.wasm ../../web/public/favicon.png dist/ && cp ../../web/public/commissioner.ttf dist/assets/ && cd dist && rm -f ../magen-extension.zip && zip -qr ../magen-extension.zip ."
   }
 }
