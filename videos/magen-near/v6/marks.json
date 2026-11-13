@@ -1,0 +1,48 @@
+{
+ "landing": {
+  "hero": 1331,
+  "type": 6402,
+  "scanned": 8123,
+  "scanread": 15443,
+  "how": 16947,
+  "get": 25450
+ },
+ "upgrade": {
+  "open": 1557,
+  "ready": 3103,
+  "submit": 6254,
+  "done": 8538,
+  "home": 18046
+ },
+ "dapp": {
+  "open": 2561,
+  "connected": 4687,
+  "approveOpen": 7180,
+  "approveClick": 9814,
+  "approveDone": 12142,
+  "dappDone": 12146,
+  "tx": "https://testnet.nearblocks.io/txns/BpGJ8H33LWKiewXqkJHeF9xjVnownshJp1xq55qYitbh"
+ },
+ "drill": {
+  "ready": 5149,
+  "run": 5244,
+  "cracked": 10396,
+  "drained": 12681,
+  "refused": 14472,
+  "txs": [
+   "https://testnet.nearblocks.io/txns/2UiFv27dFmzVp8MzeNChhm6TKMGqxpFVm8NhHGhLGFH8",
+   "https://testnet.nearblocks.io/txns/E7ikQaX5yqGJEyA3gcZJkkWPtvtgkNwm7rmjebprKso"
+  ]
+ },
+ "tour": {
+  "app": 5079,
+  "app/activity": 11590,
+  "app/security": 16598,
+  "app/qday": 21605,
+  "app/receive": 26616
+ },
+ "webapp": {
+  "home": 6153,
+  "activity": 12160
+ }
+}

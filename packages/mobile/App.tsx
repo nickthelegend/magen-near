@@ -300,7 +300,7 @@ function SecurityTab({ vault, live, refresh, onReset }: P & { onReset: () => voi
       {res?.hash ? <Pressable onPress={() => open(res.hash)}><T style={{ color: '#b9c8ff', fontWeight: '600' }}>{res.success ? 'Switch transaction' : friendlyError(res.error)} {short(res.hash)} ↗</T></Pressable> : null}
     </View>
     <Card>
-      <View style={styles.cardHead}><T style={styles.h2}>What NEAR sees</T><Pressable onPress={() => Linking.openURL(`https://testnet.nearblocks.io/address/${vault.wallet}#accesskeys`)}><ExternalLink color={C.cobalt} size={18} /></Pressable></View>
+      <View style={styles.cardHead}><T style={styles.h2}>What NEAR sees</T><Pressable onPress={() => Linking.openURL(`https://testnet.near.rocks/account/${vault.wallet}`)}><ExternalLink color={C.cobalt} size={18} /></Pressable></View>
       {(live?.keys ?? []).map((k, i, a) => <View key={k.publicKey} style={[styles.row, i === a.length - 1 && { borderBottomWidth: 0 }]}>
         <View style={[styles.ico, k.scheme === 'ML-DSA-65' && { backgroundColor: C.cobaltSoft }]}>{k.scheme === 'ML-DSA-65' ? <Atom color={C.cobalt} size={18} /> : <KeyRound color={C.text2} size={18} />}</View>
         <View style={{ flex: 1 }}><T style={{ fontWeight: '600' }}>{k.scheme} · {k.full ? 'full access' : 'execute only'}</T><T numberOfLines={1} style={{ color: C.text3, fontSize: 12, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{k.publicKey}</T></View>

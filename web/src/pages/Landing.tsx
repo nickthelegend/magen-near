@@ -224,7 +224,7 @@ function ScanCard({ s }: { s: Scan }) {
         {s.level === 'exposed' && s.network === 'testnet' && <a className="btn btn-primary" href={`#/start/upgrade/${s.account}`}>Upgrade this account in place <ArrowRight size={17} /></a>}
         {s.level === 'exposed' && s.network === 'mainnet' && <><a className="btn btn-primary" href="#/start">Try the upgrade on testnet <ArrowRight size={17} /></a><span className="hint">Magen is a testnet preview. Mainnet upgrades come after an audit.</span></>}
         {s.isMagen && <a className="btn btn-dark" href="#/app">Open this wallet</a>}
-        <a className="link" href={`${s.network === 'mainnet' ? 'https://nearblocks.io' : 'https://testnet.nearblocks.io'}/address/${s.account}`} target="_blank" rel="noreferrer">See keys on NearBlocks <ExternalLink size={13} /></a>
+        <a className="link" href={`${s.network === 'mainnet' ? 'https://near.rocks' : 'https://testnet.near.rocks'}/account/${s.account}`} target="_blank" rel="noreferrer">See keys in the explorer <ExternalLink size={13} /></a>
       </div>
     </div>
   </div>;

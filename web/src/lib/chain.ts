@@ -2,10 +2,10 @@
 import { rpc, view, accessKeys, decode, base64, formatNear } from '../../../sdk/index.ts';
 import { RPCS } from '../../../sdk/scan.ts';
 
-export const EXPLORER = 'https://testnet.nearblocks.io';
-export const txUrl = (h: string) => `${EXPLORER}/txns/${h}`;
-export const accountUrl = (a: string) => `${EXPLORER}/address/${a}`;
-export const keysUrl = (a: string) => `${EXPLORER}/address/${a}#accesskeys`;
+export const EXPLORER = 'https://testnet.near.rocks';
+export const txUrl = (h: string) => `${EXPLORER}/tx/${h}`;
+export const accountUrl = (a: string) => `${EXPLORER}/account/${a}`;
+export const keysUrl = (a: string) => `${EXPLORER}/account/${a}`;
 
 export const short = (s: string, a = 6, b = 4) => (s.length > a + b + 1 ? `${s.slice(0, a)}…${s.slice(-b)}` : s);
 export const near = (yocto: string | bigint | null | undefined, places = 2) => (yocto === null || yocto === undefined ? '—' : formatNear(String(yocto), places));

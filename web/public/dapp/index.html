@@ -50,8 +50,8 @@
     $('tip').disabled = true; $('tip').textContent = 'Waiting for Magen…';
     try {
       const r = await window.magen.signAndSendTransaction({ receiverId: RECEIVER, actions: [{ type: 'Transfer', params: { deposit: yocto(amount) } }] });
-      r.success ? show(true, `Thank you! ${amount} NEAR sent. <a target="_blank" href="https://testnet.nearblocks.io/txns/${r.transactionHash}">View transaction</a>`)
-        : show(false, `${r.error} <a target="_blank" href="https://testnet.nearblocks.io/txns/${r.transactionHash}">View</a>`);
+      r.success ? show(true, `Thank you! ${amount} NEAR sent. <a target="_blank" href="https://testnet.near.rocks/tx/${r.transactionHash}">View transaction</a>`)
+        : show(false, `${r.error} <a target="_blank" href="https://testnet.near.rocks/tx/${r.transactionHash}">View</a>`);
     } catch (e) { show(false, e.message); } finally { $('tip').disabled = false; render(); }
   };
   if (window.magen) ready(); else window.addEventListener('magen#initialized', ready, { once: true });
