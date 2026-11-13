@@ -1,0 +1,178 @@
+{
+  "verifiedAt": "2026-11-13T14:30:06.801Z",
+  "checked": [
+    {
+      "name": "create",
+      "hash": "2aDuH7sK8BAeL1croLpETF4185oygFVVYaosRqm46PiD",
+      "success": true,
+      "error": "",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "deploy_and_lock",
+      "hash": "sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ",
+      "success": true,
+      "error": "",
+      "logs": [],
+      "signer": "shield.magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "forged classical signature",
+      "hash": "FUx6zP2sDZMeStnetexsTxLXS3EXQnVqyq3MwH9w6SJ2",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "forged quantum signature",
+      "hash": "9kq5W4uBpJy24eK5hpjRiq7VCpggRK4oBGA5QrbqHg6d",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:43:9:\\nquantum half missing or invalid\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "missing quantum half",
+      "hash": "5zX8PzPq9SuxY6sYaLYntgTeuEPFhqXTcdz74xYjiS2E",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:41:47:\\nquantum half missing: []\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "wrong message",
+      "hash": "QBdczwPfiny9PGuwqJKMGZJFExYdAQvPdFs5PVwtVe4",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "wrong wallet",
+      "hash": "FURcdKaQaXh91XYYGS3tN7GqRy13EbHkoK4bTueJKUqM",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:33:9:\\nwrong wallet or network\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "expired message",
+      "hash": "CUzbs7bKJaKKsyqZxTDhvh5ipHiTFdKdxmAspgJsAgAW",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:36:9:\\nintent expired or too far in future\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "migration by non-owner",
+      "hash": "9eanmYauW8zVWKqpaZ9ezkogoXfZXf4McfV7dMLVFpMA",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "self call forbidden",
+      "hash": "Dud3V1eYBHZU2NuMd27EZpccZ3ZbLwqovm7W11SnyzaJ",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:73:9:\\nassertion `left != right` failed: self calls forbidden\\n  left: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\\n right: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "valid dual transfer",
+      "hash": "GF8RDJDRET3PTYrvayvcPHQyZqFaWby4xLrUfE91r1LS",
+      "success": true,
+      "error": "",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=0 dual_verified=true",
+        "MAGEN_SETTLED nonce=0 success=true migration=false"
+      ],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "replayed transfer",
+      "hash": "EnvaSeFb9TLUZvZc2bvf1c8Dwz61TXNDnFzs6UNF2k6A",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:34:9:\\nassertion `left == right` failed: replay: wrong nonce\\n  left: 0\\n right: 1\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Browser send 1 NEAR",
+      "hash": "CvFE8r631MTG9XTiaW6SFZ7tKLLXhaeFKRthv8KycMR9",
+      "success": true,
+      "error": "",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=1 dual_verified=true",
+        "MAGEN_SETTLED nonce=1 success=true migration=false"
+      ],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Browser forged quantum rejection",
+      "hash": "HEuLRJTGzWgdRfq2C3zD3z8G53odVxSFK81XBuQWddp3",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:43:9:\\nquantum half missing or invalid\"}}}}",
+      "logs": [],
+      "signer": "magen-mwf26bd5.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Q-Day migration",
+      "hash": "9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr",
+      "success": true,
+      "error": "",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=0 dual_verified=true",
+        "MAGEN_SETTLED nonce=0 success=true migration=true"
+      ],
+      "signer": "magen-film-mwf2kq5t.testnet",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Native PQ-signed transfer",
+      "hash": "8EGTshvxxVGKrXgcTftXjWZ4sGVKr8ukDBwnNtiQgu8F",
+      "success": true,
+      "error": "",
+      "logs": [],
+      "signer": "shield.magen-film-mwf2kq5t.testnet",
+      "final_execution_status": "FINAL"
+    }
+  ],
+  "state": [
+    {
+      "account": "shield.magen-mwf26bd5.testnet",
+      "accessKeys": [],
+      "balance": "4997569276739545200000000"
+    },
+    {
+      "account": "shield.magen-film-mwf2kq5t.testnet",
+      "accessKeys": [
+        {
+          "access_key": {
+            "nonce": 277522075000001,
+            "permission": "FullAccess"
+          },
+          "public_key": "ml-dsa-65-hash:46RBxKGYafzb1vXQuNb4P56RLsf3DJn2JMEUcYdYigdD"
+        }
+      ],
+      "balance": "5998414354427724000000000"
+    }
+  ]
+}

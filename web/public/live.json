@@ -3,59 +3,38 @@
   "relay": "magen-mwf26bd5.testnet",
   "transactions": [
     {
-      "name": "forged classical signature",
-      "hash": "FUx6zP2sDZMeStnetexsTxLXS3EXQnVqyq3MwH9w6SJ2",
+      "name": "Browser send 1 NEAR",
+      "hash": "CvFE8r631MTG9XTiaW6SFZ7tKLLXhaeFKRthv8KycMR9",
+      "success": true,
+      "status": "confirmed",
+      "amount": "1"
+    },
+    {
+      "name": "Browser forged quantum rejection",
+      "hash": "HEuLRJTGzWgdRfq2C3zD3z8G53odVxSFK81XBuQWddp3",
       "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
+      "status": "rejected",
+      "amount": null
+    },
+    {
+      "name": "deploy_and_lock",
+      "hash": "sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ",
+      "success": true,
+      "error": "",
       "logs": []
     },
     {
-      "name": "forged quantum signature",
-      "hash": "9kq5W4uBpJy24eK5hpjRiq7VCpggRK4oBGA5QrbqHg6d",
-      "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:43:9:\\nquantum half missing or invalid\"}}}}",
+      "name": "create",
+      "hash": "2aDuH7sK8BAeL1croLpETF4185oygFVVYaosRqm46PiD",
+      "success": true,
+      "error": "",
       "logs": []
     },
     {
-      "name": "missing quantum half",
-      "hash": "5zX8PzPq9SuxY6sYaLYntgTeuEPFhqXTcdz74xYjiS2E",
+      "name": "replayed transfer",
+      "hash": "EnvaSeFb9TLUZvZc2bvf1c8Dwz61TXNDnFzs6UNF2k6A",
       "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:41:47:\\nquantum half missing: []\"}}}}",
-      "logs": []
-    },
-    {
-      "name": "wrong message",
-      "hash": "QBdczwPfiny9PGuwqJKMGZJFExYdAQvPdFs5PVwtVe4",
-      "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
-      "logs": []
-    },
-    {
-      "name": "wrong wallet",
-      "hash": "FURcdKaQaXh91XYYGS3tN7GqRy13EbHkoK4bTueJKUqM",
-      "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:33:9:\\nwrong wallet or network\"}}}}",
-      "logs": []
-    },
-    {
-      "name": "expired message",
-      "hash": "CUzbs7bKJaKKsyqZxTDhvh5ipHiTFdKdxmAspgJsAgAW",
-      "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:36:9:\\nintent expired or too far in future\"}}}}",
-      "logs": []
-    },
-    {
-      "name": "migration by non-owner",
-      "hash": "9eanmYauW8zVWKqpaZ9ezkogoXfZXf4McfV7dMLVFpMA",
-      "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
-      "logs": []
-    },
-    {
-      "name": "self call forbidden",
-      "hash": "Dud3V1eYBHZU2NuMd27EZpccZ3ZbLwqovm7W11SnyzaJ",
-      "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:73:9:\\nassertion `left != right` failed: self calls forbidden\\n  left: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\\n right: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\"}}}}",
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:34:9:\\nassertion `left == right` failed: replay: wrong nonce\\n  left: 0\\n right: 1\"}}}}",
       "logs": []
     },
     {
@@ -69,24 +48,59 @@
       ]
     },
     {
-      "name": "replayed transfer",
-      "hash": "EnvaSeFb9TLUZvZc2bvf1c8Dwz61TXNDnFzs6UNF2k6A",
+      "name": "self call forbidden",
+      "hash": "Dud3V1eYBHZU2NuMd27EZpccZ3ZbLwqovm7W11SnyzaJ",
       "success": false,
-      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:34:9:\\nassertion `left == right` failed: replay: wrong nonce\\n  left: 0\\n right: 1\"}}}}",
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:73:9:\\nassertion `left != right` failed: self calls forbidden\\n  left: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\\n right: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\"}}}}",
       "logs": []
     },
     {
-      "name": "create",
-      "hash": "2aDuH7sK8BAeL1croLpETF4185oygFVVYaosRqm46PiD",
-      "success": true,
-      "error": "",
+      "name": "migration by non-owner",
+      "hash": "9eanmYauW8zVWKqpaZ9ezkogoXfZXf4McfV7dMLVFpMA",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
       "logs": []
     },
     {
-      "name": "deploy_and_lock",
-      "hash": "sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ",
-      "success": true,
-      "error": "",
+      "name": "expired message",
+      "hash": "CUzbs7bKJaKKsyqZxTDhvh5ipHiTFdKdxmAspgJsAgAW",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:36:9:\\nintent expired or too far in future\"}}}}",
+      "logs": []
+    },
+    {
+      "name": "wrong wallet",
+      "hash": "FURcdKaQaXh91XYYGS3tN7GqRy13EbHkoK4bTueJKUqM",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:33:9:\\nwrong wallet or network\"}}}}",
+      "logs": []
+    },
+    {
+      "name": "wrong message",
+      "hash": "QBdczwPfiny9PGuwqJKMGZJFExYdAQvPdFs5PVwtVe4",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
+      "logs": []
+    },
+    {
+      "name": "missing quantum half",
+      "hash": "5zX8PzPq9SuxY6sYaLYntgTeuEPFhqXTcdz74xYjiS2E",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:41:47:\\nquantum half missing: []\"}}}}",
+      "logs": []
+    },
+    {
+      "name": "forged quantum signature",
+      "hash": "9kq5W4uBpJy24eK5hpjRiq7VCpggRK4oBGA5QrbqHg6d",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:43:9:\\nquantum half missing or invalid\"}}}}",
+      "logs": []
+    },
+    {
+      "name": "forged classical signature",
+      "hash": "FUx6zP2sDZMeStnetexsTxLXS3EXQnVqyq3MwH9w6SJ2",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
       "logs": []
     }
   ],
