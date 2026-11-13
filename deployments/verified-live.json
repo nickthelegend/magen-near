@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-13T14:30:06.801Z",
+  "verifiedAt": "2026-11-13T14:38:10.926Z",
   "checked": [
     {
       "name": "create",
@@ -8,6 +8,7 @@
       "error": "",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -17,6 +18,7 @@
       "error": "",
       "logs": [],
       "signer": "shield.magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -26,6 +28,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -35,6 +38,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:43:9:\\nquantum half missing or invalid\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -44,6 +48,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:41:47:\\nquantum half missing: []\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -53,6 +58,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -62,6 +68,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:33:9:\\nwrong wallet or network\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -71,6 +78,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:36:9:\\nintent expired or too far in future\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -80,6 +88,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:40:9:\\nclassical half invalid\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -89,6 +98,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:73:9:\\nassertion `left != right` failed: self calls forbidden\\n  left: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\\n right: AccountId(\\\"shield.magen-mwf26bd5.testnet\\\")\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -101,6 +111,7 @@
         "MAGEN_SETTLED nonce=0 success=true migration=false"
       ],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -110,6 +121,20 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:34:9:\\nassertion `left == right` failed: replay: wrong nonce\\n  left: 0\\n right: 1\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
+      "final_execution_status": "FINAL"
+    },
+    {
+      "name": "Dual-signed cross-contract status call",
+      "hash": "DomrPPW1kJRP3r2kcdYfxspvW7h2rsprryFijHyakAQA",
+      "success": true,
+      "error": "",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=2 dual_verified=true",
+        "MAGEN_SETTLED nonce=2 success=true migration=false"
+      ],
+      "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -122,6 +147,7 @@
         "MAGEN_SETTLED nonce=1 success=true migration=false"
       ],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -131,6 +157,7 @@
       "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:43:9:\\nquantum half missing or invalid\"}}}}",
       "logs": [],
       "signer": "magen-mwf26bd5.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -143,6 +170,7 @@
         "MAGEN_SETTLED nonce=0 success=true migration=true"
       ],
       "signer": "magen-film-mwf2kq5t.testnet",
+      "signing_key_type": "ed25519",
       "final_execution_status": "FINAL"
     },
     {
@@ -152,6 +180,7 @@
       "error": "",
       "logs": [],
       "signer": "shield.magen-film-mwf2kq5t.testnet",
+      "signing_key_type": "ml-dsa-65",
       "final_execution_status": "FINAL"
     }
   ],

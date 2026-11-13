@@ -3,6 +3,19 @@
   "relay": "magen-mwf26bd5.testnet",
   "transactions": [
     {
+      "name": "Dual-signed cross-contract status call",
+      "signer": "magen-mwf26bd5.testnet",
+      "receiver": "shield.magen-film-mwf2kq5t.testnet",
+      "hash": "DomrPPW1kJRP3r2kcdYfxspvW7h2rsprryFijHyakAQA",
+      "success": true,
+      "error": "",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=2 dual_verified=true",
+        "MAGEN_SETTLED nonce=2 success=true migration=false"
+      ],
+      "status": "confirmed"
+    },
+    {
       "name": "Browser send 1 NEAR",
       "hash": "CvFE8r631MTG9XTiaW6SFZ7tKLLXhaeFKRthv8KycMR9",
       "success": true,

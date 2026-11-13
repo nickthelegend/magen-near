@@ -21,7 +21,7 @@ Create downloads the backup before deploying. The parent account pays gas and cr
 | [shield.magen-mwf26bd5.testnet](https://testnet.nearblocks.io/address/shield.magen-mwf26bd5.testnet#keys) | Public hybrid wallet, zero access keys | [Deploy + initialize + delete key](https://testnet.nearblocks.io/txns/sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ) |
 | [magen-mwf26bd5.testnet](https://testnet.nearblocks.io/address/magen-mwf26bd5.testnet) | Testnet gas sponsor / recipient | [Wallet creation](https://testnet.nearblocks.io/txns/2aDuH7sK8BAeL1croLpETF4185oygFVVYaosRqm46PiD) |
 
-[Deployment record](deployments/testnet.json) · [Live attack receipts](deployments/attacks.json) · [Testing](TESTING.md) · [Flow QA](FLOW-QA.md)
+[Browser proof](deployments/browser-film.json) · [Final receipt audit](deployments/verified-live.json) · [Deployment record](deployments/testnet.json) · [Live attack receipts](deployments/attacks.json) · [Testing](TESTING.md) · [Flow QA](FLOW-QA.md)
 
 | On-chain check | Result | Receipt |
 |---|---|---|
@@ -32,6 +32,10 @@ Create downloads the backup before deploying. The parent account pays gas and cr
 | Unauthorized migration | Rejected | [9eanmYa…](https://testnet.nearblocks.io/txns/9eanmYauW8zVWKqpaZ9ezkogoXfZXf4McfV7dMLVFpMA) |
 
 RPC checks on Nov 13: **testnet and mainnet both protocol 88**. The host function requires protocol 87+. Magen deliberately refuses mainnet intents; this release uses testnet only. [NEAR SDK host implementation](https://github.com/near/near-sdk-rs/blob/master/near-sdk/src/environment/env.rs), [NEP-645 native PQ access keys](https://github.com/near/NEPs/blob/master/neps/nep-0645.md). The host function is a later protocol addition than the original NEP's scope.
+
+Browser-created film account: [shield.magen-film-mwf2kq5t.testnet](https://testnet.nearblocks.io/address/shield.magen-film-mwf2kq5t.testnet#keys), now native PQ-only full access. [Migration](https://testnet.nearblocks.io/txns/9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr) · [Native-signed transfer](https://testnet.nearblocks.io/txns/8EGTshvxxVGKrXgcTftXjWZ4sGVKr8ukDBwnNtiQgu8F).
+
+A dual-signed cross-contract call to the film wallet status method also succeeded: [receipt](https://testnet.nearblocks.io/txns/DomrPPW1kJRP3r2kcdYfxspvW7h2rsprryFijHyakAQA).
 
 ## Build
 
