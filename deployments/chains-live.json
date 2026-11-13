@@ -1,0 +1,59 @@
+{
+  "network": "NEAR testnet + local Anvil (chain 31337)",
+  "wallet": "magen-ana.testnet",
+  "mpc": "v1.signer-prod.testnet",
+  "at": "2026-11-13T20:56:05.799Z",
+  "addresses": [
+    {
+      "chain": "Ethereum",
+      "network": "Sepolia / local Anvil",
+      "path": "magen/eth",
+      "domain": 0,
+      "address": "0xf06d7f1851db534a680e6e856697cbbd4557a38b"
+    },
+    {
+      "chain": "Bitcoin",
+      "network": "testnet4",
+      "path": "magen/btc",
+      "domain": 0,
+      "address": "tb1qxm4wpa7kfqmpgxa3sr8j2kvef30sjsz72wjsks"
+    },
+    {
+      "chain": "Solana",
+      "network": "devnet",
+      "path": "magen/sol",
+      "domain": 1,
+      "address": "KD18rb7mrVBP7eJpn6EbULRkSupGQPmf56es7fubDrZ"
+    },
+    {
+      "chain": "Cosmos Hub",
+      "network": "theta testnet",
+      "path": "magen/cosmos",
+      "domain": 0,
+      "address": "cosmos1afcp7rkwphr88s22kn9s97s7rc73a6fducqycw"
+    }
+  ],
+  "refused_without_ml_dsa": {
+    "hash": "Bmqyf7yxRueeM7jiaDTAoaAtxYfgADCb9Tq2Wu5XW1GX",
+    "success": false,
+    "error": "quantum half missing: []"
+  },
+  "gated_sign": {
+    "hash": "DJHfYfayEgeQrQVS9GgSjSsJqYsr3sdG829ZJWLuj1L3",
+    "success": true,
+    "scheme": "Secp256k1"
+  },
+  "ethereum_local": {
+    "from": "0xf06d7f1851db534a680e6e856697cbbd4557a38b",
+    "to": "0x018bab3e1dbcec902d4f3927b042106d84ec3bbb",
+    "value_eth": "0.05",
+    "tx": "0xa5e1263d084a99182672a086701318b69edf355082635c788cc09a3f6b432ae9",
+    "status": "0x1 (success)",
+    "block": 1,
+    "verified_with": "cast receipt + cast balance: recipient holds 0.05 ETH"
+  },
+  "sepolia": {
+    "address": "0xf06d7f1851db534a680e6e856697cbbd4557a38b",
+    "note": "The same MPC flow works on Sepolia once this address holds Sepolia ETH for gas; public faucets need a login or CAPTCHA, so this build broadcasts on local Anvil."
+  }
+}
