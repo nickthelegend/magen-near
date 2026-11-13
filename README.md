@@ -9,7 +9,7 @@ It ships on three surfaces that share one SDK:
 | Surface | What it does | Where |
 |---|---|---|
 | **Chrome extension** (MV3) | Popup wallet (balance, send, receive, activity, keys, Q-Day switch, drill). dApps connect through `window.magen`; every request opens an approval window that says **"Signed twice: classical + quantum-safe"**. | `packages/extension`, [zip](web/public/downloads/magen-extension.zip) |
-| **iPhone app** (Expo, Release build) | Upgrade in place, dual-signed send, receive QR, activity, Q-Day switch. Keys live in the iOS keychain; ML-DSA-65 signs on the phone. | `packages/mobile`, [iOS Simulator build](web/public/downloads/Magen-NEAR-iOS-Simulator.zip) |
+| **iPhone app** (Expo, Release build) | Upgrade in place, dual-signed send, a centre **Scan** button (camera, scan from photo, paste) that reads NEAR accounts and `magen://pay` requests, a lattice QR for receiving, activity, Q-Day switch. Keys live in the iOS keychain; ML-DSA-65 signs on the phone. | `packages/mobile`, [iOS Simulator build](web/public/downloads/Magen-NEAR-iOS-Simulator.zip) (SHA-256 `faa91c8bd6c96358f1827ed4c248fcc33f99af903c0fe138629889215a4daeba`) |
 | **Web** | The front door: a read-only **quantum readiness scan** of any NEAR account, the **"steal the key, still get nothing" drill**, and the full wallet. | `web/` |
 
 NEAR testnet preview. Not audited.
@@ -52,12 +52,15 @@ Real ed25519 keys come from 2^256 seeds; the drill never claims a real quantum a
 | Extension: in-place upgrade of `magen-leo.testnet` | [9C476mF…](https://testnet.near.rocks/tx/9C476mFyCnZtLJqx8tNw9QSRyX5uuSCc2z5yEaxFyyeL) | Deploy + new + DeleteKey + AddKey(execute) |
 | Extension: dApp tip via `window.magen`, signed twice | [BpGJ8H3…](https://testnet.near.rocks/tx/BpGJ8H33LWKiewXqkJHeF9xjVnownshJp1xq55qYitbh) | both signatures verified |
 | Phone: in-place upgrade of `magen-maya.testnet` | [4xgu9Bw…](https://testnet.near.rocks/tx/4xgu9Bw4546vCYs3szXq3sfrxyTiXMNjUcSESB6Cgq6p) | upgraded on the iOS Simulator app |
+| Phone: scanned a `magen://pay` QR from a photo, paid 0.01 NEAR to `magen-leo.testnet`, signed twice | [GEQRaWi…](https://testnet.near.rocks/tx/GEQRaWidgnawQ9f7TZkg1Aw8SpvhByDQPL8J6tUaFHMG) | both signatures verified |
 | Phone: send 0.25 NEAR, signed twice on the device | [4m9usua…](https://testnet.near.rocks/tx/4m9usuaJ4uggvEcmyAuYh8NfTusV3XPQfKGnRfUf7kS6) | both signatures verified |
 | Phone: Q-Day switch, then classical key removed by the ML-DSA-65 key alone | [28Hidbr…](https://testnet.near.rocks/tx/28HidbrhKeqQ1UwCwVvdPgTPrEKRLxS8QoorK4LMoyyu) → [Gt78Zw1…](https://testnet.near.rocks/tx/Gt78Zw1DFf21xMWCY3BfkwvEKZbmGt8BTQ9ExSASKURD) | [account](https://testnet.near.rocks/account/magen-maya.testnet): 1 key, Quantum-safe |
 | Guardians (magen-2): `magen-ana.testnet` sets 2-of-3 ML-DSA-65 guardians, loses its device, two guardians rotate both locks, new device spends | [3C65TEu…](https://testnet.near.rocks/tx/3C65TEuFyepW73Cpq7QUbkBA3m8P8K8oxFrXXhjLeDXj) → [3Hzh5f9…](https://testnet.near.rocks/tx/3Hzh5f9MzmvT2pkdCwf2zkzLddeMtzPxrTsYGAPRqBFN) → [1TKFy7g…](https://testnet.near.rocks/tx/1TKFy7gesuvYudcNL2cFhMpiNk6Yk4PqtLJ5DRs3WFF) | old keys removed, funds untouched |
 | First wallet (`shield.magen-mwf26bd5.testnet`): deploy + lock | [sJhhvMH…](https://testnet.near.rocks/tx/sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ) | zero access keys |
 | Dual-signed transfer / forged quantum half / replay | [GF8RDJD…](https://testnet.near.rocks/tx/GF8RDJDRET3PTYrvayvcPHQyZqFaWby4xLrUfE91r1LS) / [9kq5W4u…](https://testnet.near.rocks/tx/9kq5W4uBpJy24eK5hpjRiq7VCpggRK4oBGA5QrbqHg6d) / [EnvaSeF…](https://testnet.near.rocks/tx/EnvaSeFb9TLUZvZc2bvf1c8Dwz61TXNDnFzs6UNF2k6A) | accepted / refused / refused |
 | Q-Day switch → native ML-DSA-65 key → native-signed transfer | [9kaxHA4…](https://testnet.near.rocks/tx/9kaxHA4bTSXnXkLeDL7aE6UZBAQcm5hF3QRcXHQE2xsr) → [8EGTshv…](https://testnet.near.rocks/tx/8EGTshvxxVGKrXgcTftXjWZ4sGVKr8ukDBwnNtiQgu8F) | [account](https://testnet.near.rocks/account/shield.magen-film-mwf2kq5t.testnet) shows "Quantum-safe" |
+
+Pay requests: `magen://pay?to=<account>&amount=<NEAR>&memo=<text>` (also `https://magen-near.vercel.app/#/pay?…`). `magen://send`, `magen://receive` and `magen://scan` open those phone screens.
 
 Wallet contract code hashes (rebuilt from source with the pinned toolchain): magen-1 `BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3`, magen-2 with guardians `84P7CKENx6FNQDWktEfr1KiSDfGFo4Bq9cZgM41zj7yV`. Full records in [`deployments/`](deployments) (surfaces: [`surfaces-live.json`](deployments/surfaces-live.json)). Film: [`videos/magen-near/magen-near-film.mp4`](videos/magen-near/magen-near-film.mp4). Test counts in [TESTING.md](TESTING.md).
 
@@ -73,6 +76,7 @@ npm run test:sandbox           # contract on a local neard 2.14 sandbox (binary 
 npm run dev                    # web on http://127.0.0.1:5340 (demo dApp at /dapp/index.html)
 (cd packages/extension && npm run build)    # dist/ → chrome://extensions → Load unpacked
 (cd packages/mobile && npm install && npm run build:ios-sim)   # Release .app for Apple-silicon simulators
+(cd packages/mobile && npm test)                               # scan parser + QR render-and-decode round trip
 ```
 
 `window.magen` for dApps:
