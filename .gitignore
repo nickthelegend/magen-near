@@ -8,3 +8,7 @@ dist/
 .loom/
 .vercel
 .tools/
+packages/mobile/ios/
+packages/mobile/build-out/*.zip
+packages/extension/dist/
+.tools/

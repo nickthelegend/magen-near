@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tip Jar · a demo NEAR dApp</title>
+<style>
+  :root { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; color: #1d1a16; background: #f6f1e8; }
+  * { box-sizing: border-box; margin: 0; }
+  body { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(800px 400px at 50% 0%, #fde7c4, transparent 70%), #f6f1e8; }
+  .card { width: min(460px, 100%); background: #fff; border-radius: 24px; padding: 32px; box-shadow: 0 30px 60px -30px rgba(80, 50, 10, .35); display: grid; gap: 18px; }
+  .top { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 44px; height: 44px; border-radius: 14px; background: #f59e0b; display: grid; place-items: center; font-size: 22px; }
+  h1 { font-size: 24px; letter-spacing: -.02em; }
+  p { color: #6b6257; line-height: 1.55; font-size: 15px; }
+  .who { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #f8f4ee; border-radius: 12px; font-size: 14px; }
+  .amts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .amts button { height: 52px; border-radius: 14px; border: 1.5px solid #eadfcd; background: #fff; font-size: 17px; font-weight: 650; cursor: pointer; }
+  .amts button.on { border-color: #1d1a16; background: #1d1a16; color: #fff; }
+  .go { height: 54px; border-radius: 999px; border: 0; background: #1d1a16; color: #fff; font-size: 16px; font-weight: 650; cursor: pointer; }
+  .go:disabled { opacity: .4; cursor: default; }
+  .ghost { background: #fff; color: #1d1a16; border: 1.5px solid #1d1a16; }
+  .out { font-size: 14px; line-height: 1.5; padding: 12px 14px; border-radius: 12px; display: none; overflow-wrap: anywhere; }
+  .out.ok { display: block; background: #e7f6ee; color: #0b5c3c; } .out.bad { display: block; background: #fdeeee; color: #8e1d22; }
+  .out a { color: inherit; font-weight: 650; }
+  small { color: #9a8f80; font-size: 12.5px; text-align: center; }
+</style></head>
+<body><main class="card">
+  <div class="top"><div class="logo">☕</div><div><h1>Tip Jar</h1><p style="font-size:13px">Buy a NEAR builder a coffee</p></div></div>
+  <p>Send a tip to <b>magen-tips.testnet</b>. This page is a demo dApp: it only talks to your wallet through <code>window.magen</code>.</p>
+  <div class="who"><span id="who">Not connected</span><span id="net">NEAR testnet</span></div>
+  <div class="amts"><button data-v="0.1">0.1</button><button data-v="0.5" class="on">0.5</button><button data-v="1">1</button></div>
+  <button class="go" id="connect">Connect Magen</button>
+  <button class="go" id="tip" style="display:none">Send 0.5 NEAR tip</button>
+  <div class="out" id="out"></div>
+  <small id="hint">Needs the Magen browser extension.</small>
+</main>
+<script>
+  const RECEIVER = 'magen-tips.testnet';
+  let amount = '0.5', account = null;
+  const $ = id => document.getElementById(id);
+  const yocto = s => { const [a, b = ''] = s.split('.'); return (BigInt(a) * 10n ** 24n + BigInt((b + '0'.repeat(24)).slice(0, 24))).toString(); };
+  const show = (ok, html) => { const o = $('out'); o.className = 'out ' + (ok ? 'ok' : 'bad'); o.innerHTML = html; };
+  const render = () => { $('who').textContent = account ? `Connected: ${account}` : 'Not connected'; $('connect').style.display = account ? 'none' : ''; $('tip').style.display = account ? '' : 'none'; $('tip').textContent = `Send ${amount} NEAR tip`; };
+  document.querySelectorAll('.amts button').forEach(b => b.onclick = () => { document.querySelectorAll('.amts button').forEach(x => x.classList.remove('on')); b.classList.add('on'); amount = b.dataset.v; render(); });
+  async function ready() {
+    if (!window.magen) { $('connect').disabled = true; $('hint').textContent = 'Magen extension not found. Install it, then reload.'; return; }
+    $('hint').textContent = 'Magen detected · every payment is signed twice.';
+    const a = await window.magen.getAccount(); account = a?.accountId ?? null; render();
+  }
+  $('connect').onclick = async () => { try { account = (await window.magen.connect()).accountId; render(); } catch (e) { show(false, e.message); } };
+  $('tip').onclick = async () => {
+    $('tip').disabled = true; $('tip').textContent = 'Waiting for Magen…';
+    try {
+      const r = await window.magen.signAndSendTransaction({ receiverId: RECEIVER, actions: [{ type: 'Transfer', params: { deposit: yocto(amount) } }] });
+      r.success ? show(true, `Thank you! ${amount} NEAR sent. <a target="_blank" href="https://testnet.nearblocks.io/txns/${r.transactionHash}">View transaction</a>`)
+        : show(false, `${r.error} <a target="_blank" href="https://testnet.nearblocks.io/txns/${r.transactionHash}">View</a>`);
+    } catch (e) { show(false, e.message); } finally { $('tip').disabled = false; render(); }
+  };
+  if (window.magen) ready(); else window.addEventListener('magen#initialized', ready, { once: true });
+  setTimeout(() => { if (!window.magen) ready(); }, 800);
+</script></body></html>

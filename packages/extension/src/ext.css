@@ -1,0 +1,23 @@
+body.ext { width: 380px; min-height: 600px; }
+body.ext-approve { width: 100%; min-height: 100vh; }
+.ext .page { padding-bottom: 96px; }
+.ext .tabbar { position: fixed; }
+.ext .mtop .brand { font-size: 17px; }
+.approve { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+.approve-top { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: var(--ink); color: var(--on-ink); }
+.approve-top .brand { color: #fff; font-size: 17px; } .approve-top .brand img { width: 26px; height: 26px; border-radius: 7px; }
+.approve-top .pill { margin-left: auto; }
+.approve-body { padding: 18px; display: grid; gap: 14px; flex: 1; align-content: start; }
+.site { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); }
+.site-ico { width: 40px; height: 40px; border-radius: 12px; background: var(--bg); display: grid; place-items: center; font-weight: 700; color: var(--text-2); flex: none; }
+.site b { display: block; font-size: 15px; } .site small { color: var(--text-3); font-size: 12.5px; overflow-wrap: anywhere; }
+.ask { font-size: 22px; font-weight: 650; letter-spacing: -.02em; line-height: 1.2; }
+.ask-amt { font-size: 40px; font-weight: 650; letter-spacing: -.04em; line-height: 1; }
+.ask-amt small { font-size: 17px; color: var(--text-3); font-weight: 500; margin-left: 6px; letter-spacing: 0; }
+.twice { border-radius: 16px; background: var(--ink); color: var(--on-ink); padding: 16px; display: grid; gap: 10px; }
+.twice h3 { font-size: 15px; font-weight: 650; display: flex; gap: 8px; align-items: center; }
+.twice .sig { background: rgba(255,255,255,.06); }
+.twice .sig small { color: var(--on-ink-3); }
+.twice .lock-ico { background: rgba(255,255,255,.08); color: var(--on-ink); }
+.twice .lock-ico.pq { background: rgba(51,102,255,.22); color: #b9c8ff; }
+.approve-foot { position: sticky; bottom: 0; display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; padding: 14px 18px 18px; background: linear-gradient(transparent, var(--bg) 30%); }

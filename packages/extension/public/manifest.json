@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Magen: quantum-safe NEAR wallet",
+  "short_name": "Magen",
+  "version": "0.1.0",
+  "description": "Your NEAR account with a second lock a quantum computer can't pick. Every payment is signed with ed25519 and ML-DSA-65. Testnet preview.",
+  "icons": { "128": "favicon.png" },
+  "action": { "default_popup": "popup.html", "default_title": "Magen", "default_icon": { "64": "favicon.png" } },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "permissions": ["storage"],
+  "host_permissions": ["https://test.rpc.fastnear.com/*", "https://rpc.mainnet.fastnear.com/*", "https://api-testnet.nearblocks.io/*", "https://helper.nearprotocol.com/*"],
+  "content_scripts": [{ "matches": ["http://localhost/*", "http://127.0.0.1/*", "https://*/*"], "js": ["content.js"], "run_at": "document_start", "all_frames": false }],
+  "web_accessible_resources": [{ "resources": ["inpage.js"], "matches": ["http://localhost/*", "http://127.0.0.1/*", "https://*/*"] }]
+}

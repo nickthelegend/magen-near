@@ -43,7 +43,9 @@ export async function scanAccount(raw: string): Promise<Scan> {
     let view: any;
     try { view = await rpc('query', { request_type: 'view_account', account_id: account, finality: 'final' }, ep); }
     catch (e: any) { lastErr = String(e.message || e); if (/UNKNOWN_ACCOUNT|does not exist/i.test(lastErr)) continue; throw Error('NEAR RPC did not answer. Try again in a moment.'); }
-    const list = (await rpc('query', { request_type: 'view_access_key_list', account_id: account, finality: 'final' }, ep)).keys as any[];
+    let list: any[];
+    try { list = (await rpc('query', { request_type: 'view_access_key_list', account_id: account, finality: 'final' }, ep)).keys; }
+    catch (e: any) { if (/TOO_MANY_ACCESS_KEYS/.test(String(e.message))) throw Error(`${account} has more than 100 access keys, which is more than this scan reads.`); throw e; }
     const keys: ScanKey[] = list.map(k => {
       const p = k.access_key.permission;
       return p === 'FullAccess'
