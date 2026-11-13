@@ -12,6 +12,6 @@ You can receive NEAR, save contacts and inspect every recorded receipt. There ar
 
 Then there is the Q Day switch. It keeps the account, but changes what controls it. Both signatures authorize adding your post quantum key as a native full access key. This is a deliberate change to quantum only control. That key can now act without the classical half, including changing the wallet contract.
 
-Here is the key in the explorer. ML DSA sixty five hash. And here is a transaction signed by that native quantum key. The protocol verifies it directly.
+Here is the native access key, read directly from NEAR. The public explorer blocks our automated browser, so this view shows the actual access key response. ML DSA sixty five hash. Now sign with that key alone. NEAR verifies the transaction directly.
 
 Magen is a fresh hackathon build, running on NEAR testnet. It protects account authorization, not the whole network's consensus. It is preview software, not audited. The working contract, attack receipts and signing code are all inspectable. Two signatures. One shield. Magen.
