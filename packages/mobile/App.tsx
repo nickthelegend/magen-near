@@ -96,7 +96,11 @@ function Onboarding({ onDone }: { onDone: (v: Vault) => void }) {
           <T style={{ color: C.onInk2, fontSize: 15, lineHeight: 22 }}>{mode === 'create' ? 'We create the account with 10 test NEAR, then add the second lock.' : 'Your key signs one transaction. It stays your first lock; a new ML-DSA-65 key becomes the second.'}</T>
           {mode === 'create' ? <TextInput style={styles.inputDark} placeholder="yourname" placeholderTextColor={C.onInk2} value={name} onChangeText={t => setName(t.toLowerCase())} autoCapitalize="none" autoCorrect={false} />
             : <><TextInput style={styles.inputDark} placeholder="alice.testnet" placeholderTextColor={C.onInk2} value={account} onChangeText={setAccount} autoCapitalize="none" autoCorrect={false} />
-              <TextInput style={[styles.inputDark, { height: 84, paddingTop: 14 }]} multiline placeholder="ed25519:… private key" placeholderTextColor={C.onInk2} value={secret} onChangeText={setSecret} autoCapitalize="none" autoCorrect={false} secureTextEntry={false} /></>}
+              <TextInput style={styles.inputDark} placeholder="Private key (ed25519:…)" placeholderTextColor={C.onInk2} value={secret} onChangeText={setSecret} autoCapitalize="none" autoCorrect={false} secureTextEntry textContentType="none" autoComplete="off" />
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <T style={{ color: C.onInk2, fontSize: 12.5, flex: 1 }}>Stays on this phone. It only signs the upgrade.</T>
+                <Pressable onPress={async () => setSecret((await Clipboard.getStringAsync()).trim())} hitSlop={10}><T style={{ color: '#8fa8ff', fontWeight: '600' }}>{secret ? 'Key pasted' : 'Paste key'}</T></Pressable>
+              </View></>}
           {!!err && <View style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={18} /><T style={{ color: '#8e1d22', flex: 1, lineHeight: 20 }}>{err}</T></View>}
           <Btn title={busy || (mode === 'create' ? 'Create and upgrade' : 'Upgrade in place')} busy={!!busy} onPress={run} disabled={mode === 'create' ? !name : !account || !secret} />
         </View>}
@@ -147,7 +151,7 @@ function HomeTab({ vault, live, acts, go }: P) {
     <View style={styles.balance}>
       <Image source={require('./assets/shield-wallet.png')} style={{ position: 'absolute', right: -14, top: 6, width: 130, height: 130, opacity: .9 }} />
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><T style={{ color: C.onInk2, fontSize: 14 }}>Total balance</T><Pill tone="ink" text={migrated ? 'Native PQ key on' : 'Two locks on'} /></View>
-      <T style={{ color: '#fff', fontSize: 52, fontWeight: '650', letterSpacing: -2.4, marginTop: 14 }}>{near(live?.amount ?? null, 2)}<T style={{ color: C.onInk2, fontSize: 18, fontWeight: '500' }}>  NEAR</T></T>
+      <T style={{ color: '#fff', fontSize: 52, fontWeight: '650', letterSpacing: -2.4, marginTop: 14 }}>{near(live?.amount ?? null, 2)}<T style={{ color: C.onInk2, fontSize: 18, fontWeight: '500', letterSpacing: 0 }}>{'\u2002'}NEAR</T></T>
       <T style={{ color: C.onInk2, fontSize: 13.5, marginTop: 6 }}>{vault.wallet}</T>
       <View style={{ flexDirection: 'row', gap: 8, marginTop: 22 }}>
         <View style={{ flex: 1 }}><Btn title="Send" icon={<ArrowUpRight color="#fff" size={18} />} onPress={() => go('send')} /></View>
