@@ -17,3 +17,5 @@ Confirmed sandbox result: **13/13 cases passed** (deployments/sandbox-tests.json
 Desktop/mobile route capture: **18/18 pass, zero horizontal overflow, zero browser runtime errors** at 1440 and 375. Independent UI reviewer requested darker secondary text; applied before final confirmation capture.
 
 Read-only final receipt audit: **19/19 known transaction receipts verified FINAL**, including browser send, rejection, migration and native-signature transfer (deployments/verified-live.json). Public demo account remains keyless; film account has exactly one ML-DSA hash full-access key. Setup recovery script is provided for interruptions but is not counted as a tested flow.
+
+Additional non-writing browser regression: backup acknowledgement does not pre-authorize PQ-only migration (deployments/consent-qa.json). No test transaction sent. Final route matrix after proof UI also passes18/18.
