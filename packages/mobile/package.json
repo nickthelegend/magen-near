@@ -1,0 +1,39 @@
+{
+  "name": "@magen/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit",
+    "build:ios-sim": "zsh scripts/build-ios-sim.sh"
+  },
+  "dependencies": {
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
+    "@noble/post-quantum": "^0.5.2",
+    "@scure/base": "^2.0.0",
+    "@scure/bip39": "^1.6.0",
+    "expo": "~58.0.23",
+    "expo-clipboard": "~58.0.4",
+    "expo-crypto": "~58.0.7",
+    "expo-font": "~58.0.11",
+    "expo-haptics": "~58.0.7",
+    "expo-linear-gradient": "~58.0.3",
+    "expo-secure-store": "~58.0.2",
+    "expo-status-bar": "~58.0.4",
+    "fast-text-encoding": "^1.0.6",
+    "lucide-react-native": "^1.72.0",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-qrcode-svg": "^6.3.54",
+    "react-native-safe-area-context": "~5.11.1",
+    "react-native-svg": "15.16.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "~5.9.3"
+  },
+  "license": "MIT"
+}

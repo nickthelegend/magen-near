@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Magen",
+    "slug": "magen-near",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "magen",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#f3f4f6",
+    "splash": { "image": "./assets/icon.png", "resizeMode": "contain", "backgroundColor": "#0b0e14" },
+    "ios": { "bundleIdentifier": "xyz.magen.near", "supportsTablet": false },
+    "android": { "package": "xyz.magen.near" },
+    "plugins": ["expo-secure-store", "expo-font"],
+    "runtimeVersion": { "policy": "sdkVersion" }
+  }
+}
