@@ -140,7 +140,7 @@ await window.magen.signAndSendTransaction({
         <div className="stat"><b>2</b><span>signatures checked on chain for every payment</span></div>
         <div className="stat"><b>3,309</b><span>bytes in each ML-DSA-65 signature, verified by NEAR itself</span></div>
         <div className="stat"><b>{d ? '1' : '…'}</b><span>transaction to upgrade, no funds moved</span></div>
-        <div className="stat"><b>45</b><span>attack and flow tests on a local NEAR node and testnet</span></div>
+        <div className="stat"><b>39</b><span>automated tests, 29 of them against a real local NEAR node</span></div>
       </div>
     </section>
 
