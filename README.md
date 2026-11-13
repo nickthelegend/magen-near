@@ -2,7 +2,7 @@
 
 Your NEAR account, safe from quantum computers. A fresh hybrid post-quantum wallet built November 13–14 for NEAR HACKATHON 2026.
 
-**[Open the live wallet](https://magen-near.vercel.app)** · NEAR testnet · unaudited preview
+**[Open the live wallet](https://magen-near.vercel.app)** · [Download the source](https://magen-near.vercel.app/magen-source.zip) · NEAR testnet · unaudited preview
 
 Every send and contract call requires **ed25519 AND ML-DSA-65 signatures**, verified on chain by `env::ed25519_verify` and `env::ml_dsa_verify`. Both sign a SHA-256 digest of the same expiring intent, bound to network, wallet, nonce and action. The deploy key is deleted atomically with initialization. No access key can bypass this contract in hybrid mode.
 

@@ -19,3 +19,5 @@ Desktop/mobile route capture: **18/18 pass, zero horizontal overflow, zero brows
 Read-only final receipt audit: **19/19 known transaction receipts verified FINAL**, including browser send, rejection, migration and native-signature transfer (deployments/verified-live.json). Public demo account remains keyless; film account has exactly one ML-DSA hash full-access key. Setup recovery script is provided for interruptions but is not counted as a tested flow.
 
 Additional non-writing browser regression: backup acknowledgement does not pre-authorize PQ-only migration (deployments/consent-qa.json). No test transaction sent. Final route matrix after proof UI also passes18/18.
+
+Latest expanded matrix: **20/20 viewport-route checks** after adding About and public source download. The source ZIP's34-file SHA256 manifest is verified against its payload and excludes private material. Read-only receipt action display provides DeployContract / FunctionCall(new) / DeleteKey proof without repeating setup.
