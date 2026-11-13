@@ -1,0 +1,20 @@
+{
+  "marks": [
+    {
+      "name": "why",
+      "start": 1.26,
+      "end": 8.643
+    },
+    {
+      "name": "daily",
+      "start": 8.643,
+      "end": 17.261
+    },
+    {
+      "name": "closing",
+      "start": 17.261,
+      "end": 26.666
+    }
+  ],
+  "transactionSubmissions": 0
+}
