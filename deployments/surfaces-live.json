@@ -18,9 +18,26 @@
     "classical_key_removed_by_ml_dsa_signature": "Gt78Zw1DFf21xMWCY3BfkwvEKZbmGt8BTQ9ExSASKURD"
   },
   "film_drill": {
-    "plain": "plain.qday-drill.testnet", "magen": "magen.qday-drill.testnet", "attacker": "attacker.qday-drill.testnet",
-    "create_plain": "BHadJEiqR3PnPFntKwTV8pSz2U3Hfq9NxkNEKmpGXBDH", "create_magen": "HtLKTSLvDMKbXqoF8KEYpoPxHN2VmbpHhiLjmtENZv3s",
-    "create_attacker": "FZD8yeJ89V9hU6s1XC8eQE6GVX18hpW9hZifC13vZk5z", "upgrade_magen": "FKscF9hLaiZvfkthJ8AQ7ayE5PMZziXRwtf63fvGCY8K",
-    "drain_plain": "2UiFv27dFmzVp8MzeNChhm6TKMGqxpFVm8NhHGhLGFH8", "attack_magen_refused": "E7ikQaX5yqGJEyA3gcZJkkWPtvtgkNwm7rmjebprKso"
+    "plain": "plain.qday-drill.testnet",
+    "magen": "magen.qday-drill.testnet",
+    "attacker": "attacker.qday-drill.testnet",
+    "create_plain": "BHadJEiqR3PnPFntKwTV8pSz2U3Hfq9NxkNEKmpGXBDH",
+    "create_magen": "HtLKTSLvDMKbXqoF8KEYpoPxHN2VmbpHhiLjmtENZv3s",
+    "create_attacker": "FZD8yeJ89V9hU6s1XC8eQE6GVX18hpW9hZifC13vZk5z",
+    "upgrade_magen": "FKscF9hLaiZvfkthJ8AQ7ayE5PMZziXRwtf63fvGCY8K",
+    "drain_plain": "2UiFv27dFmzVp8MzeNChhm6TKMGqxpFVm8NhHGhLGFH8",
+    "attack_magen_refused": "E7ikQaX5yqGJEyA3gcZJkkWPtvtgkNwm7rmjebprKso"
+  },
+  "phone_final_build": {
+    "account": "magen-noa.testnet",
+    "upgrade_in_place_ml_dsa_fee_key": "7PmQQyh1KpG49tqWxukXhrGvmdf8VKspnMPm3gqpn394",
+    "send_0_2_signed_twice": "DWvR6685erXddoD6F6kg4w1rrmKdxNJ3SQ9TbFUay28w",
+    "mpc_request_with_one_signature_refused": "4HAYbtmEZSW7NSFDKHCDRoeYUgb9Hoj19w2DtWotcEQ4",
+    "qday_switch": "FTQKyf (see near.rocks account page)",
+    "note": "NEAR Rocks lists 2 access keys, both ML-DSA-65, \"Quantum-safe\""
+  },
+  "phone_mpc_dual_signed": {
+    "account": "magen-maya.testnet",
+    "hash": "3fssMT\u2026 (see near.rocks account page)"
   }
 }
