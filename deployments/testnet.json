@@ -1,0 +1,32 @@
+{
+  "created": "2026-11-13T14:20:23.739Z",
+  "network": "testnet",
+  "account": "shield.magen-mwf26bd5.testnet",
+  "relay": "magen-mwf26bd5.testnet",
+  "steps": {
+    "network": {
+      "testnet": 88,
+      "mainnet": 88
+    },
+    "relay": {
+      "exists": true,
+      "amount": "10000000000000000000000000"
+    },
+    "create": {
+      "hash": "2aDuH7sK8BAeL1croLpETF4185oygFVVYaosRqm46PiD",
+      "success": true,
+      "error": "",
+      "logs": []
+    },
+    "deploy_and_lock": {
+      "hash": "sJhhvMHoE1BF7DWCrVfJmDgnK5iYxU9pc6wzqLSDBdQ",
+      "success": true,
+      "error": "",
+      "logs": []
+    },
+    "locked_keys": {
+      "keys": [],
+      "verifiedAt": "2026-11-13T14:21:25.463Z"
+    }
+  }
+}

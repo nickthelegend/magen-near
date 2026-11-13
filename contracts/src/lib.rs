@@ -58,7 +58,7 @@ impl Wallet {
             }
         };
         env::log_str(&format!("MAGEN_AUTHORIZED nonce={} dual_verified=true",i.nonce.0));
-        operation.then(Promise::new(env::current_account_id()).function_call("settle".into(),near_sdk::serde_json::to_vec(&near_sdk::serde_json::json!({"migration":is_migration,"nonce":i.nonce})).unwrap(),NearToken::from_yoctonear(0),Gas::from_tgas(8)))
+        operation.then(Promise::new(env::current_account_id()).function_call("settle",near_sdk::serde_json::to_vec(&near_sdk::serde_json::json!({"migration":is_migration,"nonce":i.nonce})).unwrap(),NearToken::from_yoctonear(0),Gas::from_tgas(8)))
     }
     #[private]
     pub fn settle(&mut self, migration: bool, nonce: U64) -> bool {

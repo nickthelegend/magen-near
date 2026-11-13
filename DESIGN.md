@@ -1,0 +1,4 @@
+# Magen visual direction
+Premium personal wallet, familiar sidebar navigation and direct send/receive actions, asset rows and explorer-linked activity. Commissioner type. Ink #202729, ceramic #f8faf6, citron #d5fa73. One dark balance surface; clean light forms; 16px panels, 12px controls. No art, gradients, glass or invented charts. 14/16px labels and body; 32px page headings; balance 56px. Desktop main content max 1120px; sidebar 216px; mobile bottom navigation and full-width forms. 44px controls; visible focus; reduced motion. Scope: app, not a marketing landing page.
+
+Layout references: Phantom/Rabby home wallet actions, Zerion sidebar and asset table, Rainbow transfer-first flow (Rainbow screenshot unavailable due navigation abort). Private Dribbble takes recorded outside repo. No reference artwork shipped.
