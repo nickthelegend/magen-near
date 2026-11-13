@@ -11,6 +11,9 @@ import { Activity } from '../../../web/src/pages/Activity.tsx';
 import { Security } from '../../../web/src/pages/Security.tsx';
 import { QDay } from '../../../web/src/pages/QDay.tsx';
 import { Drill } from '../../../web/src/pages/Drill.tsx';
+import { Chains } from '../../../web/src/pages/Chains.tsx';
+import { PrivateSend } from '../../../web/src/pages/PrivateSend.tsx';
+import { Swap } from '../../../web/src/pages/Swap.tsx';
 import { Start } from '../../../web/src/pages/Start.tsx';
 import { Boundary } from '../../../web/src/ui/bits.tsx';
 
@@ -23,7 +26,7 @@ function Popup() {
   const path = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   if (path[0] === 'start') return <Start key={hash} mode={(path[1] as any) ?? 'choose'} account={path[2] ?? ''} />;
   const r = path[0] === 'app' ? path[1] ?? '' : '';
-  const P = ({ '': Dashboard, send: Send, receive: Receive, activity: Activity, security: Security, qday: QDay, drill: Drill } as any)[r] ?? Dashboard;
+  const P = ({ '': Dashboard, send: Send, receive: Receive, activity: Activity, security: Security, qday: QDay, drill: Drill, chains: Chains, private: PrivateSend, swap: Swap } as any)[r] ?? Dashboard;
   return <><AppShell route={r}><Boundary key={r}><P /></Boundary></AppShell>{toast && <div className="toast">{toast}</div>}</>;
 }
 createRoot(document.getElementById('root')!).render(<StrictMode><WalletProvider><Popup /></WalletProvider></StrictMode>);

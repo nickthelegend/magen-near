@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { LayoutGrid, ArrowUpRight, ArrowDownLeft, History, ShieldCheck, Power, Crosshair, Lock, LockOpen, ChevronRight, Home } from 'lucide-react';
+import { LayoutGrid, ArrowUpRight, ArrowDownLeft, History, ShieldCheck, Power, Crosshair, Lock, LockOpen, ChevronRight, Home, Network, EyeOff, Repeat } from 'lucide-react';
 import { useWallet, DEMO } from '../lib/store.tsx';
 import { short } from '../lib/chain.ts';
 
@@ -8,6 +8,9 @@ const NAV = [
   { to: 'send', label: 'Send', icon: ArrowUpRight },
   { to: 'receive', label: 'Receive', icon: ArrowDownLeft },
   { to: 'activity', label: 'Activity', icon: History },
+  { to: 'chains', label: 'Chains', icon: Network },
+  { to: 'private', label: 'Private send', icon: EyeOff },
+  { to: 'swap', label: 'Swap & bridge', icon: Repeat },
 ];
 const PROTECT = [
   { to: 'security', label: 'Keys & security', icon: ShieldCheck },
@@ -24,7 +27,7 @@ export const ShieldSend = ({ size = 26 }: { size?: number }) => <svg width={size
   <path d="M11 10v11M21 10v11M8.5 15.5h15" stroke="#fff" strokeOpacity=".45" strokeWidth="1.2" />
   <path d="M12.5 19.5 19.5 12.5M14 12.5h5.5V18" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 </svg>;
-const TITLES: Record<string, string> = { '': 'Overview', send: 'Send', receive: 'Receive', activity: 'Activity', security: 'Keys & security', qday: 'Q-Day switch', drill: 'Key-recovery drill' };
+const TITLES: Record<string, string> = { chains: 'Chains', private: 'Private send', swap: 'Swap & bridge', '': 'Overview', send: 'Send', receive: 'Receive', activity: 'Activity', security: 'Keys & security', qday: 'Q-Day switch', drill: 'Key-recovery drill' };
 
 export function AppShell({ route, children }: { route: string; children: ReactNode }) {
   const { vault, account, live, lock, readOnly } = useWallet();

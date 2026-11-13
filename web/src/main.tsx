@@ -11,6 +11,9 @@ import { Activity } from './pages/Activity.tsx';
 import { Security } from './pages/Security.tsx';
 import { QDay } from './pages/QDay.tsx';
 import { Drill } from './pages/Drill.tsx';
+import { Chains } from './pages/Chains.tsx';
+import { PrivateSend } from './pages/PrivateSend.tsx';
+import { Swap } from './pages/Swap.tsx';
 import { Start } from './pages/Start.tsx';
 import { Boundary } from './ui/bits.tsx';
 
@@ -27,7 +30,7 @@ function Router() {
   let page;
   if (path[0] === 'app') {
     const r = path[1] ?? '';
-    const P = ({ '': Dashboard, send: Send, receive: Receive, activity: Activity, security: Security, qday: QDay, drill: Drill } as any)[r] ?? Dashboard;
+    const P = ({ '': Dashboard, send: Send, receive: Receive, activity: Activity, security: Security, qday: QDay, drill: Drill, chains: Chains, private: PrivateSend, swap: Swap } as any)[r] ?? Dashboard;
     page = <AppShell route={r}><Boundary key={r}><P /></Boundary></AppShell>;
   } else if (path[0] === 'start') {
     page = <Start key={hash} mode={(path[1] as any) ?? 'choose'} account={path[2] ? decodeURIComponent(path[2]) : ''} />;
