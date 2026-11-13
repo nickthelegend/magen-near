@@ -400,16 +400,16 @@ function ChainsTab({ vault, live, go }: P) {
     <View style={[styles.balance, { gap: 12 }]}>
       <T style={{ color: '#fff', fontSize: 18, fontWeight: '600' }}>Ask for an Ethereum signature</T>
       <T style={{ color: C.onInk2, fontSize: 13.5, lineHeight: 20 }}>A 0.001 Sepolia ETH transfer. NEAR checks ed25519 and ML-DSA-65, then asks v1.signer-prod.testnet.</T>
-      <Btn title={busy && !busy.includes('classical') ? busy : 'Sign twice, ask the MPC'} busy={!!busy && !busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(false)} icon={<ShieldSend size={20} />} />
-      <Btn title={busy.includes('classical') ? busy : 'Try with one signature'} kind="ghost" busy={busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(true)} />
-    </View>
-    {res && (res.success ? <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: C.greenSoft }]}><ShieldCheck color={C.green} size={20} />
+      {res && (res.success ? <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: C.greenSoft }]}><ShieldCheck color={C.green} size={20} />
         <View style={{ flex: 1, gap: 4 }}><T style={{ fontWeight: '600', color: '#0b5c3c', fontSize: 15 }}>MPC signature returned after both your signatures verified.</T>
           <T style={{ color: '#0b5c3c', fontSize: 13 }}>{res.needsGas ? 'Needs Sepolia gas to broadcast: fund your Ethereum address above.' : 'Ready to broadcast on Sepolia.'}</T>
           <T style={{ color: C.cobalt, fontWeight: '600' }}>NEAR request {short(res.hash)}</T></View></Pressable>
       : <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={20} />
         <View style={{ flex: 1, gap: 4 }}><T style={{ fontWeight: '600', color: '#8e1d22', fontSize: 15 }}>{friendlyError(res.error)}</T><T style={{ color: '#8e1d22', fontSize: 13 }}>NEAR never asked the MPC, so nothing was signed.</T>
           <T style={{ color: C.cobalt, fontWeight: '600' }}>Refusal {short(res.hash)}</T></View></Pressable>)}
+      <Btn title={busy && !busy.includes('classical') ? busy : 'Sign twice, ask the MPC'} busy={!!busy && !busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(false)} icon={<ShieldSend size={20} />} />
+      <Btn title={busy.includes('classical') ? busy : 'Try with one signature'} kind="ghost" busy={busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(true)} />
+    </View>
     {!!err && <View style={[styles.banner, { backgroundColor: C.redSoft }]}><ShieldAlert color={C.red} size={18} /><T style={{ color: '#8e1d22', flex: 1 }}>{err}</T></View>}
   </>;
 }
