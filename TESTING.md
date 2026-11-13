@@ -21,3 +21,5 @@ Read-only final receipt audit: **19/19 known transaction receipts verified FINAL
 Additional non-writing browser regression: backup acknowledgement does not pre-authorize PQ-only migration (deployments/consent-qa.json). No test transaction sent. Final route matrix after proof UI also passes18/18.
 
 Latest expanded matrix: **20/20 viewport-route checks** after adding About and public source download. The source ZIP's34-file SHA256 manifest is verified against its payload and excludes private material. Read-only receipt action display provides DeployContract / FunctionCall(new) / DeleteKey proof without repeating setup.
+
+Read-only browser receipt regressions: **2/2 passed** (deployments/receipt-qa.json): a receipt unrelated to the displayed wallet is rejected; the real atomic setup receipt displays DeployContract, FunctionCall(new), DeleteKey. No new chain writes. Independent migration-consent regression:1/1 passed, also zero writes.
