@@ -1,0 +1,34 @@
+[
+ {
+  "id": "s1",
+  "text": "Magen keeps your Near account, and adds a second lock. A dApp asks for a payment. Magen signs it twice: classical, and quantum safe. Now a simulated attack. A laptop plays the quantum computer and recovers both accounts' keys. The plain account is drained. The Magen account refuses, on chain."
+ },
+ {
+  "id": "s2",
+  "text": "Why now? On Near, every account's keys are public. Paste any account, and Magen shows what a quantum computer could take. This one holds six hundred and fifty Near behind classical keys anyone can read. Its keys are listed for anyone, forever. A quantum computer could work backwards from them."
+ },
+ {
+  "id": "s3",
+  "text": "Magen upgrades the account you already have, in one transaction. Your key stays as the first lock. A new M L D S A sixty five key, made on your device, becomes the second. Same name. Same balance. The old key comes back with one permission: ask the contract to act. On its own, it can no longer move a single coin."
+ },
+ {
+  "id": "s4",
+  "text": "On the phone, it feels like any wallet. Send signs twice, right on the device, and Near checks both signatures inside the wallet contract. Receiving is just your account name, as a QR code."
+ },
+ {
+  "id": "s5",
+  "text": "When classical keys stop being safe, the Q Day switch adds the post quantum key as a native Near access key. The switch itself needs both signatures, and the name, balance and history stay."
+ },
+ {
+  "id": "s6",
+  "text": "Then the post quantum key removes the old classical key, by itself. The explorer now shows a single key, and marks the account quantum safe."
+ },
+ {
+  "id": "s7",
+  "text": "In the browser, the extension holds the same wallet. Balance, activity with every refusal on record, and your keys. Any dApp can connect through window dot magen, and every request shows both signatures before you approve."
+ },
+ {
+  "id": "s8",
+  "text": "Magen runs on Near testnet, and is not audited yet. Chain signatures stay classical. Get the extension and the iPhone build from the Magen site. Keep your account. Add the second lock."
+ }
+]

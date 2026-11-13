@@ -13,3 +13,5 @@ packages/mobile/build-out/*.zip
 packages/extension/dist/
 .tools/
 videos/magen-near/v*/raw/
+videos/magen-near/v6/work/
+videos/magen-near/versions/*/frames/

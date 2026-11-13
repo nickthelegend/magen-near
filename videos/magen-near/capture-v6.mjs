@@ -88,6 +88,8 @@ await withChromeLock(async () => {
 
   await take('tour', async (p, mark) => {
     await popupPage(p);
+    await p.goto(`chrome-extension://${id}/popup.html#/start/unlock`); await W(800);
+    await p.locator('input[type=password]').fill(pw); await p.getByRole('button', { name: 'Unlock' }).click(); await W(1500); mark('unlocked');
     for (const r of ['app', 'app/activity', 'app/security', 'app/qday', 'app/receive']) {
       await p.goto(`chrome-extension://${id}/popup.html#/${r}`); await W(r === 'app/activity' ? 6500 : 5000); mark(r);
     }

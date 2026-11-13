@@ -1,11 +1,11 @@
 {
  "landing": {
-  "hero": 1331,
-  "type": 6402,
-  "scanned": 8123,
-  "scanread": 15443,
-  "how": 16947,
-  "get": 25450
+  "hero": 1445,
+  "type": 6542,
+  "scanned": 8312,
+  "scanread": 15617,
+  "how": 17130,
+  "get": 25650
  },
  "upgrade": {
   "open": 1557,
@@ -35,11 +35,12 @@
   ]
  },
  "tour": {
-  "app": 5079,
-  "app/activity": 11590,
-  "app/security": 16598,
-  "app/qday": 21605,
-  "app/receive": 26616
+  "unlocked": 2532,
+  "app": 7536,
+  "app/activity": 14054,
+  "app/security": 19075,
+  "app/qday": 24087,
+  "app/receive": 29090
  },
  "webapp": {
   "home": 6153,
