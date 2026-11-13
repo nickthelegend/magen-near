@@ -1,0 +1,78 @@
+{
+  "network": "testnet",
+  "created": "2026-11-13T15:21:22.727Z",
+  "funder": "drill-mwf4jsnn.testnet",
+  "plain": "plain.drill-mwf4jsnn.testnet",
+  "magen": "magen.drill-mwf4jsnn.testnet",
+  "attacker": "attacker.drill-mwf4jsnn.testnet",
+  "keySpace": "2^18 = 262144 seeds (weakened on purpose)",
+  "targets": [
+    {
+      "account": "plain.drill-mwf4jsnn.testnet",
+      "publicKey": "ed25519:H1CAyQh66zqtmbhyupQL4eqEvVaKNXmcvyPQnbqayGvM",
+      "permission": "full access"
+    },
+    {
+      "account": "magen.drill-mwf4jsnn.testnet",
+      "publicKey": "ed25519:9jrEgsGEspEVPyG63V5WYAgDxAzAo9xq1A2QzdoKHjML",
+      "permission": "can only call execute"
+    }
+  ],
+  "crackMs": 39892,
+  "balances": {
+    "before": {
+      "plain": "4.00",
+      "magen": "4.00",
+      "note": "read after the upgrade settled (final)"
+    },
+    "after": {
+      "plain": "gone",
+      "magen": "4.00",
+      "attacker": "4.49"
+    },
+    "note": "balances at final finality; the attacker account received the plain account’s balance"
+  },
+  "transactions": [
+    {
+      "name": "create plain account",
+      "hash": "De3fqFPEL1qYepbpcg8qY9dxLWvyRjEEAQYfMo2zhSQb",
+      "success": true,
+      "error": "",
+      "logs": []
+    },
+    {
+      "name": "create Magen account",
+      "hash": "5jgZf1qCiSi6hDWHQA2K4VGoPAGHq8CiVk3MzYnANRVC",
+      "success": true,
+      "error": "",
+      "logs": []
+    },
+    {
+      "name": "create attacker account",
+      "hash": "5rQ7kgSdGbC69yCmfLJ9d2CN4MWviAjLdBtjp221wHcH",
+      "success": true,
+      "error": "",
+      "logs": []
+    },
+    {
+      "name": "upgrade in place",
+      "hash": "H4eNiD7uUGkrZbw8AJqJKqwVZsuk4S4hyhSzTdbmfL86",
+      "success": true,
+      "error": "",
+      "logs": []
+    },
+    {
+      "name": "attacker drains plain account",
+      "hash": "5WoMf2PPejywKTzt8bqbz7gEHoj9B2iUK9XbNLR1quvS",
+      "success": true,
+      "error": ""
+    },
+    {
+      "name": "attacker tries the Magen account",
+      "hash": "DaXHZWKeXUGy2iyy3ZJdxme4TGmkDjQ1nMXZyGiQyYxs",
+      "success": false,
+      "error": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: panicked at src/lib.rs:41:47:\\nquantum half missing: []\"}}}}",
+      "logs": []
+    }
+  ]
+}
