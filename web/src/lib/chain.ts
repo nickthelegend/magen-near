@@ -108,7 +108,14 @@ async function readActivityFresh(account: string, limit: number): Promise<Activi
       if (a.kind === 'send') out.push({ ...base, success: ok, kind: 'sent', title: 'Sent', detail: `to ${a.receiver} · signed twice`, amount: a.amount, counterparty: a.receiver });
       else if (a.kind === 'migrate') out.push({ ...base, success: ok, kind: 'qday', title: 'Q-Day switch', detail: 'Native ML-DSA-65 key added' });
       else if (a.kind === 'guardians') out.push({ ...base, success: ok, kind: 'upgrade', title: 'Guardians set', detail: `${a.threshold} of ${a.keys.length} ML-DSA-65 guardians · signed twice` });
-      else out.push({ ...base, success: ok, kind: 'call', title: `Called ${a.method}`, detail: `on ${a.receiver} · signed twice`, counterparty: a.receiver });
+      else if (a.kind === 'batch') {
+        const rs: string[] = (a.calls ?? []).map((c: any) => String(c.receiver ?? ''));
+        const n = rs.length;
+        if (rs.some(r => /omni|bridge/.test(r))) out.push({ ...base, success: ok, kind: 'call', title: 'Bridged out', detail: `Omni Bridge · ${n} calls, one dual-signed approval` });
+        else if (rs.some(r => /ref|rhea|v2\./.test(r))) out.push({ ...base, success: ok, kind: 'call', title: 'Swapped on Ref', detail: `${n} calls, one dual-signed approval` });
+        else out.push({ ...base, success: ok, kind: 'call', title: `${n} calls in one approval`, detail: `${[...new Set(rs)].join(', ')} · signed twice` });
+      }
+      else out.push({ ...base, success: ok, kind: 'call', title: a.method ? `Called ${a.method}` : 'Wallet action', detail: `${a.receiver ? `on ${a.receiver} · ` : ''}signed twice`, counterparty: a.receiver });
     } catch {
       out.push({ ...base, kind: success ? 'call' : 'refused', title: success ? 'Wallet action' : 'Refused on chain', detail: 'execute' });
     }

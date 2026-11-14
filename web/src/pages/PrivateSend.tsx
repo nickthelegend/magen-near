@@ -52,7 +52,7 @@ export function PrivateSend() {
     <h1 className="page-title-m only-m">Private send</h1>
     <section className="card card-pad rise" style={{ display: 'grid', gap: 12 }}>
       <h2 style={{ fontSize: 24, fontWeight: 650, letterSpacing: '-.02em' }}>Pay someone without linking it to their account.</h2>
-      <div className="compare">
+      <div className="beforeafter">
         <div><b style={{ display: 'flex', gap: 6, alignItems: 'center' }}><EyeOff size={15} />Hidden</b>Which account the payment really belongs to. It lands in a one-time account only the recipient can open.</div>
         <div><b style={{ display: 'flex', gap: 6, alignItems: 'center' }}><Eye size={15} />Still public</b>Your account, the amount and the time. Sweeping the one-time account into the recipient’s main account links them again.</div>
       </div>

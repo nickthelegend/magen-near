@@ -20,7 +20,7 @@ export function Gauge({ score, light = false }: { score: number; light?: boolean
   const [v, setV] = useState(0);
   useEffect(() => { const t = setTimeout(() => setV(score), 60); return () => clearTimeout(t); }, [score]);
   const r = 70, c = 2 * Math.PI * r;
-  const color = score >= 85 ? '#8fa8ff' : score >= 40 ? '#f0b44c' : '#ff6b6f';
+  const color = score >= 85 ? '#E87FD8' : score >= 40 ? '#f0b44c' : '#ff6b6f';
   return <div className="gauge" aria-label={`Readiness ${score} of 100`}>
     <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r={r} fill="none" stroke={light ? '#e4e7ec' : 'rgba(255,255,255,.1)'} strokeWidth="12" />
       <circle cx="80" cy="80" r={r} fill="none" stroke={color} strokeWidth="12" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - v / 100)} style={{ transition: 'stroke-dashoffset .9s cubic-bezier(.2,.7,.2,1)' }} /></svg>

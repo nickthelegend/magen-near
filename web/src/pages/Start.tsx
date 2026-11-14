@@ -20,7 +20,7 @@ export function Start({ mode: initial = 'choose', account: preset = '' }: { mode
   return <div className="start">
     <aside className="start-art">
       <Brand />
-      <div style={{ display: 'grid', placeItems: 'center', flex: 1 }}><div style={{ filter: 'drop-shadow(0 0 60px rgba(108,240,194,.35))' }}><Mark size={220} /></div></div>
+      <div style={{ display: 'grid', placeItems: 'center', flex: 1 }}><div style={{ filter: 'drop-shadow(0 0 60px rgba(224,64,200,.35))' }}><Mark size={220} /></div></div>
       <p>One seed. Every chain. A quantum-safe key from day one.</p>
     </aside>
     <main className="start-main"><div className="start-box rise">
@@ -107,7 +107,7 @@ function Create({ back }: { back: () => void }) {
     {step === 2 && derived && <>
       <div><h1>Every chain, ready.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>All from your words, made on this device.</p></div>
       <div className="derive-list">
-        <div className="derive-row" style={{ borderColor: 'rgba(108,240,194,.35)' }}><span className="lock-ico pq" style={{ width: 26, height: 26, borderRadius: 8 }}><Atom size={15} /></span><b>Quantum-safe key</b><span className="mono" style={{ color: 'var(--mint)' }}>ML-DSA-65</span></div>
+        <div className="derive-row" style={{ borderColor: 'rgba(224,64,200,.35)' }}><span className="lock-ico pq" style={{ width: 26, height: 26, borderRadius: 8 }}><Atom size={15} /></span><b>Quantum-safe key</b><span className="mono" style={{ color: 'var(--mint)' }}>ML-DSA-65</span></div>
         {derived.chains.map((c, i) => <div key={c.id} className="derive-row" style={{ animationDelay: `${(i + 1) * 70}ms` }}><ChainLogo id={c.id} size="sm" /><b>{c.name}</b><span className="mono">{c.id === 'near' ? id : shortAddr(c.address, 6)}</span></div>)}
       </div>
       <button className="btn btn-primary btn-lg btn-block" onClick={() => setStep(3)}>Continue <ArrowRight size={18} /></button>

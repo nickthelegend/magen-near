@@ -51,7 +51,7 @@ export function QDay() {
         <h2>{on ? 'Your post-quantum key is now a native NEAR key.' : 'When classical keys fall, flip one switch.'}</h2>
         <p>{on ? 'NEAR lists your ML-DSA-65 key in the account’s access keys. It can sign transactions by itself, at the protocol level, with no contract in between.'
           : 'The switch adds your ML-DSA-65 key to this same account as a native NEAR full-access key. Your name, balance and history stay. The switch itself needs both signatures.'}</p>
-        <div className="bigswitch">
+        <div className="qswitch">
           <button className={`switch blue ${on ? 'on' : ''}`} role="switch" aria-checked={on} aria-label="Q-Day switch" disabled={on || readOnly || !agree || !!busy} onClick={flip} />
           <span><b>{on ? 'Native ML-DSA-65 key: on' : 'Add native ML-DSA-65 key'}</b><small>{busy || (on ? 'Recorded on NEAR testnet' : readOnly ? 'Unlock your wallet to use the switch' : 'Signed with both locks')}</small></span>
           {busy && <Spinner />}
@@ -68,7 +68,7 @@ export function QDay() {
         </div>)}
         {!on && handle && <div className="banner banner-gray"><Atom size={18} /><div><strong>Will appear as</strong><span className="mono" style={{ overflowWrap: 'anywhere' }}>{short(handle, 26, 8)}</span></div></div>}
         {on && <a className="link" href={keysUrl(account)} target="_blank" rel="noreferrer">See it in the explorer’s key list <ExternalLink size={13} /></a>}
-        <div className="compare">
+        <div className="beforeafter">
           <div><b>Before</b>Two signatures in a contract. Strongest while classical keys still hold.</div>
           <div><b>After</b>Plus a native post-quantum key NEAR checks itself, at 100 Ggas per signature.</div>
         </div>

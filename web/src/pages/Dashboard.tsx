@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, ArrowDownLeft, Repeat, Globe, KeyRound, Atom, Power, Check, X, RefreshCw, ChevronRight, Search, Settings, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Repeat, Globe, KeyRound, Atom, Power, Check, X, RefreshCw, ChevronRight, ShieldCheck, Plus, ExternalLink } from 'lucide-react';
 import { useWallet } from '../lib/store.tsx';
-import { near, readActivity, short } from '../lib/chain.ts';
+import { accountUrl, near, readActivity } from '../lib/chain.ts';
 import { grade } from '../../../sdk/scan.ts';
 import { view } from '../../../sdk/index.ts';
 import { ActivityRow, CopyBtn, ReadOnlyBar, useAsync } from '../ui/bits.tsx';
-import { Mark } from '../ui/Logo.tsx';
 import { ChainLogo } from '../ui/chain.tsx';
 import { useBalances, useChains, fmt, shortAddr } from '../lib/multi.ts';
 
@@ -49,36 +48,27 @@ export function Dashboard() {
   const others = (rows ?? []).filter(r => r.id !== 'near');
   return <>
     <ReadOnlyBar />
-    <div className="m3-home">
-      <div className="m3-profile">
-        <span className="m3-avatar"><Mark size={34} /></span>
-        <span className="who"><b>{account.replace(/\.testnet$/, '')}</b><small className="mono">{short(account, 10, 8)}</small></span>
-        <CopyBtn text={account} label="Copy account" />
-        <a className="m3-round" href="#/app/security" aria-label="Keys and guardians"><Settings size={20} /></a>
-      </div>
-      <div className="m3-search">
-        <a className="m3-field" href="#/app/chains"><Search size={18} />Search chains and tokens</a>
-        <a className="btn btn-primary m3-swap" href="#/app/swap">Swap</a>
-      </div>
-      <section className="m3-balance rise">
-        <div className="lbl">Balance<span className="m3-up"><ShieldCheck size={14} />{migrated ? 'Quantum-only' : 'Two locks on'}</span></div>
-        <div className="amt num">{live?.account ? <>{near(live.account.amount, 2).split('.')[0]}.<span>{near(live.account.amount, 2).split('.')[1] ?? '00'}</span></> : <span className="skel" style={{ display: 'inline-block', width: 200, height: 52 }} />}<small>NEAR</small></div>
+    <div className="home-w2"><div className="w2h">
+      <section className="w2h-card rise">
+        <div className="w2-bal"><small>Current Balance</small>
+          <b className="num">{live?.account ? <>{near(live.account.amount, 2).split('.')[0]}<span>.{near(live.account.amount, 2).split('.')[1] ?? '00'}</span></> : '…'}<i>NEAR</i></b>
+          <span className="w2h-acct"><span className="mono">{account}</span><CopyBtn text={account} label="Copy account" /><a href={accountUrl(account)} target="_blank" rel="noreferrer" aria-label="Open in explorer"><ExternalLink size={14} /></a></span>
+        </div>
+        <div className="w2-avs"><small>Your Chains</small><div>{['near', 'bitcoin', 'zcash', 'ethereum', 'solana'].map(id => <ChainLogo key={id} id={id} />)}<a className="w2-plus" href="#/app/chains" aria-label="All chains"><Plus size={18} /></a></div></div>
+        {(() => {
+          const nearN = live?.account ? Number(live.account.amount / 10n ** 20n) / 1e4 : undefined;
+          const list = [{ id: 'near', name: 'NEAR', v: nearN, href: '#/app/send' }, ...NEAR_TOKENS.filter(t => t.id !== 'near' && t.id !== 'usdc').map(t => ({ id: t.id, name: t.symbol, v: tokens[t.token] ?? undefined, href: t.id === 'bitcoin' || t.id === 'zcash' ? '#/app/bridge' : '#/app/swap' }))];
+          const max = Math.max(...list.map(x => x.v ?? 0), 1e-9);
+          return list.map(x => <div key={x.id} className="w2-row"><div className="w2-row-h"><b>{x.name}</b><a href="#/app/activity"><small>History</small></a></div>
+            <a className="w2-bar" href={x.href}><div className="w2-fill" style={{ width: `${Math.max(.24, (x.v ?? 0) / max) * 100}%` }}><ChainLogo id={x.id} size="sm" /><b className="num">{x.v === undefined ? '…' : x.v === null ? '—' : fmt(x.v, x.id === 'near' ? 2 : 6)}</b></div></a></div>);
+        })()}
       </section>
-      <div className="m3-actions">
+      <div className="w2h-acts">
         {[['receive', 'Receive', ArrowDownLeft], ['send', 'Send', ArrowUpRight], ['swap', 'Swap', Repeat], ['bridge', 'Bridge', Globe]].map(([to, l, I]: any) =>
-          <a key={to} className="m3-act" href={`#/app/${to}`}><span><I size={22} strokeWidth={1.7} /></span>{l}</a>)}
+          <a key={to} className="w2h-act" href={`#/app/${to}`}><span><I size={20} /></span>{l}</a>)}
       </div>
-      <a className="m3-welcome" href="#/app/qday">
-        <img src="/v4/onboard-quantum-lock.png" alt="" width={64} height={64} />
-        <span><b>{migrated ? 'Quantum-only key is on' : 'Your quantum-safe lock is on'}</b><small>Every move needs your ed25519 and ML-DSA-65 signatures. Tap for the Q-Day switch.</small></span>
-        <ChevronRight size={18} color="var(--text-3)" />
-      </a>
-      <h3 className="m3-h">Your coins on NEAR</h3>
-      <div className="m3-list">
-        <a className="m3-row" href="#/app/send"><ChainLogo id="near" /><span className="mid"><b>NEAR</b><small>Native · gas</small></span><span className="r"><b className="num">{live?.account ? near(live.account.amount, 4) : '…'}</b><small>NEAR</small></span></a>
-        {NEAR_TOKENS.filter(t => t.id !== 'near').map(t => { const v = tokens[t.token]; return <a key={t.token} className="m3-row" href={t.id === 'bitcoin' || t.id === 'zcash' ? '#/app/bridge' : '#/app/swap'}><ChainLogo id={t.id === 'usdc' ? 'usdc' : t.id} /><span className="mid"><b>{t.symbol}</b><small>{t.name}</small></span><span className="r"><b className="num">{v === undefined ? '…' : v === null ? '—' : fmt(v, 4)}</b><small>{t.symbol}</small></span></a>; })}
-      </div>
-      <section className="card locks-card m3-locks">
+      <a className="w2h-lock" href="#/app/qday"><span className="ico"><ShieldCheck size={22} /></span><span><b>{migrated ? 'Quantum-only key is on' : 'Two locks on every move'}</b><small>ed25519 + ML-DSA-65, both checked on NEAR</small></span><ChevronRight size={18} /></a>
+      <section className="card locks-card">
         <div className="card-head"><h2>Your two locks</h2><a className="link" href="#/app/security">Keys</a></div>
         <div className="locks">
           <div className="lock-row"><span className="lock-ico"><KeyRound size={18} /></span><span><b>ed25519</b><small>Classical. Needed, never enough alone.</small></span>{live?.status ? <Check size={18} className="ico-ok" /> : <X size={18} className="ico-bad" />}</div>
@@ -108,6 +98,6 @@ export function Dashboard() {
             : <div className="empty"><b>No activity yet</b>{readOnly ? 'The demo wallet is quiet.' : 'Your first move shows here.'}</div>}
         </div>
       </section>
-    </div>
+    </div></div>
   </>;
 }

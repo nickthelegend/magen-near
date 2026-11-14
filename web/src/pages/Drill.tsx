@@ -83,7 +83,7 @@ export function Drill() {
         <div className="victim-top"><span className="lock-ico pq"><Atom size={18} /></span><b>Magen account</b></div>
         <span className="who mono">{st?.magen.account ?? 'Not set up yet'}</span>
         <div className="num">{bal ? near(bal.magen, 2) : '—'}<small>NEAR</small></div>
-        <div className="lockline"><span className="pill pill-ink">ed25519 · execute only</span><span className="pill pill-ink" style={{ color: '#b9c8ff' }}>+ ML-DSA-65</span></div>
+        <div className="lockline"><span className="pill pill-ink">ed25519 · execute only</span><span className="pill pill-ink" style={{ color: '#F3B5EA' }}>+ ML-DSA-65</span></div>
         {refused ? <div className="verdict good"><b>Refused on chain: quantum half missing</b><span>Same stolen key, valid classical signature. The contract asked for the second lock.</span><a href={txUrl(run.magen!.hash)} target="_blank" rel="noreferrer">Transaction {short(run.magen!.hash)}</a></div>
           : <div className="verdict" style={{ background: 'rgba(255,255,255,.06)', color: 'var(--on-ink-2)' }}>Upgraded in place: the same kind of key, plus a second lock.</div>}
       </section>
@@ -115,8 +115,8 @@ export function Drill() {
       </div>
       {(err || run.error) && <div className="banner banner-red"><ShieldAlert size={18} /><div>{err || run.error}</div></div>}
       {run.phase === 'done' && <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-        <ShieldCheck size={18} color="#8fa8ff" /><span style={{ fontSize: 14, color: 'var(--on-ink-2)' }}>Next: the owner can flip the Q-Day switch so a native ML-DSA-65 key takes over.</span>
-        <a className="link" href="#/app/qday" style={{ color: '#8fa8ff' }}>Q-Day switch</a>
+        <ShieldCheck size={18} color="#E87FD8" /><span style={{ fontSize: 14, color: 'var(--on-ink-2)' }}>Next: the owner can flip the Q-Day switch so a native ML-DSA-65 key takes over.</span>
+        <a className="link" href="#/app/qday" style={{ color: '#E87FD8' }}>Q-Day switch</a>
       </div>}
     </section>
   </>;
