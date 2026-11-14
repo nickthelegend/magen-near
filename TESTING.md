@@ -37,6 +37,6 @@ Results: [`deployments/sandbox-tests.json`](deployments/sandbox-tests.json), [`d
 Not audited.
 
 ## Signing pass v13 (Nov 14)
-14 SDK tests rerun, including public-only previews, Reject before RPC/signing, and backup preparation before approval. All 18 phone tests rerun; web/extension builds and mobile typecheck pass. Native iOS Release build passes (SHA-256 `a30cffbca37a6f212bc1b99dec94c02da542a4a8d582aa4ff5cee6a67c3e49a2`). The existing 46 sandbox cases were retained; no Rust changed in this pass and they were not rerun. Total 78 = 14 SDK + 13 contract + 19 upgrade + 14 guardians + 18 phone.
+14 SDK tests rerun, including public-only previews, Reject before RPC/signing, and backup preparation before approval. All 18 phone tests rerun; web/extension builds and mobile typecheck pass. Native iOS Release build passes (SHA-256 `cd167c2e777c43a0005d422d204a3694a7dbc350fa04a01d8f3927726e5a83a1`). The existing 46 sandbox cases were retained; no Rust changed in this pass and they were not rerun. Total 78 = 14 SDK + 13 contract + 19 upgrade + 14 guardians + 18 phone.
 
 Six new camera-approved transactions independently verified FINAL: [receipts](deployments/signing-pass-receipts-v13.json). The recovery attempt with the low-balance sponsor was rejected before inclusion, confirmed UNKNOWN_TRANSACTION; a funded own payer then submitted the successful recovery. Reject in the browser produced zero broadcasts. Approval at 1440, 375 and 390 has zero horizontal overflow, with Approve visible: [QA](deployments/approval-qa-v13.json).
