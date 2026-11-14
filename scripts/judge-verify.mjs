@@ -33,6 +33,8 @@ const PROOFS = [
   { what: 'Film v17 (tovmagen.testnet, created on camera): dual-signed Chain Signatures request for an Ethereum send', tx: 'DTF3hnGkvjp8VoRZRBNANjihByvVNwadigX24uBJm8Sz', expect: 'mpc' },
   { what: 'Film v17 "Test my quantum lock": same request without the ML-DSA half, refused on chain', tx: 'EhaTuYufMuox5DSa8QmKNq5LRBZQ5qYcXcFeaWFoHufs', expect: 'refused', reason: 'quantum half missing' },
   { what: 'Film v17: Q-Day switch on tovmagen.testnet (dual-signed)', tx: 'E8kQL4Yy6JyeXezxKaCqcEkwRgEgX31r25qtxYwksHWG', expect: 'success' },
+  { what: 'Film v18: second wallet liamagen.testnet created on camera and upgraded in place (ed25519 + ML-DSA-65 locks)', tx: 'FWR4fAPwS4abPwVyxfWHdDq6fcDzqfccgGWoHf4612RS', expect: 'success' },
+  { what: 'Film v18: dual-signed send of 0.5 NEAR from tovmagen.testnet to liamagen.testnet (receiver shown in the app)', tx: 'aXfkJUch1XJfdwyn4Yhvz91SJ5TZkXiwE4BaTC4vzek', expect: 'success' },
 ];
 const SEPOLIA = { what: 'Ethereum Sepolia tx broadcast with that MPC signature, from the NEAR-derived address', hash: '0xd8cee16543ec97decb4370d601d3d7e01d0e74dbc11b1132139ec2980a1092c0', from: '0xf06d7f1851db534a680e6e856697cbbd4557a38b' };
 

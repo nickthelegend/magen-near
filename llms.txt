@@ -5,6 +5,6 @@
 - [Judge guide](JUDGES.md): verification commands, "do X → see Y" steps, NEAR features used, limits
 - [README](README.md): product, proof table, how the upgrade works, build and run
 - [Wallet contract](contracts/src/lib.rs): dual verification, guardians, recovery, Q-Day migration
-- [Live verifier](scripts/judge-verify.mjs): `node scripts/judge-verify.mjs` re-checks 17 on-chain proofs
+- [Live verifier](scripts/judge-verify.mjs): `node scripts/judge-verify.mjs` re-checks 19 on-chain proofs
 - [Blocked / quote-only items](BLOCKED.md)
 - [Testing](TESTING.md)

@@ -20,7 +20,7 @@ The script needs Node 18+ and nothing else. It checks every proof against public
 - an Ethereum Sepolia public RPC;
 - the contract source.
 
-Expected output: `17/17 checks passed.` It exits 0 only if all 17 pass. What it checks (checks 14–17 re-verify the transactions shown in the v17 film: tovmagen.testnet's Chain Signatures Sepolia send, the on-camera "Test my quantum lock" refusal and its Q-Day switch):
+Expected output: `19/19 checks passed.` It exits 0 only if all 19 pass. What it checks (checks 14–19 re-verify the transactions shown in the v17 film: tovmagen.testnet's Chain Signatures Sepolia send, the on-camera "Test my quantum lock" refusal and its Q-Day switch):
 
 | # | Check | Source of truth |
 |---|---|---|

@@ -20,7 +20,7 @@ Magen upgrades an existing account **in place** in one transaction (DeployContra
 - Live testnet transactions for every flow: README table and `deployments/` (`surfaces-live.json`, `drill-live.json`, `attacks.json`, `verified-live.json`).
 - Tests: 78 automated (14 SDK, 46 local NEAR sandbox, 18 phone) plus live testnet runs; see TESTING.md.
 - Film (v17, iPhone only, every action live on testnet): `videos/magen-near/magen-near-film.mp4` (7:09), 720p `magen-near-film-share.mp4`, 1.5x cut `magen-near-film-1.5x.mp4` (4:46). Hashes: `deployments/film-v17-live.json`.
-- One-command live check for judges: `node scripts/judge-verify.mjs` (17 checks, see JUDGES.md).
+- One-command live check for judges: `node scripts/judge-verify.mjs` (19 checks, see JUDGES.md).
 
 ## Honest limits
 Testnet preview, not audited. Both keys live on one device (protects against broken cryptography, not a stolen unlocked device). Chain Signatures and validator keys stay classical. The drill uses deliberately weakened keys (2^18 seeds) to simulate a quantum attacker; it never claims a real quantum attack. `window.magen` follows wallet-selector's action shape; a full wallet-selector module is future work.
