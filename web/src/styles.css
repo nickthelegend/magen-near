@@ -538,7 +538,7 @@ textarea.input { height: auto; min-height: 90px; padding: 14px 16px; resize: ver
 .w2-live .clogo { background: #fff; box-shadow: 0 0 0 2px #17181C; } .w2-live-t { flex: 1; display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,.75); font-size: 14.5px; min-width: 220px; } .w2-live-t b { color: var(--pink); }
 .w2-bento { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr; grid-template-rows: 300px 300px; gap: 14px; }
 .w2-b-photo { position: relative; border-radius: 26px; overflow: hidden; background: #111318; } .w2-b-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.w2-b-photo.big { grid-row: span 2; } .w2-b-photo.big > img { object-position: 70% 50%; }
+.w2-b-photo.big { grid-row: span 2; } .w2-b-photo.big > img { object-position: 62% 50%; }
 .w2-toasts { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); display: grid; gap: 10px; justify-items: start; }
 .w2-b-stat { grid-column: 3; grid-row: 1; border-radius: 26px; background: var(--pink); color: #fff; padding: 26px; display: grid; align-content: space-between; }
 .w2-b-stat span { font-size: 19px; font-weight: 600; line-height: 1.25; max-width: 210px; } .w2-b-stat b { font-family: var(--display); font-size: 64px; letter-spacing: -.04em; line-height: 1; } .w2-b-stat small { font-size: 13px; opacity: .85; }

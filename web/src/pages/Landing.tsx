@@ -80,7 +80,7 @@ export function Landing() {
         <FeatCard icon={<Layers size={20} />} title="One Seed, Every Chain" text="Twelve words open Bitcoin, Zcash, Ethereum, Solana, Base and more, plus your ML-DSA-65 key." href="#/app/chains" />
         <FeatCard icon={<Bitcoin size={20} />} title="Bridge BTC And ZEC In" text="Your own deposit address on Bitcoin and Zcash. Coins arrive on NEAR as nBTC and nZEC." href="#/app/bridge" />
         <div className="w2-portrait">
-          <img src="/v4/hero-portrait.jpg" alt="A woman in profile among floating matte coins" width={1024} height={1536} />
+          <img src="/v5/shield-tall.jpg" alt="A matte magenta shield on a plinth, circled by floating coins" width={1024} height={1536} />
           <a className="w2-toast" href={`https://mempool.space/testnet/tx/${BTC_DEPOSIT_TX}`} target="_blank" rel="noreferrer"><ChainLogo id="bitcoin" size="sm" /><span><b>4,000 sats</b><small>BTC sent to your deposit address</small></span></a>
         </div>
         <FeatCard icon={<KeyRound size={20} />} title="Signed Twice, Every Move" text="ed25519 and ML-DSA-65 both sign. NEAR checks both before anything moves." href="#/app/security" />
@@ -94,7 +94,7 @@ export function Landing() {
     </div></section>
 
     <section className="w2-sec"><div className="w2-bento">
-      <div className="w2-b-photo big"><img src="/v4/hero-landing.jpg" alt="" width={1536} height={1024} />
+      <div className="w2-b-photo big"><img src="/v5/orbit-wide.jpg" alt="" width={1536} height={1024} />
         <div className="w2-toasts">
           {create && <a className="w2-toast" href={EXPLORER_TX(create.hash)} target="_blank" rel="noreferrer"><Mark size={26} /><span><b>Wallet created</b><small>from 12 words, both locks on</small></span></a>}
           {swap && <a className="w2-toast" href={EXPLORER_TX(swap.hash)} target="_blank" rel="noreferrer"><ChainLogo id="usdt" size="sm" /><span><b>1 NEAR → {y24(BigInt(swap.received))} USDT</b><small>Swapped on Ref, signed twice</small></span></a>}
