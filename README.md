@@ -1,5 +1,32 @@
 # Magen · מגן
 
+**A quantum-safe multichain wallet for iPhone, Chrome and the web: every move needs a classical and a post-quantum signature, checked on NEAR.**
+
+- Bitcoin, Ethereum, Solana and NEAR all sign with ECDSA or EdDSA keys. Shor's algorithm on a large quantum computer recovers a private key from its public key.
+- Any account that has ever signed has already published its public key, so it can be harvested now and cracked later.
+- NIST standardised ML-DSA in FIPS 204 (Aug 2024). Magen puts an ML-DSA-65 lock on your NEAR account and releases every other chain's signature (NEAR Chain Signatures) only after both locks pass on chain.
+
+### Proof (NEAR testnet, Ethereum Sepolia, Solana devnet)
+
+| What | Transaction |
+|---|---|
+| Dual-signed `execute` (ed25519 + ML-DSA-65 verified by the wallet contract) | [8zE68i…](https://testnet.near.rocks/tx/8zE68ivr8yqCAxMZdH7jfWfCAPmzLUzSrn7DSz95AhoU) |
+| 2-of-3 ML-DSA-65 guardians set | [4WnbGu…](https://testnet.near.rocks/tx/4WnbGuP8Ae7wji3qAj836zGFj2XAxJb4rMmeNQoxo6rp) |
+| Q-Day switch: native ML-DSA-65 full-access key | [BAWh3d…](https://testnet.near.rocks/tx/BAWh3doDhZsfYMT7uzrnLS8i59rwLMKdA1TTNE7XZbTF) |
+| Chain Signatures send on Sepolia, gated by both locks | NEAR [Efwjsz…](https://testnet.near.rocks/tx/Efwjsz3s1SQfYarn3Mkym8XQxRxNkvifa5cSDFJdHZ6M) → Etherscan [0xd8cee1…](https://sepolia.etherscan.io/tx/0xd8cee16543ec97decb4370d601d3d7e01d0e74dbc11b1132139ec2980a1092c0) |
+| Same request without the ML-DSA half: **refused on NEAR** | [3QXq3W…](https://testnet.near.rocks/tx/3QXq3Wegps8W2mKb13PoxcjoAMwA2vHzgrdE5UzCW2y8) ("quantum half missing") |
+| Bitcoin testnet deposit minted as nBTC by Omni | [3ozwi6…](https://testnet.near.rocks/tx/3ozwi6xYKwSXFWDhbQbANDNWg1YH2rt9XzGSLqbrrj66) |
+| Swap NEAR → USDT on Ref (4 calls, one dual-signed approval) | [244z9R…](https://testnet.near.rocks/tx/244z9RSELiRdQmhvDmV7sxBS3vMw6zNGE8xavcfGQTVi) |
+| Bridge out NEAR → Solana devnet via Omni | [7zHBYK…](https://testnet.near.rocks/tx/7zHBYKkdvHn5umWv3eAVZgiww3FN7NSRmoqaCx7U66at) |
+
+Records: [`deployments/sepolia-mpc-live.json`](deployments/sepolia-mpc-live.json), [`deployments/film-v15-live.json`](deployments/film-v15-live.json).
+
+> **What is quantum-safe and what isn't.** Quantum-safe: the NEAR wallet contract's ML-DSA-65 check on every action, the guardians, and the native ML-DSA-65 key after the Q-Day switch. Still classical: NEAR's Chain Signatures MPC network, the signatures Bitcoin, Ethereum and Solana themselves verify, and the Omni bridge relayers. Magen guarantees nothing leaves NEAR, and no other-chain signature is requested, without your quantum-safe signature.
+
+**Tests:** `npm test` 28 pass, 0 fail, 1 skipped · sandbox (near-sandbox, real contract): 13 + 19 upgrade + 14 guardian tests. **Film:** `videos/magen-near/magen-near-film.mp4` (iPhone app, every action live). NEAR testnet preview, not audited.
+
+---
+
 **Keep your NEAR account. Add a second lock a quantum computer can't pick.**
 
 Magen upgrades an account you already have, in place, so every payment needs **two signatures**: your existing ed25519 key and a new post-quantum **ML-DSA-65** key. The wallet contract checks both on chain with NEAR's own host functions, `env::ed25519_verify` and `env::ml_dsa_verify`. When classical keys stop being safe, the **Q-Day switch** adds the ML-DSA-65 key to the same account as a native NEAR access key.
