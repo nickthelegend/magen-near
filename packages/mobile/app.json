@@ -6,14 +6,42 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "magen",
-    "userInterfaceStyle": "light",
-    "backgroundColor": "#f3f4f6",
-    "splash": { "image": "./assets/icon.png", "resizeMode": "contain", "backgroundColor": "#0b0e14" },
-    "ios": { "bundleIdentifier": "xyz.magen.near", "supportsTablet": false },
-    "android": { "package": "xyz.magen.near" },
-    "plugins": ["expo-secure-store", "expo-font",
-      ["expo-camera", { "cameraPermission": "Magen uses the camera to scan NEAR accounts and Magen pay codes.", "microphonePermission": false, "recordAudioAndroid": false }],
-      ["expo-image-picker", { "photosPermission": "Magen reads a QR code from a photo you pick.", "cameraPermission": false, "microphonePermission": false }]],
-    "runtimeVersion": { "policy": "sdkVersion" }
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B0C0F",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0C0F"
+    },
+    "ios": {
+      "bundleIdentifier": "xyz.magen.near",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "xyz.magen.near"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Magen uses the camera to scan NEAR accounts and Magen pay codes.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Magen reads a QR code from a photo you pick.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }

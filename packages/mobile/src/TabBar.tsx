@@ -1,4 +1,4 @@
-// Floating, icon-only tab bar. Thin-line icons, filled when active, a cobalt glow that springs under the
+// Floating, icon-only tab bar. Thin-line icons, filled when active, a magenta glow that springs under the
 // active icon, and a raised centre "Scan" button: Magen's lattice shield with scan brackets inside. Send keeps
 // its own slot. Screen readers get labels.
 import { useEffect, useRef, useState } from 'react';
@@ -53,7 +53,7 @@ export function TabBar({ tab, onChange, bottom }: { tab: Tab; onChange: (t: Tab)
     Animated.spring(x, { toValue: idx * slot + slot / 2 - 26, useNativeDriver: true, damping: 16, stiffness: 180, mass: 0.8 }).start();
     pop.setValue(0.6); Animated.spring(pop, { toValue: 1, useNativeDriver: true, damping: 10, stiffness: 220 }).start();
   }, [idx, slot]);
-  // On the Scan screen the centre button breathes a soft cobalt halo.
+  // On the Scan screen the centre button breathes a soft magenta halo.
   useEffect(() => {
     if (tab !== 'scan') { halo.stopAnimation(); halo.setValue(0); return; }
     fab.setValue(0.82); Animated.spring(fab, { toValue: 1, useNativeDriver: true, damping: 8, stiffness: 260 }).start();
@@ -71,14 +71,14 @@ export function TabBar({ tab, onChange, bottom }: { tab: Tab; onChange: (t: Tab)
           <Pressable accessibilityRole="tab" accessibilityLabel="Scan a code" accessibilityState={{ selected: onScan }} onPress={() => press('scan')}
             onPressIn={() => Animated.spring(fab, { toValue: 0.9, useNativeDriver: true, damping: 14, stiffness: 320 }).start()}
             onPressOut={() => Animated.spring(fab, { toValue: 1, useNativeDriver: true, damping: 8, stiffness: 260 }).start()}>
-            <Animated.View style={[s.fab, { backgroundColor: onScan ? '#0b0e14' : '#f3f4f6', transform: [{ scale: fab }] }]}>
-              <LinearGradient colors={['#5b84ff', '#2449e0']} start={{ x: 0.1, y: 0 }} end={{ x: 0.9, y: 1 }} style={s.fabFill}><ShieldScan size={31} /></LinearGradient>
+            <Animated.View style={[s.fab, { backgroundColor: '#0B0C0F', transform: [{ scale: fab }] }]}>
+              <LinearGradient colors={['#EE6AD9', '#C930B1']} start={{ x: 0.1, y: 0 }} end={{ x: 0.9, y: 1 }} style={s.fabFill}><ShieldScan size={31} /></LinearGradient>
             </Animated.View>
           </Pressable>
         </View>;
         const it = SIDE.find(i => i.key === k)!; const on = tab === k;
         return <Pressable key={k} style={s.slot} accessibilityRole="tab" accessibilityLabel={it.label} accessibilityState={{ selected: on }} onPress={() => press(k)} hitSlop={6}>
-          <it.Icon size={24} strokeWidth={on ? 2 : 1.6} color={on ? '#ffffff' : '#7d869a'} fill={on && k !== 'send' ? 'rgba(143,168,255,0.35)' : 'none'} />
+          <it.Icon size={24} strokeWidth={on ? 2 : 1.6} color={on ? '#ffffff' : 'rgba(255,255,255,0.4)'} fill={on && k !== 'send' ? 'rgba(224,64,200,0.35)' : 'none'} />
         </Pressable>;
       })}
     </View>
@@ -87,10 +87,10 @@ export function TabBar({ tab, onChange, bottom }: { tab: Tab; onChange: (t: Tab)
 
 const s = StyleSheet.create({
   wrap: { position: 'absolute', left: 20, right: 20, alignItems: 'stretch' },
-  bar: { height: 66, borderRadius: 33, backgroundColor: '#0b0e14', flexDirection: 'row', alignItems: 'center', shadowColor: '#0b0e14', shadowOpacity: 0.35, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
+  bar: { height: 66, borderRadius: 33, backgroundColor: '#15171C', flexDirection: 'row', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
   slot: { flex: 1, alignItems: 'center', justifyContent: 'center', height: 66 },
-  glow: { position: 'absolute', left: 0, top: 7, width: 52, height: 52, borderRadius: 26, backgroundColor: 'rgba(51,102,255,0.28)', shadowColor: '#3366ff', shadowOpacity: 0.8, shadowRadius: 14, shadowOffset: { width: 0, height: 0 } },
-  fab: { marginTop: -30, width: 66, height: 66, borderRadius: 33, padding: 4, shadowColor: '#3366ff', shadowOpacity: 0.45, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
+  glow: { position: 'absolute', left: 0, top: 7, width: 52, height: 52, borderRadius: 26, backgroundColor: 'rgba(224,64,200,0.22)', shadowColor: '#E040C8', shadowOpacity: 0.8, shadowRadius: 14, shadowOffset: { width: 0, height: 0 } },
+  fab: { marginTop: -30, width: 66, height: 66, borderRadius: 33, padding: 4, shadowColor: '#E040C8', shadowOpacity: 0.45, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
   fabFill: { flex: 1, borderRadius: 29, alignItems: 'center', justifyContent: 'center' },
-  halo: { position: 'absolute', top: -15, left: '50%', marginLeft: -33, width: 66, height: 66, borderRadius: 33, borderWidth: 2, borderColor: '#5b84ff' },
+  halo: { position: 'absolute', top: -15, left: '50%', marginLeft: -33, width: 66, height: 66, borderRadius: 33, borderWidth: 2, borderColor: '#E040C8' },
 });

@@ -2,7 +2,7 @@
 // and "My code": Magen's lattice QR for receiving, inside an orbiting quantum border. What a code means is
 // decided by src/scan.ts; the wallet routes the result (Send prefilled, pay confirmation, or a clear error).
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
+import { Animated, Easing, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Share, StyleSheet, TextInput, View, useWindowDimensions } from 'react-native';
 import { CameraView, scanFromURLAsync, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import * as Clipboard from 'expo-clipboard';
@@ -14,10 +14,11 @@ import { Atom, Check, ClipboardPaste, Copy, Flashlight, FlashlightOff, Image as 
 import { magenQr } from './qr';
 import { checkAmount, payLink, receiveCode, MAX_MEMO, type Scanned } from './scan';
 import { ShieldScan, ShieldSend } from './TabBar';
+import { C as K, FONT, T as Txt } from './theme';
 
-const F = 'Commissioner';
-const C = { ink: '#0b0e14', onInk: '#eef1f6', onInk2: '#9aa3b4', cobalt: '#3366ff', soft: '#8fa8ff', red: '#d93036', redSoft: '#fdeeee', text: '#0e131c', text2: '#4b5466', text3: '#7a8394', line: '#e4e7ec' };
-const T = ({ style, ...p }: any) => <Text {...p} style={[{ fontFamily: F, color: '#fff' }, style]} />;
+const F = FONT.m;
+const C = { ink: K.bg, onInk: K.text, onInk2: K.text2, cobalt: K.accent, soft: K.accentText, red: K.red, redSoft: K.redSoft, text: K.text, text2: K.text2, text3: K.text3, line: K.line };
+const T = (p: any) => <Txt {...p} />;
 export type ScanMode = 'scan' | 'code';
 export type Sheet = Extract<Scanned, { kind: 'pay' } | { kind: 'error' }>;
 
@@ -33,8 +34,8 @@ const useLoop = (ms: number, delay = 0, easing = Easing.linear) => {
 /** Faint lattice of dots and bonds, Magen's background motif. */
 const Lattice = ({ opacity = 1 }: { opacity?: number }) => <Svg style={StyleSheet.absoluteFill} pointerEvents="none" opacity={opacity}>
   <Defs><Pattern id="lat" width="24" height="24" patternUnits="userSpaceOnUse">
-    <Rect x="11.5" y="0" width="1" height="24" fill="rgba(143,168,255,0.07)" /><Rect x="0" y="11.5" width="24" height="1" fill="rgba(143,168,255,0.07)" />
-    <Circle cx="12" cy="12" r="1.5" fill="rgba(143,168,255,0.28)" /></Pattern></Defs>
+    <Rect x="11.5" y="0" width="1" height="24" fill="rgba(242,139,224,0.07)" /><Rect x="0" y="11.5" width="24" height="1" fill="rgba(242,139,224,0.07)" />
+    <Circle cx="12" cy="12" r="1.5" fill="rgba(242,139,224,0.28)" /></Pattern></Defs>
   <Rect width="100%" height="100%" fill="url(#lat)" />
 </Svg>;
 
@@ -97,9 +98,9 @@ function Scanner({ sheet, onCode, top }: { sheet: Sheet | null; onCode: (raw: st
   const granted = !!perm?.granted;
   const denied = perm && !perm.granted && !perm.canAskAgain;
   const status = busy || note || (denied ? 'Camera access is off. Allow it in Settings, or scan from a photo.' : !ready && noCam ? noCam : 'Point at a NEAR account or a Magen pay code');
-  const dim = 'rgba(4,7,14,0.66)';
+  const dim = 'rgba(5,6,8,0.66)';
   return <View style={[StyleSheet.absoluteFill, { backgroundColor: C.ink }]}>
-    <LinearGradient colors={['#0b0e14', '#0f1a3d', '#0b0e14']} locations={[0, 0.45, 1]} style={StyleSheet.absoluteFill} />
+    <LinearGradient colors={['#0B0C0F', '#1A0E19', '#0B0C0F']} locations={[0, 0.45, 1]} style={StyleSheet.absoluteFill} />
     <Lattice />
     {granted && <CameraView style={StyleSheet.absoluteFill} facing="back" enableTorch={torch} barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
       onCameraReady={() => { setReady(true); setNoCam(''); }} onMountError={e => setNoCam(`Camera unavailable: ${e.message}`)}
@@ -110,7 +111,7 @@ function Scanner({ sheet, onCode, top }: { sheet: Sheet | null; onCode: (raw: st
     <View pointerEvents="none" style={[s.dim, { backgroundColor: ready ? dim : 'transparent', top: fy, height: F_, width: fx }]} />
     <View pointerEvents="none" style={[s.dim, { backgroundColor: ready ? dim : 'transparent', top: fy, height: F_, left: fx + F_, right: 0 }]} />
     <View pointerEvents="none" style={{ position: 'absolute', top: top + 74, left: 24, right: 24, alignItems: 'center' }}>
-      <T style={{ fontSize: 26, fontWeight: '600', letterSpacing: -0.7 }}>Scan to pay</T>
+      <T display style={{ fontSize: 28, letterSpacing: -0.9 }}>Scan to pay</T>
       <T style={{ color: C.onInk2, fontSize: 14, marginTop: 4 }}>NEAR account · Magen pay code · magen:// link</T>
     </View>
     <Frame x={fx} y={fy} size={F_} live={ready && !sheet} />
@@ -119,7 +120,7 @@ function Scanner({ sheet, onCode, top }: { sheet: Sheet | null; onCode: (raw: st
       {torch ? <Flashlight color={C.ink} size={19} /> : <FlashlightOff color="#fff" size={19} />}
     </Pressable>}
     {!sheet && <View style={{ position: 'absolute', top: fy + F_ + 26, left: 20, right: 20, alignItems: 'center', gap: 16 }}>
-      <T style={{ color: note ? '#ffb4b6' : C.onInk2, fontSize: 13.5, textAlign: 'center', lineHeight: 19 }}>{status}</T>
+      <T style={{ color: note ? '#FFB3BA' : C.onInk2, fontSize: 13.5, textAlign: 'center', lineHeight: 19 }}>{status}</T>
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <Glass title="Scan from photo" icon={<ImageIcon color="#fff" size={18} />} onPress={fromPhoto} />
         <Glass title="Paste" icon={<ClipboardPaste color="#fff" size={18} />} onPress={paste} label="Paste a code from the clipboard" />
@@ -143,15 +144,15 @@ function Frame({ x, y, size, live }: { x: number; y: number; size: number; live:
       <View style={[s.quant, { left: O / 2 - 4, top: -4 }]} /><View style={[s.quant, { left: O / 2 - 3, bottom: -3, width: 6, height: 6, opacity: 0.7 }]} />
     </Animated.View>
     <Animated.View style={[{ position: 'absolute', width: O, height: O, left: -27, top: -27 }, spin(orbit2, true)]}>
-      <View style={[s.quant, { left: -3, top: O / 2 - 3, width: 6, height: 6, backgroundColor: '#b9c8ff' }]} />
+      <View style={[s.quant, { left: -3, top: O / 2 - 3, width: 6, height: 6, backgroundColor: '#F6B5EB' }]} />
     </Animated.View>
     <View style={[StyleSheet.absoluteFill, { borderRadius: 26, overflow: 'hidden' }]}>
       <Lattice opacity={0.9} />
       {live && <Animated.View style={{ position: 'absolute', left: 0, right: 0, height: 72, transform: [{ translateY: beam.interpolate({ inputRange: [0, 1], outputRange: [-72, size] }) }] }}>
-        <LinearGradient colors={['rgba(91,132,255,0)', 'rgba(91,132,255,0.38)']} style={{ flex: 1 }} />
-        <View style={{ height: 2, backgroundColor: '#b9c8ff', shadowColor: '#5b84ff', shadowOpacity: 1, shadowRadius: 8 }} />
+        <LinearGradient colors={['rgba(224,64,200,0)', 'rgba(224,64,200,0.38)']} style={{ flex: 1 }} />
+        <View style={{ height: 2, backgroundColor: '#F6B5EB', shadowColor: '#E040C8', shadowOpacity: 1, shadowRadius: 8 }} />
       </Animated.View>}
-      {!live && <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}><View style={{ opacity: 0.85 }}><ShieldScan size={78} color="#8fa8ff" /></View></View>}
+      {!live && <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}><View style={{ opacity: 0.85 }}><ShieldScan size={78} color="#F28BE0" /></View></View>}
     </View>
     <Animated.View style={[StyleSheet.absoluteFill, { transform: [{ scale: breathe.interpolate({ inputRange: [0, 0.5, 1], outputRange: [1, 1.035, 1] }) }] }]}>
       {corner({ left: -k, top: -k, borderLeftWidth: k, borderTopWidth: k, borderTopLeftRadius: 26 })}
@@ -171,7 +172,7 @@ function ResultSheet({ sheet, onConfirm, onDismiss, bottom }: { sheet: Sheet; on
     {sheet.kind === 'pay' ? <>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 6 }}>
         <View style={s.sheetIco}><ShieldSend size={22} /></View>
-        <View style={{ flex: 1 }}><T style={{ color: C.text, fontWeight: '700', fontSize: 18 }}>Pay request</T><T style={{ color: C.text3, fontSize: 12.5 }}>{sheet.via === 'https' ? 'Magen link' : 'Magen code'} · NEAR testnet</T></View>
+        <View style={{ flex: 1 }}><T style={{ color: C.text, fontWeight: "700", fontSize: 18 }}>Pay request</T><T style={{ color: C.text3, fontSize: 12.5 }}>{sheet.via === 'https' ? 'Magen link' : 'Magen code'} · NEAR testnet</T></View>
         <Pressable onPress={onDismiss} hitSlop={10} accessibilityLabel="Dismiss"><X color={C.text3} size={20} /></Pressable>
       </View>
       <Row k="To" v={sheet.to} />
@@ -187,7 +188,7 @@ function ResultSheet({ sheet, onConfirm, onDismiss, bottom }: { sheet: Sheet; on
         <View style={{ flex: 1 }}><T style={{ color: C.text, fontWeight: '700', fontSize: 17 }}>{sheet.code === 'self' ? 'That’s your own code' : sheet.code === 'dapp' ? 'dApp request' : 'Can’t use this code'}</T>
           <T style={{ color: C.text2, fontSize: 14.5, lineHeight: 20, marginTop: 4 }}>{sheet.message}</T></View>
       </View>
-      <Pressable onPress={onDismiss} accessibilityRole="button" style={({ pressed }) => [s.primary, { backgroundColor: C.ink, transform: [{ scale: pressed ? 0.97 : 1 }] }]}>
+      <Pressable onPress={onDismiss} accessibilityRole="button" style={({ pressed }) => [s.primary, { backgroundColor: '#1D2027', shadowOpacity: 0, transform: [{ scale: pressed ? 0.97 : 1 }] }]}>
         <T style={{ fontWeight: '600', fontSize: 16 }}>Scan again</T>
       </Pressable>
     </>}
@@ -214,44 +215,44 @@ function MyCode({ wallet, top }: { wallet: string; top: number }) {
   const share = () => Share.share({ message: isRequest ? `Pay me${valid ? ` ${valid} NEAR` : ''} with Magen on NEAR testnet: ${link}` : `My NEAR testnet account (Magen, signed twice): ${wallet}` }).catch(() => {});
   const copy = async () => { await Clipboard.setStringAsync(link); setCopied(true); Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); setTimeout(() => setCopied(false), 1500); };
   return <View style={[StyleSheet.absoluteFill, { backgroundColor: C.ink }]}>
-    <LinearGradient colors={['#0b0e14', '#101c46', '#0b0e14']} locations={[0, 0.4, 1]} style={StyleSheet.absoluteFill} />
+    <LinearGradient colors={['#0B0C0F', '#1E0F1C', '#0B0C0F']} locations={[0, 0.4, 1]} style={StyleSheet.absoluteFill} />
     <Lattice />
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ paddingTop: top + 70, paddingBottom: 140, alignItems: 'center', paddingHorizontal: 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={{ width: O, height: O, alignItems: 'center', justifyContent: 'center' }}>
           <Animated.View pointerEvents="none" style={[s.aura, { width: card + 30, height: card + 30, borderRadius: 40, opacity: pulse.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0.35, 0.8, 0.35] }) }]} />
-          <Svg pointerEvents="none" width={O} height={O} style={StyleSheet.absoluteFill}><Circle cx={O / 2} cy={O / 2} r={O / 2 - 2} stroke="rgba(143,168,255,0.22)" strokeWidth={1} strokeDasharray="2 7" fill="none" /></Svg>
+          <Svg pointerEvents="none" width={O} height={O} style={StyleSheet.absoluteFill}><Circle cx={O / 2} cy={O / 2} r={O / 2 - 2} stroke="rgba(242,139,224,0.22)" strokeWidth={1} strokeDasharray="2 7" fill="none" /></Svg>
           <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, spin(orbit)]}>
             <View style={[s.quant, { left: O / 2 - 5, top: -3, width: 10, height: 10, borderRadius: 5 }]} />
             <View style={[s.quant, { left: O / 2 - 3, bottom: -1, opacity: 0.6 }]} />
           </Animated.View>
           <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, spin(orbit2, true)]}>
-            <View style={[s.quant, { left: -1, top: O / 2 - 3, backgroundColor: '#b9c8ff' }]} />
+            <View style={[s.quant, { left: -1, top: O / 2 - 3, backgroundColor: '#F6B5EB' }]} />
             <View style={[s.quant, { right: -1, top: O / 2 - 2, width: 5, height: 5, opacity: 0.7 }]} />
           </Animated.View>
-          <Animated.View style={{ width: card + 6, height: card + 6, borderRadius: 31, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(91,132,255,0.28)', transform: [{ scale: swap }] }}>
+          <Animated.View style={{ width: card + 6, height: card + 6, borderRadius: 31, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(224,64,200,0.28)', transform: [{ scale: swap }] }}>
             <Animated.View style={[{ position: 'absolute', width: card * 1.6, height: card * 1.6 }, spin(beam)]}>
-              <LinearGradient colors={['rgba(51,102,255,0)', '#3366ff', '#d9e2ff', '#3366ff', 'rgba(51,102,255,0)']} locations={[0.3, 0.46, 0.5, 0.54, 0.7]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={{ flex: 1 }} />
+              <LinearGradient colors={['rgba(224,64,200,0)', '#E040C8', '#FCE1F7', '#E040C8', 'rgba(224,64,200,0)']} locations={[0.3, 0.46, 0.5, 0.54, 0.7]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={{ flex: 1 }} />
             </Animated.View>
             <View style={{ width: card, height: card, borderRadius: 28, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               <SvgXml xml={qr} width={Q} height={Q} accessibilityLabel={`QR code for ${value}`} />
               <Animated.View pointerEvents="none" style={{ position: 'absolute', top: -card * 0.3, bottom: -card * 0.3, width: 70, transform: [{ translateX: sheen.interpolate({ inputRange: [0, 1], outputRange: [-card, card] }) }, { rotate: '18deg' }] }}>
-                <LinearGradient colors={['rgba(185,200,255,0)', 'rgba(185,200,255,0.30)', 'rgba(185,200,255,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={{ flex: 1 }} />
+                <LinearGradient colors={['rgba(246,181,235,0)', 'rgba(246,181,235,0.30)', 'rgba(246,181,235,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={{ flex: 1 }} />
               </Animated.View>
             </View>
           </Animated.View>
         </View>
         <T style={{ fontSize: 19, fontWeight: '600', marginTop: 6, textAlign: 'center' }} numberOfLines={1} adjustsFontSizeToFit>{wallet}</T>
-        <View style={s.badge}><Atom color="#b9c8ff" size={14} /><T style={{ color: '#d5deff', fontSize: 12.5, fontWeight: '600' }}>Signed twice · ed25519 + ML-DSA-65</T></View>
+        <View style={s.badge}><Atom color="#F6B5EB" size={14} /><T style={{ color: '#FBD3F4', fontSize: 12.5, fontWeight: '600' }}>Signed twice · ed25519 + ML-DSA-65</T></View>
         <View style={{ alignSelf: 'stretch', gap: 10, marginTop: 18 }}>
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            <View style={[s.input, { flex: 1, flexDirection: 'row', alignItems: 'center', paddingRight: 12 }, amount && !valid ? { borderColor: '#ff8a8f' } : null]}>
-              <TextInput style={{ flex: 1, fontFamily: F, fontSize: 16, color: '#fff' }} placeholder="Amount" placeholderTextColor={C.onInk2} keyboardType="decimal-pad" value={amount} onChangeText={t => setAmount(t.replace(/[^\d.]/g, ''))} accessibilityLabel="Amount to request in NEAR, optional" />
+            <View style={[s.input, { flex: 1, flexDirection: 'row', alignItems: 'center', paddingRight: 12 }, amount && !valid ? { borderColor: '#FF5A6A' } : null]}>
+              <TextInput selectionColor="#E040C8" style={{ flex: 1, fontFamily: F, fontSize: 16, color: '#fff' }} placeholder="Amount" placeholderTextColor={C.onInk2} keyboardType="decimal-pad" value={amount} onChangeText={t => setAmount(t.replace(/[^\d.]/g, ''))} accessibilityLabel="Amount to request in NEAR, optional" />
               <T style={{ color: C.onInk2, fontWeight: '600', fontSize: 13 }}>NEAR</T>
             </View>
-            <TextInput style={[s.input, { flex: 1.25, fontFamily: F, fontSize: 16, color: '#fff' }]} placeholder="Memo" placeholderTextColor={C.onInk2} value={memo} onChangeText={t => setMemo(t.slice(0, MAX_MEMO))} accessibilityLabel="Memo shown to the payer, optional" />
+            <TextInput selectionColor="#E040C8" style={[s.input, { flex: 1.25, fontFamily: F, fontSize: 16, color: '#fff' }]} placeholder="Memo" placeholderTextColor={C.onInk2} value={memo} onChangeText={t => setMemo(t.slice(0, MAX_MEMO))} accessibilityLabel="Memo shown to the payer, optional" />
           </View>
-          <T style={{ color: amount && !valid ? '#ffb4b6' : C.onInk2, fontSize: 12.5, textAlign: 'center' }}>{amount && !valid ? 'Enter a number above 0, up to 24 decimals.' : isRequest ? 'Pay request: Magen opens it ready to sign twice.' : 'Your account is your address. Add an amount to request one.'}</T>
+          <T style={{ color: amount && !valid ? '#FFB3BA' : C.onInk2, fontSize: 12.5, textAlign: 'center' }}>{amount && !valid ? 'Enter a number above 0, up to 24 decimals.' : isRequest ? 'Pay request: Magen opens it ready to sign twice.' : 'Your account is your address. Add an amount to request one.'}</T>
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
             <Pressable onPress={share} accessibilityRole="button" style={({ pressed }) => [s.primary, { flex: 1, marginTop: 0, transform: [{ scale: pressed ? 0.96 : 1 }] }]}><Share2 color="#fff" size={18} /><T style={{ fontWeight: '600', fontSize: 16 }}>Share</T></Pressable>
             <Pressable onPress={copy} accessibilityRole="button" accessibilityLabel={isRequest ? 'Copy pay link' : 'Copy address'} style={({ pressed }) => [s.glass, { flex: 1, height: 54, justifyContent: 'center', transform: [{ scale: pressed ? 0.96 : 1 }] }]}>
@@ -266,19 +267,19 @@ function MyCode({ wallet, top }: { wallet: string; top: number }) {
 const s = StyleSheet.create({
   head: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
   seg: { width: 232, height: 44, borderRadius: 22, padding: 4, flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.08)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
-  segKnob: { position: 'absolute', left: 4, top: 4, width: 112, height: 34, borderRadius: 17, backgroundColor: '#3366ff', shadowColor: '#3366ff', shadowOpacity: 0.7, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
+  segKnob: { position: 'absolute', left: 4, top: 4, width: 112, height: 34, borderRadius: 17, backgroundColor: '#E040C8', shadowColor: '#E040C8', shadowOpacity: 0.7, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
   segItem: { width: 112, height: 34, alignItems: 'center', justifyContent: 'center' },
   dim: { position: 'absolute', left: 0, right: 0 },
-  corner: { position: 'absolute', borderColor: '#8fa8ff', shadowColor: '#3366ff', shadowOpacity: 0.9, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
-  orbit: { position: 'absolute', borderWidth: 1, borderColor: 'rgba(143,168,255,0.16)', borderStyle: 'dashed' },
-  quant: { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: '#8fa8ff', shadowColor: '#5b84ff', shadowOpacity: 1, shadowRadius: 8, shadowOffset: { width: 0, height: 0 } },
+  corner: { position: 'absolute', borderColor: '#F28BE0', shadowColor: '#E040C8', shadowOpacity: 0.9, shadowRadius: 10, shadowOffset: { width: 0, height: 0 } },
+  orbit: { position: 'absolute', borderWidth: 1, borderColor: 'rgba(242,139,224,0.16)', borderStyle: 'dashed' },
+  quant: { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: '#F28BE0', shadowColor: '#E040C8', shadowOpacity: 1, shadowRadius: 8, shadowOffset: { width: 0, height: 0 } },
   torch: { position: 'absolute', right: 20, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  glass: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 48, paddingHorizontal: 18, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' },
-  sheet: { position: 'absolute', left: 14, right: 14, backgroundColor: '#fff', borderRadius: 24, padding: 18, gap: 4, shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 30, shadowOffset: { width: 0, height: 14 } },
-  sheetIco: { width: 42, height: 42, borderRadius: 13, backgroundColor: '#3366ff', alignItems: 'center', justifyContent: 'center' },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#eef0f3' },
-  primary: { marginTop: 14, height: 54, borderRadius: 999, backgroundColor: '#3366ff', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, shadowColor: '#3366ff', shadowOpacity: 0.35, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
-  aura: { position: 'absolute', backgroundColor: 'rgba(51,102,255,0.25)', shadowColor: '#3366ff', shadowOpacity: 1, shadowRadius: 40, shadowOffset: { width: 0, height: 0 } },
-  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, paddingHorizontal: 12, height: 28, borderRadius: 14, backgroundColor: 'rgba(51,102,255,0.22)', borderWidth: 1, borderColor: 'rgba(143,168,255,0.3)' },
-  input: { height: 52, borderRadius: 14, paddingHorizontal: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', backgroundColor: 'rgba(255,255,255,0.06)' },
+  glass: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 48, paddingHorizontal: 18, borderRadius: 999, backgroundColor: '#1D2027', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+  sheet: { position: 'absolute', left: 14, right: 14, backgroundColor: '#15171C', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', borderRadius: 28, padding: 18, gap: 4, shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 30, shadowOffset: { width: 0, height: 14 } },
+  sheetIco: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#E040C8', alignItems: 'center', justifyContent: 'center' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.08)' },
+  primary: { marginTop: 14, height: 54, borderRadius: 999, backgroundColor: '#E040C8', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, shadowColor: '#E040C8', shadowOpacity: 0.35, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
+  aura: { position: 'absolute', backgroundColor: 'rgba(224,64,200,0.25)', shadowColor: '#E040C8', shadowOpacity: 1, shadowRadius: 40, shadowOffset: { width: 0, height: 0 } },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, paddingHorizontal: 12, height: 28, borderRadius: 14, backgroundColor: 'rgba(224,64,200,0.22)', borderWidth: 1, borderColor: 'rgba(242,139,224,0.3)' },
+  input: { height: 52, borderRadius: 999, paddingHorizontal: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', backgroundColor: '#1D2027' },
 });

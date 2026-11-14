@@ -52,9 +52,9 @@ export function magenQr(value: string, px = 240): QrInfo {
     + `<circle cx="16" cy="16" r="1.7" fill="#fff" stroke="none"/></g>`;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}" viewBox="0 0 ${V} ${V}">`
     + `<defs><linearGradient id="mq" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="${V}" y2="${V}">`
-    + `<stop offset="0" stop-color="#0b0e14"/><stop offset="0.5" stop-color="#16287a"/><stop offset="1" stop-color="#2449e0"/></linearGradient>`
+    + `<stop offset="0" stop-color="#0B0C0F"/><stop offset="0.5" stop-color="#4A1442"/><stop offset="1" stop-color="#8E1E7D"/></linearGradient>`
     + `<linearGradient id="ms" gradientUnits="userSpaceOnUse" x1="${lx}" y1="${lx}" x2="${lx + logo}" y2="${lx + logo}">`
-    + `<stop offset="0" stop-color="#5b84ff"/><stop offset="1" stop-color="#1b2fa8"/></linearGradient></defs>`
+    + `<stop offset="0" stop-color="#EE6AD9"/><stop offset="1" stop-color="#B02A9B"/></linearGradient></defs>`
     + `<rect width="${V}" height="${V}" fill="#ffffff"/>`
     + `<path d="${bonds}" fill="url(#mq)" fill-opacity="0.55"/>`
     + `<path d="${dots}" fill="url(#mq)"/>`
