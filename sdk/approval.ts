@@ -17,7 +17,7 @@ export function previewTransaction(signer:string,receiver:string,ops:Uint8Array[
  if(act.kind==='migrate'){r.title='Q-Day switch';r.details.unshift('Add your native ML-DSA-65 full-access key. It can control this account alone.');}
  if(act.kind==='guardians'){r.title='Set up guardians';r.details.unshift(`${act.threshold} of ${act.keys.length} ML-DSA-65 guardians can rotate both locks.`);}
  if(act.kind==='batch')describeBatch(r,act.calls);
- if(act.kind==='call'){r.title=act.method==='sign'?'Cross-chain signature request':'Contract call';r.details.unshift('Call: '+act.receiver+' → '+act.method,'Forwarded deposit: '+near(BigInt(act.deposit)));}
+ if(act.kind==='call'){const mpc=act.method==='sign'&&act.receiver.startsWith('v1.signer');r.title=mpc?'Sign for Ethereum with NEAR MPC':act.method==='sign'?'Cross-chain signature request':'Contract call';r.details.unshift('Call: '+act.receiver+' → '+act.method,'Forwarded deposit: '+near(BigInt(act.deposit)));if(mpc)r.details.unshift('Your wallet contract verifies ed25519 and ML-DSA-65 first; only then does NEAR\'s MPC sign for your Ethereum address.');}
  if(!a.pq_sig)r.details.unshift('Deliberate rejection test: quantum half is missing.');
  }else if(method==='recover'){const i=JSON.parse(a.request);r.title='Guardian recovery';r.details.push('Rotate both locks on '+i.wallet,`${a.signatures?.length??0} guardian signatures; funds stay in the account.`);}
  else if(method==='create_account'){r.title='Create testnet account';r.details.push('New account: '+a.new_account_id);}

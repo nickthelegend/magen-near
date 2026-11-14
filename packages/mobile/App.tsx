@@ -420,46 +420,92 @@ function Guardians({ vault, live, refresh, addLocal }: { vault: Vault; live: Liv
 }
 
 /* ---------- phase 2: every chain, private send, swap ---------- */
-function ChainsTab({ vault, live, go }: P) {
+const SEPOLIA = 'https://ethereum-sepolia-rpc.publicnode.com';
+const weiOf = (v: string) => { const [i, f = ''] = v.trim().split('.'); if (!/^\d*$/.test(i) || !/^\d*$/.test(f) || f.length > 18 || !(i || f)) throw Error('Enter an ETH amount like 0.001.'); return BigInt(i || '0') * 10n ** 18n + BigInt((f + '0'.repeat(18)).slice(0, 18)); };
+const ethStr = (w: bigint, p = 4) => { const s = w.toString().padStart(19, '0'); const f = s.slice(-18).slice(0, p).replace(/0+$/, ''); return BigInt(s.slice(0, -18)).toString() + (f ? '.' + f : ''); };
+type EthStage = 'form' | 'near' | 'mpc' | 'sepolia' | 'done';
+function ChainsTab({ vault, live, go, addLocal }: P) {
   const [addrs, setAddrs] = useState<any[] | null>(null); const [err, setErr] = useState('');
-  const [busy, setBusy] = useState(''); const [res, setRes] = useState<any>(null);
-  useEffect(() => { chainAddresses(vault.wallet).then(setAddrs).catch(e => setErr(String(e.message))); }, [vault.wallet]);
-  const ask = async (dropPq: boolean) => {
-    const eth = addrs?.find(a => a.id === 'ethereum'); if (!eth) return; setRes(null); setErr('');
+  const [bal, setBal] = useState<bigint | null>(null); const [to, setTo] = useState(''); const [amt, setAmt] = useState('0.001');
+  const [stage, setStage] = useState<EthStage>('form'); const [res, setRes] = useState<any>(null); const [refusal, setRefusal] = useState<any>(null);
+  useEffect(() => { chainAddresses(vault.wallet).then(setAddrs).catch(e => setErr(friendlyError(String(e.message)))); }, [vault.wallet]);
+  const eth = addrs?.find(a => a.id === 'ethereum');
+  const loadBal = useCallback(() => { if (eth) evm(SEPOLIA, 'eth_getBalance', [eth.address, 'latest']).then((b: string) => setBal(BigInt(b))).catch(() => setBal(null)); }, [eth?.address]);
+  useEffect(() => { loadBal(); }, [loadBal]);
+  const send = async () => {
+    if (!eth) return; setErr(''); setRes(null); setRefusal(null);
     try {
-      setBusy(dropPq ? 'Asking with the classical signature only…' : 'Signing twice, then asking the MPC…'); await new Promise(r => setTimeout(r, 60));
-      const RPC = 'https://ethereum-sepolia-rpc.publicnode.com';
-      const [nonce, gp, bal] = await Promise.all([evm(RPC, 'eth_getTransactionCount', [eth.address, 'latest']), evm(RPC, 'eth_gasPrice', []), evm(RPC, 'eth_getBalance', [eth.address, 'latest'])]);
-      const tx: EthTx = { chainId: 11155111n, nonce: BigInt(nonce), maxPriorityFeePerGas: 1_000_000_000n, maxFeePerGas: BigInt(gp) * 2n + 1_000_000_000n, gas: 21000n, to: eth.address, value: 1_000_000_000_000_000n };
-      const r = await signCrossChain(feeOf(vault, live), vault.wallet, vault.keys, { chain: 'ethereum', tx, from: eth.address }, { dropPq });
-      setRes({ ...r, needsGas: BigInt(bal) < 21000n * tx.maxFeePerGas + tx.value });
-      Haptics.notificationAsync(r.success ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Error);
-    } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
+      const dest = to.trim(); if (!/^0x[0-9a-fA-F]{40}$/.test(dest)) throw Error('Enter an Ethereum address: 0x followed by 40 hex characters.');
+      const value = weiOf(amt); if (value <= 0n) throw Error('Enter an amount above zero.');
+      const [nonce, gp, b] = await Promise.all([evm(SEPOLIA, 'eth_getTransactionCount', [eth.address, 'latest']), evm(SEPOLIA, 'eth_gasPrice', []), evm(SEPOLIA, 'eth_getBalance', [eth.address, 'latest'])]);
+      const tx: EthTx = { chainId: 11155111n, nonce: BigInt(nonce), maxPriorityFeePerGas: 1_000_000_000n, maxFeePerGas: BigInt(gp) * 2n + 1_000_000_000n, gas: 21000n, to: dest, value };
+      if (BigInt(b) < value + tx.gas * tx.maxFeePerGas) throw Error(`Your Ethereum address holds ${ethStr(BigInt(b), 5)} Sepolia ETH, not enough for ${amt} ETH plus gas.`);
+      setStage('near'); await new Promise(r => setTimeout(r, 60));
+      const r = await signCrossChain(feeOf(vault, live), vault.wallet, vault.keys, { chain: 'ethereum', tx, from: eth.address });
+      if (!r.success || !r.raw) { setRes(r); setStage('form'); throw Error(r.error ? friendlyError(r.error) : 'NEAR returned no MPC signature.'); }
+      setStage('mpc'); setRes({ near: r.hash }); await new Promise(r2 => setTimeout(r2, 400));
+      setStage('sepolia');
+      const h: string = await evm(SEPOLIA, 'eth_sendRawTransaction', [r.raw]);
+      setRes({ near: r.hash, eth: h });
+      let rc: any = null; for (let i = 0; i < 60 && !rc; i++) { rc = await evm(SEPOLIA, 'eth_getTransactionReceipt', [h]); if (!rc) await new Promise(r2 => setTimeout(r2, 2000)); }
+      if (!rc) throw Error(`Broadcast ${short(h)}, but Sepolia has not mined it after two minutes.`);
+      if (rc.status !== '0x1') throw Error(`Sepolia reverted ${short(h)}.`);
+      setRes({ near: r.hash, eth: h, block: parseInt(rc.blockNumber, 16) }); setStage('done'); loadBal();
+      addLocal({ hash: r.hash, time: Date.now(), success: true, kind: 'sent', title: 'Sent on Ethereum Sepolia', detail: `${amt} ETH · MPC signed after both locks`, counterparty: dest });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (e: any) { setErr(friendlyError(String(e.message))); setStage(s => (s === 'done' ? s : 'form')); Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error); }
   };
-  return <Screen tall action={<>
-      <Btn title={busy && !busy.includes('classical') ? busy : 'Sign twice, ask the MPC'} busy={!!busy && !busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(false)} icon={<ShieldSend size={20} />} />
-      <Btn title={busy.includes('classical') ? busy : 'Try with one signature'} kind="ghost" busy={busy.includes('classical')} disabled={!addrs || !!busy} onPress={() => ask(true)} />
-    </>}>
-    <Back go={go} title="Every chain" sub="NEAR's MPC signs for these addresses only after your Magen wallet verifies both signatures. The chains themselves stay classical." />
-    <Card>{addrs === null ? <ActivityIndicator color={C.accent} style={{ padding: 24 }} /> : addrs.map((a, i) => <View key={a.id} style={[styles.row, i === addrs.length - 1 && { borderBottomWidth: 0 }]}>
-      <View style={[styles.ico, { backgroundColor: '#fff' }]}>{LOGO[a.id] ? <Image source={LOGO[a.id]} style={{ width: 22, height: 22 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '700' }}>{a.name.slice(0, 1)}</T>}</View>
-      <View style={{ flex: 1 }}><T style={{ fontWeight: '600', fontSize: 15 }}>{a.name} <T style={{ color: C.text3, fontSize: 12.5 }}>{a.network}</T></T>
-        <T numberOfLines={1} style={{ color: C.text2, fontSize: 12.5, fontFamily: MONO, marginTop: 2 }}>{short(a.address, 12, 8)}</T>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 5 }}><Atom color={C.accent} size={12} /><T style={{ color: C.accentText, fontSize: 11.5, fontWeight: '600' }}>Guarded by your quantum key</T></View></View>
-      <Pressable onPress={() => Clipboard.setStringAsync(a.address)} hitSlop={8} accessibilityLabel={`Copy ${a.name} address`}><Copy color={C.text3} size={17} /></Pressable>
-    </View>)}</Card>
-    <Card style={{ padding: 20, gap: 12 }}>
-      <T display style={{ fontSize: 19 }}>Ask for an Ethereum signature</T>
-      <T style={{ color: C.text2, fontSize: 13.5, lineHeight: 20 }}>A 0.001 Sepolia ETH transfer. NEAR checks ed25519 and ML-DSA-65, then asks v1.signer-prod.testnet.</T>
-      {res && (res.success ? <Ok onPress={() => open(res.hash)}><ShieldCheck color={C.accent} size={20} />
-        <View style={{ flex: 1, gap: 4 }}><T style={{ fontWeight: '600', fontSize: 15 }}>MPC signature returned after both your signatures verified.</T>
-          <T style={{ color: C.text2, fontSize: 13 }}>{res.needsGas ? 'Needs Sepolia gas to broadcast: fund your Ethereum address above.' : 'Ready to broadcast on Sepolia.'}</T>
-          <T style={{ color: C.accentText, fontWeight: '600' }}>NEAR request {short(res.hash)}</T></View></Ok>
-      : <Pressable onPress={() => open(res.hash)} style={[styles.banner, { backgroundColor: C.redSoft, borderColor: 'rgba(255,90,106,0.3)' }]}><ShieldAlert color={C.red} size={20} />
-        <View style={{ flex: 1, gap: 4 }}><T style={{ fontWeight: '600', color: C.redText, fontSize: 15 }}>{friendlyError(res.error)}</T><T style={{ color: C.redText, fontSize: 13 }}>NEAR never asked the MPC, so nothing was signed.</T>
-          <T style={{ color: C.accentText, fontWeight: '600' }}>Refusal {short(res.hash)}</T></View></Pressable>)}
+  const tryOne = async () => {
+    if (!eth) return; setErr(''); setRefusal(null);
+    try {
+      const tx: EthTx = { chainId: 11155111n, nonce: 0n, maxPriorityFeePerGas: 1n, maxFeePerGas: 1n, gas: 21000n, to: eth.address, value: 1n };
+      setRefusal({ busy: true }); const r = await signCrossChain(feeOf(vault, live), vault.wallet, vault.keys, { chain: 'ethereum', tx, from: eth.address }, { dropPq: true }); setRefusal(r);
+    } catch (e: any) { setRefusal(null); setErr(friendlyError(String(e.message))); }
+  };
+  const busy = stage !== 'form' && stage !== 'done';
+  const steps: [EthStage, string, string][] = [['near', 'Signed twice on NEAR', 'Your wallet contract checks ed25519 + ML-DSA-65'], ['mpc', 'MPC signature', 'v1.signer-prod.testnet signs for your address'], ['sepolia', 'Sent on Sepolia', res?.block ? `Mined in block ${res.block.toLocaleString('en-US')}` : 'Broadcast and mined on Ethereum Sepolia']];
+  const order: EthStage[] = ['form', 'near', 'mpc', 'sepolia', 'done']; const at = order.indexOf(stage);
+  return <Screen tall notice={<>{stage === 'done' && res?.eth && <TxBanner state="ok" title={`Sent ${amt} ETH on Sepolia.`} sub="NEAR checked both your signatures before its MPC signed." links={[['NEAR request', txUrl(res.near)], ['Etherscan', `https://sepolia.etherscan.io/tx/${res.eth}`]]} />}
+      {!!err && <Err text={err} />}</>}
+    action={stage === 'done' ? <Btn title="New transfer" kind="ghost" onPress={() => { setStage('form'); setRes(null); }} />
+      : <Btn title={stage === 'near' ? 'NEAR is checking both…' : stage === 'mpc' ? 'MPC is signing…' : stage === 'sepolia' ? 'Waiting for Sepolia…' : 'Sign twice and send'} icon={<ShieldSend size={22} />} busy={busy} disabled={!eth || !to || !amt || busy} onPress={send} />}>
+    <Back go={go} title="Send on Ethereum" sub="NEAR Chain Signatures sign for your Ethereum address, only after your Magen wallet verifies both of your signatures." />
+    <Card style={{ padding: 16, gap: 10 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <View style={[styles.ico, { backgroundColor: '#fff' }]}><Image source={LOGO.ethereum} style={{ width: 22, height: 22 }} resizeMode="contain" /></View>
+        <View style={{ flex: 1, minWidth: 0 }}><T style={{ fontWeight: '600', fontSize: 15 }}>Ethereum <T style={{ color: C.text3, fontSize: 12.5 }}>Sepolia</T></T>
+          {eth ? <T numberOfLines={1} style={{ color: C.text2, fontSize: 12.5, fontFamily: MONO }}>{short(eth.address, 8, 6)}</T> : <ActivityIndicator color={C.accent} />}</View>
+        <View style={{ alignItems: 'flex-end' }}><T display style={{ fontSize: 24, letterSpacing: -0.6 }}>{bal === null ? '…' : ethStr(bal, 5)}</T><T style={{ color: C.text3, fontSize: 12 }}>ETH</T></View>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Atom color={C.accent} size={13} /><T style={{ color: C.accentText, fontSize: 12, fontWeight: '600', flex: 1 }}>Your Ethereum address from NEAR Chain Signatures</T>
+        {eth && <Pressable onPress={() => Clipboard.setStringAsync(eth.address)} hitSlop={8} accessibilityLabel="Copy Ethereum address"><Copy color={C.text3} size={16} /></Pressable>}</View>
     </Card>
-    {!!err && <Err text={err} />}
+    <Card style={{ padding: 18, gap: 12 }}>
+      <T s="label">To</T>
+      <TextInput selectionColor="#E040C8" style={[styles.input, { fontFamily: MONO, fontSize: 14 }]} placeholder="0x…" placeholderTextColor={C.text3} value={to} onChangeText={t => { setTo(t); setErr(''); }} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} accessibilityLabel="Ethereum address to send to" />
+      <T s="label">Amount</T>
+      <View style={{ flexDirection: 'row', alignItems: 'center', height: 60, paddingHorizontal: 4 }}>
+        <TextInput selectionColor="#E040C8" style={{ flex: 1, fontFamily: FONT.display, fontSize: 40, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" placeholder="0" placeholderTextColor={C.text3} value={amt} onChangeText={t => { setAmt(decimal(t)); setErr(''); }} editable={stage === 'form'} accessibilityLabel="Amount in Sepolia ETH" />
+        <T style={{ color: C.text2, fontSize: 17, fontWeight: '600' }}>ETH</T>
+      </View>
+    </Card>
+    {(busy || stage === 'done') && <Card style={{ padding: 18, gap: 14 }}>
+      <StripeBar pct={stage === 'done' ? 1 : Math.max(0.12, (at - 0.5) / 3)} logo={LOGO.ethereum} label={stage === 'done' ? 'Done' : steps[Math.max(0, at - 1)][1] + '…'} />
+      {steps.map(([k, t, sub], i) => { const done = at > i + 1 || stage === 'done'; const now = at === i + 1 && stage !== 'done';
+        return <View key={k} style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={[styles.ico, { width: 32, height: 32, backgroundColor: done ? C.accent : C.s2 }]}>{done ? <Check color="#fff" size={15} strokeWidth={3} /> : now ? <ActivityIndicator color={C.accent} size="small" /> : <T style={{ color: C.text3, fontWeight: '700' }}>{i + 1}</T>}</View>
+          <View style={{ flex: 1 }}><T style={{ fontWeight: '600', color: done || now ? C.text : C.text3 }}>{t}</T><T style={{ color: C.text3, fontSize: 12.5 }}>{sub}</T></View>
+        </View>; })}
+    </Card>}
+    <Card style={{ padding: 16, gap: 10 }}>
+      <T style={{ fontWeight: '600', fontSize: 15 }}>Every chain, one quantum gate</T>
+      {addrs === null ? <ActivityIndicator color={C.accent} /> : addrs.map(a => <View key={a.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <View style={[styles.ico, { width: 30, height: 30, backgroundColor: '#fff' }]}>{LOGO[a.id] ? <Image source={LOGO[a.id]} style={{ width: 18, height: 18 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '700' }}>{a.name.slice(0, 1)}</T>}</View>
+        <T style={{ fontWeight: '600', width: 92 }}>{a.name}</T><T numberOfLines={1} style={{ flex: 1, color: C.text3, fontSize: 12, fontFamily: MONO }}>{short(a.address, 8, 6)}</T>
+      </View>)}
+      <Pressable onPress={tryOne} disabled={!eth || !!refusal?.busy || busy} hitSlop={6} accessibilityRole="button"><T style={{ color: C.accentText, fontWeight: '600' }}>{refusal?.busy ? 'Asking with one signature…' : 'Try asking with the classical signature only'}</T></Pressable>
+      {refusal && !refusal.busy && <TxBanner state={refusal.success ? 'ok' : 'bad'} title={refusal.success ? 'Unexpected: signed with one signature' : 'Refused on NEAR: quantum half missing'} sub={refusal.success ? undefined : 'NEAR never asked the MPC, so nothing was signed.'} links={[['View refusal', txUrl(refusal.hash)]]} />}
+    </Card>
   </Screen>;
 }
 
