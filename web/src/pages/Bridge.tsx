@@ -27,14 +27,23 @@ function BridgeIn({ initial }: { initial: UtxoChain }) {
   const [d, setD] = useState<Awaited<ReturnType<typeof depositAddress>> | null>(null);
   const [err, setErr] = useState('');
   const [bal, setBal] = useState<bigint | null>(null);
-  const [seen, setSeen] = useState<{ txid: string; value: number; confirmed: boolean }[] | null>(null);
+  const [seen, setSeen] = useState<{ txid: string; value: number; confirmed: boolean; minted?: string }[] | null>(null);
   const c = UTXO[chain];
   useEffect(() => { let on = true; setD(null); setErr(''); depositAddress(chain, account).then(x => on && setD(x)).catch(e => on && setErr(e.message)); return () => { on = false; }; }, [chain, account]);
   useEffect(() => { let on = true; const load = () => bridgedBalance(chain, account).then(b => on && setBal(b)).catch(() => on && setBal(null)); load(); const i = setInterval(load, 15000); return () => { on = false; clearInterval(i); }; }, [chain, account]);
   useEffect(() => {
     if (chain !== 'btc' || !d) { setSeen(null); return; }
     let on = true;
-    const load = () => fetch(`https://blockstream.info/testnet/api/address/${d.address}/txs`).then(r => r.json()).then((txs: any[]) => on && setSeen(txs.slice(0, 4).map(t => ({ txid: t.txid, confirmed: t.status.confirmed, value: t.vout.filter((o: any) => o.scriptpubkey_address === d.address).reduce((s: number, o: any) => s + o.value, 0) })))).catch(() => on && setSeen(null));
+    const load = () => fetch(`https://blockstream.info/testnet/api/address/${d.address}/txs`).then(r => r.json()).then(async (txs: any[]) => {
+      const rows = await Promise.all(txs.slice(0, 4).map(async t => {
+        const vout = t.vout.findIndex((o: any) => o.scriptpubkey_address === d.address);
+        const value = t.vout.filter((o: any) => o.scriptpubkey_address === d.address).reduce((s: number, o: any) => s + o.value, 0);
+        // The Omni bridge API says whether the relayer has proved this output to NEAR and minted nBTC.
+        const tr = vout < 0 ? null : await fetch(`https://testnet.api.bridge.nearone.org/api/v4/transfers/transfer?utxo_chain=btc&utxo_tx_hash=${t.txid}&utxo_vout=${vout}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => j?.transfers?.[0] ?? null).catch(() => null);
+        return { txid: t.txid, confirmed: t.status.confirmed, value, minted: tr?.finalised?.transaction_hash as string | undefined };
+      }));
+      if (on) setSeen(rows);
+    }).catch(() => on && setSeen(null));
     load(); const i = setInterval(load, 20000); return () => { on = false; clearInterval(i); };
   }, [chain, d]);
   const conf = d ? String(Object.values(d.confirmations ?? {})[0] ?? '') || null : null;
@@ -57,7 +66,7 @@ function BridgeIn({ initial }: { initial: UtxoChain }) {
           </div>
         </div>}
       {chain === 'zcash' && <div className="banner"><Info size={18} /><div><strong>Send from a transparent output.</strong>This is a t-address, so the deposit is public: bridging removes Zcash’s shielding.</div></div>}
-      {seen && seen.length > 0 ? <div className="steps">{seen.map(s => <a key={s.txid} className={`step ${s.confirmed ? 'done' : 'active'}`} href={c.explorerTx(s.txid)} target="_blank" rel="noreferrer">{s.confirmed ? <Check size={16} /> : <Loader2 size={16} className="spin" />}{s.value.toLocaleString()} sats · {s.confirmed ? 'confirmed, waiting for the relayer' : 'seen, confirming'}<ExternalLink size={14} style={{ marginLeft: 'auto' }} /></a>)}</div>
+      {seen && seen.length > 0 ? <div className="steps">{seen.map(s => <a key={s.txid} className={`step ${s.minted || s.confirmed ? 'done' : 'active'}`} href={s.minted ? `https://testnet.nearblocks.io/txns/${s.minted}` : c.explorerTx(s.txid)} target="_blank" rel="noreferrer">{s.minted || s.confirmed ? <Check size={16} /> : <Loader2 size={16} className="spin" />}{s.value.toLocaleString()} sats · {s.minted ? `minted as ${c.symbol} on NEAR` : s.confirmed ? 'confirmed, waiting for the relayer' : 'seen, confirming'}<ExternalLink size={14} style={{ marginLeft: 'auto' }} /></a>)}</div>
         : <div className="banner banner-gray"><Info size={18} /><div><strong>Fund to try.</strong>Nothing has arrived yet. Send at least {d ? d.minDeposit.toLocaleString() : '…'} {c.unit} from any {c.name} testnet wallet.</div></div>}
     </section>
     <aside className="card">
