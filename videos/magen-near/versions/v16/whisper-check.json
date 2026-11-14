@@ -1,0 +1,158 @@
+[
+ {
+  "id": "landing",
+  "expected": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it for iPhone, or as a Chrome extension.",
+  "transcript": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it for iPhone or as a Chrome extension.",
+  "similarity": 1.0
+ },
+ {
+  "id": "install",
+  "expected": "Install it on the iPhone, and open it.",
+  "transcript": "Install it on the iPhone and open it.",
+  "similarity": 1.0
+ },
+ {
+  "id": "create",
+  "expected": "Create a wallet. Pick a name. Then twelve words: your one backup. They stay hidden until you choose to see them.",
+  "transcript": "Create a wallet, pick a name, then 12 words, your one backup. They stay hidden until you choose to see them.",
+  "similarity": 0.952
+ },
+ {
+  "id": "chains",
+  "expected": "Those twelve words make your address on Bitcoin, Zcash, Ethereum, Solana and more, plus a quantum safe key, M L D S A sixty five.",
+  "transcript": "Those 12 words make your address on Bitcoin, Zcash, Ethereum, Solana, and more, plus a quantum safe key, MLDS65.",
+  "similarity": 0.773
+ },
+ {
+  "id": "create-sign",
+  "expected": "Creating the account is one transaction. Review it, and approve.",
+  "transcript": "Creating the account is one transaction. Review it and approve.",
+  "similarity": 1.0
+ },
+ {
+  "id": "home",
+  "expected": "Your wallet is live on Near testnet, with two locks: your classical key, and the quantum safe one.",
+  "transcript": "Your wallet is live on near testnet with two locks, your classical key and the quantum safe one.",
+  "similarity": 1.0
+ },
+ {
+  "id": "receive",
+  "expected": "Receive on any chain. Here is Near, and here is Bitcoin, each with its own Q R code.",
+  "transcript": "Receive on any chain, here is near and here is Bitcoin, each with its own QR code.",
+  "similarity": 0.914
+ },
+ {
+  "id": "send",
+  "expected": "Now send half a Near. The approval sheet shows everything, and it is signed twice: classical, and quantum safe.",
+  "transcript": "Now send half a near, the approval sheet shows everything and it is signed twice, classical and quantum safe.",
+  "similarity": 1.0
+ },
+ {
+  "id": "send-explorer",
+  "expected": "On the explorer, the signer key is the quantum safe one, and the wallet contract logged both signatures as verified.",
+  "transcript": "On the Explorer, the signer key is the quantum safe one, and the wallet contract logged both signatures as verified.",
+  "similarity": 1.0
+ },
+ {
+  "id": "swap",
+  "expected": "Swap one Near for U S D T on Ref Finance. Four calls, one approval, two signatures.",
+  "transcript": "Swap one near for USDT on REF Finance. Four calls, one approval, two signatures.",
+  "similarity": 0.839
+ },
+ {
+  "id": "swap-explorer",
+  "expected": "Ref paid out one point two four U S D T.",
+  "transcript": "REF paid out 1.24 USDT.",
+  "similarity": 0.375
+ },
+ {
+  "id": "bridge-in",
+  "expected": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address, made on chain by the bridge.",
+  "transcript": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address, made on chain by the bridge.",
+  "similarity": 1.0
+ },
+ {
+  "id": "bridge-demo",
+  "expected": "A new wallet starts empty. So here is our demo wallet, with two real deposits, each minted as n B T C on Near.",
+  "transcript": "A new wallet starts empty, so here is our demo wallet with two real deposits, each minted as NBTC on near.",
+  "similarity": 0.889
+ },
+ {
+  "id": "btc-explorer",
+  "expected": "The mint on Near, and the Bitcoin payment it came from, sent earlier from a testnet wallet.",
+  "transcript": "The mint on near and the Bitcoin payment it came from sent earlier from a testnet wallet.",
+  "similarity": 1.0
+ },
+ {
+  "id": "zec",
+  "expected": "Zcash works the same way. A testnet deposit became n Z E C on Near.",
+  "transcript": "Zcash works the same way. A testnet deposit became NZEC on near.",
+  "similarity": 0.815
+ },
+ {
+  "id": "out",
+  "expected": "Bridge out, to this wallet's own Solana address, through the Omni bridge. Same approval, same two signatures.",
+  "transcript": "Bridge out to this wallet's own Solana address through the Omni Bridge. Same approval, same two signatures.",
+  "similarity": 1.0
+ },
+ {
+  "id": "out-relay",
+  "expected": "The bridge relays it. About a minute later, it has arrived on Solana.",
+  "transcript": "The bridge relays it. About a minute later, it has arrived on Solana.",
+  "similarity": 1.0
+ },
+ {
+  "id": "out-explorer",
+  "expected": "Signed on NEAR testnet, then delivered on Solana devnet.",
+  "transcript": "signed on near testnet, then delivered on Solana DevNet.",
+  "similarity": 1.0
+ },
+ {
+  "id": "private",
+  "expected": "Private send. The money goes to a one time account only the recipient can open. Signed twice, like everything else.",
+  "transcript": "Private Send, the money goes to a one-time account only the recipient can open, signed twice like everything else.",
+  "similarity": 1.0
+ },
+ {
+  "id": "guardians",
+  "expected": "Add guardians. Two of three can help you recover the wallet, and none of them can ever spend.",
+  "transcript": "Add Guardians, two of three can help you recover the wallet, and none of them can ever spend.",
+  "similarity": 1.0
+ },
+ {
+  "id": "guard-done",
+  "expected": "The guardians are saved on chain, and Near checked both signatures.",
+  "transcript": "The guardians are saved on chain and near-checked both signatures.",
+  "similarity": 1.0
+ },
+ {
+  "id": "qday",
+  "expected": "And the Q Day switch. One transaction makes your quantum safe key a native Near key. Same account, same balance.",
+  "transcript": "and the Q-Day switch, one transaction makes your quantum safe key a native near key. Same account, same balance.",
+  "similarity": 1.0
+ },
+ {
+  "id": "qday-explorer",
+  "expected": "The account on NEAR now lists an M L D S A key.",
+  "transcript": "The account on near now lists an MLDS key.",
+  "similarity": 0.727
+ },
+ {
+  "id": "activity",
+  "expected": "Activity keeps every move, each one linked to the explorer.",
+  "transcript": "Activity keeps every move, each one linked to the Explorer.",
+  "similarity": 1.0
+ },
+ {
+  "id": "lock",
+  "expected": "And Magen locks itself, behind Face I D.",
+  "transcript": "and Magen locks itself behind Face ID.",
+  "similarity": 0.8
+ },
+ {
+  "id": "close",
+  "expected": "One seed. Every chain. A quantum safe lock on every move. That's Magen.",
+  "transcript": "One seed, every chain. A quantum safe lock on every move. That's Magen.",
+  "similarity": 1.0
+ }
+]

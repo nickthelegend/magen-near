@@ -1,0 +1,132 @@
+[
+ {
+  "id": "landing",
+  "text": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it for iPhone, or as a Chrome extension.",
+  "speech": 10.347
+ },
+ {
+  "id": "install",
+  "text": "Install it on the iPhone, and open it.",
+  "speech": 2.901
+ },
+ {
+  "id": "create",
+  "text": "Create a wallet. Pick a name. Then twelve words: your one backup. They stay hidden until you choose to see them.",
+  "speech": 6.251
+ },
+ {
+  "id": "chains",
+  "text": "Those twelve words make your address on Bitcoin, Zcash, Ethereum, Solana and more, plus a quantum safe key, M L D S A sixty five.",
+  "speech": 8.619
+ },
+ {
+  "id": "create-sign",
+  "text": "Creating the account is one transaction. Review it, and approve.",
+  "speech": 4.309
+ },
+ {
+  "id": "home",
+  "text": "Your wallet is live on Near testnet, with two locks: your classical key, and the quantum safe one.",
+  "speech": 6.101
+ },
+ {
+  "id": "receive",
+  "text": "Receive on any chain. Here is Near, and here is Bitcoin, each with its own Q R code.",
+  "speech": 5.483
+ },
+ {
+  "id": "send",
+  "text": "Now send half a Near. The approval sheet shows everything, and it is signed twice: classical, and quantum safe.",
+  "speech": 6.592
+ },
+ {
+  "id": "send-explorer",
+  "text": "On the explorer, the signer key is the quantum safe one, and the wallet contract logged both signatures as verified.",
+  "speech": 7.147
+ },
+ {
+  "id": "swap",
+  "text": "Swap one Near for U S D T on Ref Finance. Four calls, one approval, two signatures.",
+  "speech": 6.144
+ },
+ {
+  "id": "swap-explorer",
+  "text": "Ref paid out one point two four U S D T.",
+  "speech": 3.584
+ },
+ {
+  "id": "bridge-in",
+  "text": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address, made on chain by the bridge.",
+  "speech": 6.016
+ },
+ {
+  "id": "bridge-demo",
+  "text": "A new wallet starts empty. So here is our demo wallet, with two real deposits, each minted as n B T C on Near.",
+  "speech": 7.616
+ },
+ {
+  "id": "btc-explorer",
+  "text": "The mint on Near, and the Bitcoin payment it came from, sent earlier from a testnet wallet.",
+  "speech": 5.461
+ },
+ {
+  "id": "zec",
+  "text": "Zcash works the same way. A testnet deposit became n Z E C on Near.",
+  "speech": 5.376
+ },
+ {
+  "id": "out",
+  "text": "Bridge out, to this wallet's own Solana address, through the Omni bridge. Same approval, same two signatures.",
+  "speech": 6.507
+ },
+ {
+  "id": "out-relay",
+  "text": "The bridge relays it. About a minute later, it has arrived on Solana.",
+  "speech": 4.544
+ },
+ {
+  "id": "out-explorer",
+  "text": "Signed on NEAR testnet, then delivered on Solana devnet.",
+  "speech": 3.968
+ },
+ {
+  "id": "private",
+  "text": "Private send. The money goes to a one time account only the recipient can open. Signed twice, like everything else.",
+  "speech": 7.104
+ },
+ {
+  "id": "guardians",
+  "text": "Add guardians. Two of three can help you recover the wallet, and none of them can ever spend.",
+  "speech": 5.205
+ },
+ {
+  "id": "guard-done",
+  "text": "The guardians are saved on chain, and Near checked both signatures.",
+  "speech": 4.245
+ },
+ {
+  "id": "qday",
+  "text": "And the Q Day switch. One transaction makes your quantum safe key a native Near key. Same account, same balance.",
+  "speech": 7.147
+ },
+ {
+  "id": "qday-explorer",
+  "text": "The account on NEAR now lists an M L D S A key.",
+  "speech": 3.819
+ },
+ {
+  "id": "activity",
+  "text": "Activity keeps every move, each one linked to the explorer.",
+  "speech": 4.032
+ },
+ {
+  "id": "lock",
+  "text": "And Magen locks itself, behind Face I D.",
+  "speech": 3.435
+ },
+ {
+  "id": "close",
+  "text": "One seed. Every chain. A quantum safe lock on every move. That's Magen.",
+  "speech": 5.013
+ }
+]

@@ -1,0 +1,654 @@
+{
+ "total": 327.07,
+ "segments": [
+  {
+   "id": "landing",
+   "src": "raw/L-landing.mp4",
+   "a": 0.0,
+   "b": 14.6,
+   "kind": "web",
+   "start": 0
+  },
+  {
+   "id": "install",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 2.5,
+   "b": 8.0,
+   "kind": "phone",
+   "start": 14.6
+  },
+  {
+   "id": "open",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 12.3,
+   "b": 13.4,
+   "kind": "phone",
+   "start": 20.1
+  },
+  {
+   "id": "open-1",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 14.45,
+   "b": 21.4,
+   "kind": "phone",
+   "start": 21.2
+  },
+  {
+   "id": "name",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 49.8,
+   "b": 57.3,
+   "kind": "phone",
+   "start": 28.17
+  },
+  {
+   "id": "words",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 57.4,
+   "b": 63.0,
+   "kind": "phone",
+   "start": 35.67
+  },
+  {
+   "id": "chains",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 64.5,
+   "b": 72.6,
+   "kind": "phone",
+   "start": 41.27
+  },
+  {
+   "id": "create",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 73.6,
+   "b": 86.3,
+   "kind": "phone",
+   "start": 49.37
+  },
+  {
+   "id": "ready",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 86.3,
+   "b": 90.5,
+   "kind": "phone",
+   "start": 62.07
+  },
+  {
+   "id": "create-x",
+   "src": "raw/phone/P0-install.mp4",
+   "a": 106.3,
+   "b": 111.2,
+   "kind": "phone",
+   "start": 66.27
+  },
+  {
+   "id": "home",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 4.6,
+   "b": 9.1,
+   "kind": "phone",
+   "start": 71.17
+  },
+  {
+   "id": "recv-near",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 9.1,
+   "b": 16.5,
+   "kind": "phone",
+   "start": 75.67
+  },
+  {
+   "id": "recv-btc",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 24.4,
+   "b": 29.6,
+   "kind": "phone",
+   "start": 83.07
+  },
+  {
+   "id": "send-0",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 29.6,
+   "b": 31.4,
+   "kind": "phone",
+   "start": 88.27
+  },
+  {
+   "id": "send-1",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 54.3,
+   "b": 57.5,
+   "kind": "phone",
+   "start": 90.07
+  },
+  {
+   "id": "send-sheet",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 57.5,
+   "b": 64.6,
+   "kind": "phone",
+   "start": 93.27
+  },
+  {
+   "id": "send-done",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 64.6,
+   "b": 69.5,
+   "kind": "phone",
+   "start": 100.37
+  },
+  {
+   "id": "send-x",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 76.0,
+   "b": 87.3,
+   "kind": "phone",
+   "start": 105.27
+  },
+  {
+   "id": "swap-0",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 165.6,
+   "b": 171.1,
+   "kind": "phone",
+   "start": 116.57
+  },
+  {
+   "id": "swap-sheet",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 171.1,
+   "b": 176.5,
+   "kind": "phone",
+   "start": 122.07
+  },
+  {
+   "id": "swap-1",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 176.5,
+   "b": 178.5,
+   "kind": "phone",
+   "start": 127.47
+  },
+  {
+   "id": "swap-done",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 181.6,
+   "b": 185.6,
+   "kind": "phone",
+   "start": 129.47
+  },
+  {
+   "id": "swap-x",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 187.0,
+   "b": 191.9,
+   "kind": "phone",
+   "start": 133.47
+  },
+  {
+   "id": "bin-home",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 6.0,
+   "b": 12.3,
+   "kind": "phone",
+   "start": 138.37
+  },
+  {
+   "id": "bin-addr",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 14.3,
+   "b": 19.5,
+   "kind": "phone",
+   "start": 144.67
+  },
+  {
+   "id": "bin-empty",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 32.0,
+   "b": 41.0,
+   "kind": "phone",
+   "start": 149.87
+  },
+  {
+   "id": "bin-minted",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 48.3,
+   "b": 55.2,
+   "kind": "phone",
+   "start": 158.87
+  },
+  {
+   "id": "bin-x",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 56.0,
+   "b": 63.0,
+   "kind": "phone",
+   "start": 165.77
+  },
+  {
+   "id": "btc-x",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 139.9,
+   "b": 146.5,
+   "kind": "phone",
+   "start": 172.77
+  },
+  {
+   "id": "zec-0",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 446.5,
+   "b": 451.0,
+   "kind": "phone",
+   "start": 179.37
+  },
+  {
+   "id": "zec-1",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 465.5,
+   "b": 471.0,
+   "kind": "phone",
+   "start": 183.87
+  },
+  {
+   "id": "out-0",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 481.0,
+   "b": 487.6,
+   "kind": "phone",
+   "start": 189.37
+  },
+  {
+   "id": "out-sheet-a",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 487.6,
+   "b": 491.5,
+   "kind": "phone",
+   "start": 195.97
+  },
+  {
+   "id": "out-sheet-b",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 495.5,
+   "b": 499.2,
+   "kind": "phone",
+   "start": 199.87
+  },
+  {
+   "id": "out-1",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 499.2,
+   "b": 503.0,
+   "kind": "phone",
+   "start": 203.57
+  },
+  {
+   "id": "out-2",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 515.5,
+   "b": 519.0,
+   "kind": "phone",
+   "start": 207.37
+  },
+  {
+   "id": "out-done",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 553.3,
+   "b": 556.5,
+   "kind": "phone",
+   "start": 210.87
+  },
+  {
+   "id": "out-x-near",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 530.0,
+   "b": 536.5,
+   "kind": "phone",
+   "start": 214.07
+  },
+  {
+   "id": "out-x-sol",
+   "src": "raw/phone/P2-bridge.mp4",
+   "a": 542.0,
+   "b": 550.0,
+   "kind": "phone",
+   "start": 220.57
+  },
+  {
+   "id": "priv-0",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 112.0,
+   "b": 115.4,
+   "kind": "phone",
+   "start": 228.57
+  },
+  {
+   "id": "priv-sheet",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 115.4,
+   "b": 120.4,
+   "kind": "phone",
+   "start": 231.97
+  },
+  {
+   "id": "priv-done",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 120.4,
+   "b": 125.8,
+   "kind": "phone",
+   "start": 236.97
+  },
+  {
+   "id": "priv-x",
+   "src": "raw/phone/P1-home.mp4",
+   "a": 128.0,
+   "b": 132.5,
+   "kind": "phone",
+   "start": 242.37
+  },
+  {
+   "id": "guard-0",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 6.0,
+   "b": 14.0,
+   "kind": "phone",
+   "start": 246.87
+  },
+  {
+   "id": "guard-sheet",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 14.0,
+   "b": 20.5,
+   "kind": "phone",
+   "start": 254.87
+  },
+  {
+   "id": "guard-done",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 20.5,
+   "b": 27.0,
+   "kind": "phone",
+   "start": 261.37
+  },
+  {
+   "id": "guard-x",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 37.5,
+   "b": 43.5,
+   "kind": "phone",
+   "start": 267.87
+  },
+  {
+   "id": "qday-0",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 47.4,
+   "b": 52.6,
+   "kind": "phone",
+   "start": 273.87
+  },
+  {
+   "id": "qday-sheet",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 52.6,
+   "b": 59.0,
+   "kind": "phone",
+   "start": 279.07
+  },
+  {
+   "id": "qday-1",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 61.5,
+   "b": 66.0,
+   "kind": "phone",
+   "start": 285.47
+  },
+  {
+   "id": "qday-on",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 71.8,
+   "b": 76.3,
+   "kind": "phone",
+   "start": 289.97
+  },
+  {
+   "id": "qday-x",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 76.4,
+   "b": 77.75,
+   "kind": "phone",
+   "start": 294.47
+  },
+  {
+   "id": "qday-acct",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 78.9,
+   "b": 85.0,
+   "kind": "phone",
+   "start": 295.83
+  },
+  {
+   "id": "activity",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 91.0,
+   "b": 98.9,
+   "kind": "phone",
+   "start": 301.93
+  },
+  {
+   "id": "activity-x",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 101.5,
+   "b": 104.5,
+   "kind": "phone",
+   "start": 309.83
+  },
+  {
+   "id": "lock-0",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 112.3,
+   "b": 115.5,
+   "kind": "phone",
+   "start": 312.83
+  },
+  {
+   "id": "lock-1",
+   "src": "raw/phone/P3-security.mp4",
+   "a": 119.5,
+   "b": 124.0,
+   "kind": "phone",
+   "start": 316.03
+  },
+  {
+   "id": "card",
+   "src": null,
+   "a": 0,
+   "b": 6.5,
+   "kind": "card",
+   "start": 320.53
+  }
+ ],
+ "voice": [
+  {
+   "id": "landing",
+   "anchor": 0.4,
+   "seg": "landing",
+   "start": 0.4,
+   "speech": 10.347
+  },
+  {
+   "id": "install",
+   "anchor": 15.2,
+   "seg": "install",
+   "start": 15.2,
+   "speech": 2.901
+  },
+  {
+   "id": "create",
+   "anchor": 30.166667000000004,
+   "seg": "name",
+   "start": 30.17,
+   "speech": 6.251
+  },
+  {
+   "id": "chains",
+   "anchor": 41.46666700000001,
+   "seg": "chains",
+   "start": 41.47,
+   "speech": 8.619
+  },
+  {
+   "id": "create-sign",
+   "anchor": 56.96666700000001,
+   "seg": "create",
+   "start": 56.97,
+   "speech": 4.309
+  },
+  {
+   "id": "home",
+   "anchor": 66.56666700000001,
+   "seg": "create-x",
+   "start": 66.57,
+   "speech": 6.101
+  },
+  {
+   "id": "receive",
+   "anchor": 76.16666700000002,
+   "seg": "recv-near",
+   "start": 76.17,
+   "speech": 5.483
+  },
+  {
+   "id": "send",
+   "anchor": 88.56666700000002,
+   "seg": "send-0",
+   "start": 88.57,
+   "speech": 6.592
+  },
+  {
+   "id": "send-explorer",
+   "anchor": 105.76666700000003,
+   "seg": "send-x",
+   "start": 105.77,
+   "speech": 7.147
+  },
+  {
+   "id": "swap",
+   "anchor": 116.86666700000002,
+   "seg": "swap-0",
+   "start": 116.87,
+   "speech": 6.144
+  },
+  {
+   "id": "swap-explorer",
+   "anchor": 133.86666700000004,
+   "seg": "swap-x",
+   "start": 133.87,
+   "speech": 3.584
+  },
+  {
+   "id": "bridge-in",
+   "anchor": 141.36666700000004,
+   "seg": "bin-home",
+   "start": 141.37,
+   "speech": 6.016
+  },
+  {
+   "id": "bridge-demo",
+   "anchor": 151.86666700000004,
+   "seg": "bin-empty",
+   "start": 151.87,
+   "speech": 7.616
+  },
+  {
+   "id": "btc-explorer",
+   "anchor": 166.06666700000005,
+   "seg": "bin-x",
+   "start": 166.07,
+   "speech": 5.461
+  },
+  {
+   "id": "zec",
+   "anchor": 179.66666700000005,
+   "seg": "zec-0",
+   "start": 179.67,
+   "speech": 5.376
+  },
+  {
+   "id": "out",
+   "anchor": 189.66666700000005,
+   "seg": "out-0",
+   "start": 189.67,
+   "speech": 6.507
+  },
+  {
+   "id": "out-relay",
+   "anchor": 204.56666700000002,
+   "seg": "out-1",
+   "start": 204.57,
+   "speech": 4.544
+  },
+  {
+   "id": "out-explorer",
+   "anchor": 214.56666700000002,
+   "seg": "out-x-near",
+   "start": 214.57,
+   "speech": 3.968
+  },
+  {
+   "id": "private",
+   "anchor": 228.86666700000004,
+   "seg": "priv-0",
+   "start": 228.87,
+   "speech": 7.104
+  },
+  {
+   "id": "guardians",
+   "anchor": 247.26666700000004,
+   "seg": "guard-0",
+   "start": 247.27,
+   "speech": 5.205
+  },
+  {
+   "id": "guard-done",
+   "anchor": 262.866667,
+   "seg": "guard-done",
+   "start": 262.87,
+   "speech": 4.245
+  },
+  {
+   "id": "qday",
+   "anchor": 274.166667,
+   "seg": "qday-0",
+   "start": 274.17,
+   "speech": 7.147
+  },
+  {
+   "id": "qday-explorer",
+   "anchor": 296.03333399999997,
+   "seg": "qday-acct",
+   "start": 296.03,
+   "speech": 3.819
+  },
+  {
+   "id": "activity",
+   "anchor": 302.333334,
+   "seg": "activity",
+   "start": 302.33,
+   "speech": 4.032
+  },
+  {
+   "id": "lock",
+   "anchor": 313.133334,
+   "seg": "lock-0",
+   "start": 313.13,
+   "speech": 3.435
+  },
+  {
+   "id": "close",
+   "anchor": 321.133334,
+   "seg": "card",
+   "start": 321.13,
+   "speech": 5.013
+  }
+ ],
+ "warnings": []
+}
