@@ -1,5 +1,5 @@
 import { ApprovalSheet } from './src/ApprovalSheet';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Animated, AppState, Image, Linking, Modal, Pressable, Share, StyleSheet, Switch, TextInput, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -28,21 +28,35 @@ import { StripeBar, prices, units, useAssets } from './src/Assets';
 
 const VAULT = 'magen-vault';
 const CACHE = 'magen-cache';
+const VAULTS = 'magen-vaults';
+/** Every wallet on this phone, the active one, and switching / adding. */
+const Wallets = createContext<{ list: Vault[]; use: (w: string) => void; add: () => void }>({ list: [], use: () => {}, add: () => {} });
 
 export default function App() {
   const [fonts] = useFonts(fontAssets);
   const [vault, setVault] = useState<Vault | null | undefined>(undefined);
+  const [list, setList] = useState<Vault[]>([]); const [adding, setAdding] = useState(false);
   const [locked, setLocked] = useState(true);
-  useEffect(() => { SecureStore.getItemAsync(VAULT).then(v => setVault(v ? JSON.parse(v) : null)).catch(() => setVault(null)); }, []);
+  useEffect(() => { (async () => {
+    const v = await SecureStore.getItemAsync(VAULT).catch(() => null); const cur: Vault | null = v ? JSON.parse(v) : null;
+    const l = await SecureStore.getItemAsync(VAULTS).catch(() => null); let all: Vault[] = l ? JSON.parse(l) : [];
+    if (cur && !all.some(x => x.wallet === cur.wallet)) all = [cur, ...all];
+    setList(all); setVault(cur);
+  })().catch(() => setVault(null)); }, []);
+  const saveList = (all: Vault[]) => { setList(all); SecureStore.setItemAsync(VAULTS, JSON.stringify(all)).catch(() => {}); };
+  const use = async (w: string) => { const v = list.find(x => x.wallet === w); if (!v) return; await SecureStore.setItemAsync(VAULT, JSON.stringify(v)); await SecureStore.deleteItemAsync(CACHE).catch(() => {}); setVault(v); };
   // Leaving the app locks it; opening it again asks for Face ID (or the phone's passcode).
   // Opening an explorer link must not lock you out: lock only after a minute away.
   const away = useRef(0);
   useEffect(() => { const s = AppState.addEventListener('change', st => { if (st === 'background') away.current = Date.now(); else if (st === 'active' && away.current && Date.now() - away.current > 60_000) setLocked(true); }); return () => s.remove(); }, []);
   if (!fonts || vault === undefined) return <View style={{ flex: 1, backgroundColor: C.bg }} />;
+  const done = async (v: Vault) => { await SecureStore.setItemAsync(VAULT, JSON.stringify(v)); await SecureStore.deleteItemAsync(CACHE).catch(() => {}); saveList([...list.filter(x => x.wallet !== v.wallet), v]); setAdding(false); setLocked(false); setVault(v); };
   return <SafeAreaProvider><ApprovalSheet/><StatusBar style="light" />
-    {vault ? <View style={{ flex: 1 }}><Wallet vault={vault} lock={() => setLocked(true)} onReset={async () => { await SecureStore.deleteItemAsync(VAULT); await SecureStore.deleteItemAsync(CACHE).catch(() => {}); setVault(null); }} />
+    <Wallets.Provider value={{ list, use, add: () => setAdding(true) }}>
+    {vault && !adding ? <View style={{ flex: 1 }}><Wallet key={vault.wallet} vault={vault} lock={() => setLocked(true)} onReset={async () => { await SecureStore.deleteItemAsync(VAULT); await SecureStore.deleteItemAsync(CACHE).catch(() => {}); const rest = list.filter(x => x.wallet !== vault.wallet); saveList(rest); setVault(rest[0] ?? null); if (rest[0]) await SecureStore.setItemAsync(VAULT, JSON.stringify(rest[0])); }} />
       {locked && <View style={[StyleSheet.absoluteFill, { zIndex: 50, elevation: 50 }]}><LockScreen wallet={vault.wallet} onUnlock={() => setLocked(false)} /></View>}</View>
-      : <Onboarding onDone={async v => { await SecureStore.setItemAsync(VAULT, JSON.stringify(v)); await SecureStore.deleteItemAsync(CACHE).catch(() => {}); setLocked(false); setVault(v); }} />}
+      : <Onboarding onDone={done} />}
+    </Wallets.Provider>
   </SafeAreaProvider>;
 }
 
@@ -325,18 +339,20 @@ const LinkRow = ({ icon, title, value, onPress }: any) => <Pressable onPress={()
   <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.accentSoft, alignItems: 'center', justifyContent: 'center' }}>{icon}</View>
   <T style={{ fontSize: 16, fontWeight: '600', flex: 1 }}>{title}</T><T style={{ color: C.text2, fontSize: 14 }}>{value}</T><ChevronRight color={C.text3} size={18} /></Pressable>;
 function WalletsSheet({ open: on, close, wallet, balance }: { open: boolean; close: () => void; wallet: string; balance: bigint | null }) {
-  const DEMO = 'magen-noam.testnet'; const [demo, setDemo] = useState<bigint | null>(null);
-  useEffect(() => { if (on) readAccount(DEMO).then((a: any) => setDemo(a ? BigInt(a.amount) : null)).catch(() => {}); }, [on]);
-  const W = ({ name, bal, me, note }: any) => <View style={{ width: '33%', alignItems: 'center', gap: 6, paddingVertical: 8 }}>
+  const { list, use, add } = useContext(Wallets);
+  const names = Array.from(new Set([wallet, ...list.map(v => v.wallet)]));
+  const [bals, setBals] = useState<Record<string, bigint | null>>({});
+  useEffect(() => { if (on) names.forEach(n => readAccount(n).then((a: any) => setBals(m => ({ ...m, [n]: a ? BigInt(a.amount) : null }))).catch(() => {})); }, [on, names.join()]);
+  const W = ({ name, bal, me }: any) => <Pressable onPress={() => { Haptics.selectionAsync(); close(); if (!me) use(name); }} accessibilityRole="button" accessibilityLabel={`Switch to ${name}`} style={{ width: '33%', alignItems: 'center', gap: 6, paddingVertical: 8 }}>
     <Avatar name={name} size={64} ring={me} />
-    <T style={{ fontWeight: '600', fontSize: 13.5 }} numberOfLines={1}>{name.replace('.testnet', '')}</T><T style={{ color: C.text2, fontSize: 13 }}>{bal === null ? '…' : `${near(bal, 2)} NEAR`}{note ? ` · ${note}` : ''}</T></View>;
+    <T style={{ fontWeight: '600', fontSize: 13.5 }} numberOfLines={1}>{name.replace('.testnet', '')}</T><T style={{ color: C.text2, fontSize: 13 }}>{bal == null ? '…' : `${near(bal, 2)} NEAR`}</T></Pressable>;
   return <Modal transparent visible={on} animationType="slide" onRequestClose={close}>
     <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,6,8,0.6)' }} onPress={close} accessibilityLabel="Close" />
     <View style={{ backgroundColor: C.s1, borderTopLeftRadius: 30, borderTopRightRadius: 30, borderWidth: 1, borderColor: C.line, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 44 }}>
       <View style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: C.line2, marginBottom: 14 }} />
       <T style={{ fontSize: 17, fontWeight: '700', textAlign: 'center', marginBottom: 10 }}>Wallets</T>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}><W name={wallet} bal={balance} me /><W name={DEMO} bal={demo} note="watch" /></View>
-      <View style={{ alignItems: 'flex-end', marginTop: 12 }}><View style={{ paddingHorizontal: 18, height: 40, borderRadius: 20, backgroundColor: C.accent, justifyContent: 'center' }}><T style={{ fontWeight: '700' }}>+ Add</T></View></View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>{names.map(n => <W key={n} name={n} bal={n === wallet ? balance : bals[n] ?? null} me={n === wallet} />)}</View>
+      <View style={{ alignItems: 'flex-end', marginTop: 12 }}><Pressable onPress={() => { Haptics.selectionAsync(); close(); add(); }} accessibilityRole="button" accessibilityLabel="Add a wallet" style={{ paddingHorizontal: 18, height: 40, borderRadius: 20, backgroundColor: C.accent, justifyContent: 'center' }}><T style={{ fontWeight: '700' }}>+ Add</T></Pressable></View>
     </View>
   </Modal>;
 }
