@@ -59,7 +59,7 @@ export function ScanScreen({ wallet, mode, setMode, sheet, onCode, onConfirm, on
 }) {
   return <View style={StyleSheet.absoluteFill}>
     <StatusBar style="light" />
-    {mode === 'scan' ? <Scanner sheet={sheet} onCode={onCode} top={top} /> : <MyCode wallet={wallet} top={top} />}
+    {mode === 'scan' ? <Scanner sheet={sheet} onCode={onCode} top={top} /> : <MyCode wallet={wallet} top={top} bottom={bottom} />}
     <View style={[s.head, { top: top + 8 }]} pointerEvents="box-none"><Segment mode={mode} onChange={setMode} /></View>
     {sheet && mode === 'scan' && <ResultSheet sheet={sheet} onConfirm={onConfirm} onDismiss={onDismiss} bottom={bottom} />}
   </View>;
@@ -196,7 +196,7 @@ function ResultSheet({ sheet, onConfirm, onDismiss, bottom }: { sheet: Sheet; on
 }
 
 /* ---------- my code ---------- */
-function MyCode({ wallet, top }: { wallet: string; top: number }) {
+function MyCode({ wallet, top, bottom }: { wallet: string; top: number; bottom: number }) {
   const { width } = useWindowDimensions();
   const [amount, setAmount] = useState(''); const [memo, setMemo] = useState(''); const [copied, setCopied] = useState(false);
   const valid = checkAmount(amount);
@@ -218,7 +218,7 @@ function MyCode({ wallet, top }: { wallet: string; top: number }) {
     <LinearGradient colors={['#0B0C0F', '#1E0F1C', '#0B0C0F']} locations={[0, 0.4, 1]} style={StyleSheet.absoluteFill} />
     <Lattice />
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ paddingTop: top + 70, paddingBottom: 140, alignItems: 'center', paddingHorizontal: 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ paddingTop: top + 70, paddingBottom: bottom + 10 + 66 + 30 + 16, alignItems: 'center', paddingHorizontal: 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={{ width: O, height: O, alignItems: 'center', justifyContent: 'center' }}>
           <Animated.View pointerEvents="none" style={[s.aura, { width: card + 30, height: card + 30, borderRadius: 40, opacity: pulse.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0.35, 0.8, 0.35] }) }]} />
           <Svg pointerEvents="none" width={O} height={O} style={StyleSheet.absoluteFill}><Circle cx={O / 2} cy={O / 2} r={O / 2 - 2} stroke="rgba(242,139,224,0.22)" strokeWidth={1} strokeDasharray="2 7" fill="none" /></Svg>

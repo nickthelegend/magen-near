@@ -23,6 +23,8 @@ import { C, FONT, LOGO, MONO, T as Txt, TopGlow, fontAssets } from './src/theme'
 import { ChainAvatars, StripeBar, shares, units, useAssets } from './src/Assets';
 
 const VAULT = 'magen-vault';
+/** Room under scrolling content for the floating tab bar: 10 pt lift + 66 pt bar + 30 pt raised Scan button + 16 pt gap (safe area added at use). */
+export const TAB_CLEARANCE = 10 + 66 + 30 + 16;
 const CACHE = 'magen-cache';
 
 export default function App() {
@@ -178,13 +180,15 @@ function Wallet({ vault, onReset }: { vault: Vault; onReset: () => void }) {
   const props = { vault, live, acts, refresh, go: goTab, receive: () => openScan('code') };
   return <View style={{ flex: 1, backgroundColor: C.bg }}>
     {tab !== 'scan' && <TopGlow />}
-    <View style={{ paddingTop: insets.top }}>
+    {/* Opaque header (own copy of the glow, same coordinates) so scrolled content never shows under it. */}
+    <View style={{ paddingTop: insets.top, backgroundColor: C.bg, overflow: 'hidden', zIndex: 2 }}>
+      {tab !== 'scan' && <TopGlow />}
       <View style={styles.top}><Logo size={30} />
         <View style={{ flex: 1 }}><T style={{ fontSize: 15, fontWeight: '600' }} numberOfLines={1}>{vault.wallet}</T><T style={{ fontSize: 12, color: C.text3 }}>NEAR testnet</T></View>
         <View style={styles.lockChip}><Atom color={C.accent} size={14} /><T style={{ color: C.accentText, fontSize: 12, fontWeight: '600' }}>{live?.status?.migrated ? 'PQ native' : '2 locks'}</T></View>
       </View>
     </View>
-    {tab !== 'scan' && <Animated.ScrollView style={{ opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }} contentContainerStyle={{ padding: 16, paddingBottom: 130, gap: 14 }} keyboardShouldPersistTaps="handled">
+    {tab !== 'scan' && <Animated.ScrollView style={{ opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }} contentContainerStyle={{ padding: 16, paddingBottom: TAB_CLEARANCE + insets.bottom, gap: 14 }} keyboardShouldPersistTaps="handled">
       {tab === 'home' && <HomeTab {...props} />}
       {tab === 'send' && <SendTab {...props} prefill={prefill} />}
       {tab === 'activity' && <ActivityTab {...props} />}
