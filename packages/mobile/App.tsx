@@ -4,6 +4,7 @@ import { ActivityIndicator, Alert, Animated, AppState, Image, Linking, Modal, Pr
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Circle, Defs, LinearGradient as SvgLinear, RadialGradient, Stop } from 'react-native-svg';
 import { useFonts } from 'expo-font';
 import * as SecureStore from 'expo-secure-store';
 import * as Clipboard from 'expo-clipboard';
@@ -253,7 +254,7 @@ function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
   const usd = (n: number | null) => n === null ? null : `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return <Screen>
     <View style={{ alignItems: 'center', gap: 6, marginTop: -6 }}>
-      <View style={{ shadowColor: C.accent, shadowOpacity: 0.5, shadowRadius: 20 }}><Avatar name={vault.wallet} /></View>
+      <Avatar name={vault.wallet} size={96} glow />
       <Pressable onPress={() => { Haptics.selectionAsync(); setWallets(true); }} accessibilityRole="button" accessibilityLabel="Switch wallet" hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 }}>
         <T style={{ fontSize: 18, fontWeight: '700' }} numberOfLines={1}>{vault.wallet}</T><ChevronDown color={C.text2} size={20} /></Pressable>
       {total !== null ? <T display style={{ fontSize: 42, letterSpacing: -1.2 }}>{usd(total)}</T> : <ActivityIndicator color={C.accent} style={{ height: 48 }} />}
@@ -288,12 +289,28 @@ function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
     <WalletsSheet open={wallets} close={() => setWallets(false)} wallet={vault.wallet} balance={live?.amount ?? null} />
   </Screen>;
 }
-/** Deterministic magenta/violet/indigo gradient avatar seeded from the account name (no people). */
-const AV = [['#E040C8', '#7A1F6C'], ['#A855F7', '#4C1D95'], ['#6366F1', '#312E81'], ['#D946EF', '#4338CA'], ['#C026D3', '#1E1B4B'], ['#8B5CF6', '#BE185D']];
-function Avatar({ name, size = 84, ring }: { name: string; size?: number; ring?: boolean }) {
-  let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0; const [a, b] = AV[h % AV.length];
-  return <LinearGradient colors={[a, b]} start={{ x: (h % 7) / 7, y: 0 }} end={{ x: 1 - (h % 5) / 5, y: 1 }} style={{ width: size, height: size, borderRadius: size / 2, alignItems: 'center', justifyContent: 'center', borderWidth: ring ? 3 : 0, borderColor: '#fff' }}>
-    <T style={{ fontSize: size * 0.42, fontWeight: '800', color: '#fff' }}>{name[0]?.toUpperCase()}</T></LinearGradient>;
+/** Generative iridescent orb seeded from the account name: layered radial gradients, a specular highlight, an inner ring. */
+const ORB = ['#E040C8', '#8B5CF6', '#4338CA', '#F472B6', '#C026D3', '#6D28D9'];
+function Avatar({ name, size = 96, ring, glow }: { name: string; size?: number; ring?: boolean; glow?: boolean }) {
+  let h = 2166136261; for (const c of name) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  const r = (n: number) => ((h >>> (n * 3)) % 1000) / 1000;
+  const c1 = ORB[h % ORB.length], c2 = ORB[(h >>> 5) % ORB.length] === c1 ? ORB[(h + 2) % ORB.length] : ORB[(h >>> 5) % ORB.length], c3 = ORB[(h >>> 9) % ORB.length];
+  const id = 'o' + (h % 100000);
+  const orb = <Svg width={size} height={size} viewBox="0 0 100 100">
+    <Defs>
+      <SvgLinear id={id + 'l'} x1={r(1)} y1="0" x2={1 - r(2)} y2="1"><Stop offset="0" stopColor={c1} /><Stop offset="0.55" stopColor={c2} /><Stop offset="1" stopColor="#0B0C0F" /></SvgLinear>
+      <RadialGradient id={id + 'a'} cx={20 + r(3) * 60} cy={55 + r(4) * 35} r="55" gradientUnits="userSpaceOnUse"><Stop offset="0" stopColor={c3} stopOpacity="0.95" /><Stop offset="1" stopColor={c3} stopOpacity="0" /></RadialGradient>
+      <RadialGradient id={id + 'b'} cx={60 + r(5) * 30} cy={15 + r(6) * 30} r="45" gradientUnits="userSpaceOnUse"><Stop offset="0" stopColor="#F472B6" stopOpacity={0.35 + r(7) * 0.4} /><Stop offset="1" stopColor="#F472B6" stopOpacity="0" /></RadialGradient>
+      <RadialGradient id={id + 's'} cx="32" cy="28" r="24" gradientUnits="userSpaceOnUse"><Stop offset="0" stopColor="#fff" stopOpacity="0.7" /><Stop offset="1" stopColor="#fff" stopOpacity="0" /></RadialGradient>
+    </Defs>
+    <Circle cx="50" cy="50" r="50" fill={`url(#${id}l)`} />
+    <Circle cx="50" cy="50" r="50" fill={`url(#${id}a)`} />
+    <Circle cx="50" cy="50" r="50" fill={`url(#${id}b)`} />
+    <Circle cx="50" cy="50" r="50" fill={`url(#${id}s)`} />
+    <Circle cx="50" cy="50" r="49.3" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.4" />
+    {ring && <Circle cx="50" cy="50" r="48" fill="none" stroke="#fff" strokeWidth="3" />}
+  </Svg>;
+  return glow ? <View style={{ shadowColor: C.accent, shadowOpacity: 0.55, shadowRadius: 22, shadowOffset: { width: 0, height: 0 } }}>{orb}</View> : orb;
 }
 const TokenRow = ({ logo, badge, name, sub, right, zero, onPress }: any) => <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} accessibilityRole="button" accessibilityLabel={`${name}, ${sub}`}
   style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 64, opacity: pressed ? 0.7 : 1 })}>
@@ -311,7 +328,7 @@ function WalletsSheet({ open: on, close, wallet, balance }: { open: boolean; clo
   const DEMO = 'magen-noam.testnet'; const [demo, setDemo] = useState<bigint | null>(null);
   useEffect(() => { if (on) readAccount(DEMO).then((a: any) => setDemo(a ? BigInt(a.amount) : null)).catch(() => {}); }, [on]);
   const W = ({ name, bal, me, note }: any) => <View style={{ width: '33%', alignItems: 'center', gap: 6, paddingVertical: 8 }}>
-    <Avatar name={name} size={72} ring={me} />
+    <Avatar name={name} size={64} ring={me} />
     <T style={{ fontWeight: '600', fontSize: 13.5 }} numberOfLines={1}>{name.replace('.testnet', '')}</T><T style={{ color: C.text2, fontSize: 13 }}>{bal === null ? '…' : `${near(bal, 2)} NEAR`}{note ? ` · ${note}` : ''}</T></View>;
   return <Modal transparent visible={on} animationType="slide" onRequestClose={close}>
     <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,6,8,0.6)' }} onPress={close} accessibilityLabel="Close" />
