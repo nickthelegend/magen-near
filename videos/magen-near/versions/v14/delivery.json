@@ -1,0 +1,51 @@
+{
+  "noCanonicalOverwrite": true,
+  "durationBelow180": true,
+  "shareBelow25MB": true,
+  "oneSecondSamplesViewed": 180,
+  "subtitleStreams": 0,
+  "newTransactions": 0,
+  "deployments": 0,
+  "renders": [
+    {
+      "path": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v14/magen-near-film.mp4",
+      "sha256": "58b81cb16f6fc51aa71f4fc3a94b2b77c70550a7e36ffbc0f248626d6ac43749",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "codec_type": "audio"
+        }
+      ],
+      "format": {
+        "duration": "179.300000",
+        "size": "13188787"
+      }
+    },
+    {
+      "path": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v14/magen-near-film-share.mp4",
+      "sha256": "cee72c3e9f614c6800330dc9342584c42383b58e3eab86342f1c3c5045e4473b",
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_type": "video",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "codec_type": "audio"
+        }
+      ],
+      "format": {
+        "duration": "179.307000",
+        "size": "5142763"
+      }
+    }
+  ]
+}

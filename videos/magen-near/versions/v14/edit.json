@@ -1,0 +1,523 @@
+{
+  "duration": 179.3,
+  "fps": 30,
+  "sourceV12": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+  "sourceV12SHA256": "12ea46b8ab9db2e21488169d673aef9c2581d70492e0f3877acf1e6d3956ebdb",
+  "canonicalPreserved": {
+    "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/magen-near-film.mp4": "5b8b6aa2110ac2e2a4b8fa6347d92da124a000c10bb2b9c7625d8eb74e7c4539",
+    "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/magen-near-film.mp4": "12ea46b8ab9db2e21488169d673aef9c2581d70492e0f3877acf1e6d3956ebdb"
+  },
+  "timeline": [
+    {
+      "id": "landing-extension-drill",
+      "start": 0.0,
+      "end": 17.533333,
+      "duration": 17.533333,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 0,
+      "out": 17.533333,
+      "kind": "base"
+    },
+    {
+      "id": "readiness-scan",
+      "start": 17.533333,
+      "end": 34.1,
+      "duration": 16.566667,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 17.533333,
+      "out": 34.1,
+      "kind": "base"
+    },
+    {
+      "id": "extension-upgrade-how-home",
+      "start": 34.1,
+      "end": 52.9,
+      "duration": 18.8,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 34.1,
+      "out": 52.9,
+      "kind": "base"
+    },
+    {
+      "id": "upgrade-approval",
+      "start": 52.9,
+      "end": 56.4,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app.webm",
+      "in": 6.0,
+      "out": 8.6,
+      "kind": "approval",
+      "transaction": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu"
+    },
+    {
+      "id": "upgrade-explorer",
+      "start": 56.4,
+      "end": 60.4,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/upgrade-explorer.webm",
+      "in": 3.4099999999999993,
+      "out": 7.409999999999999,
+      "kind": "explorer",
+      "transaction": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu"
+    },
+    {
+      "id": "phone-upgrade-send",
+      "start": 60.4,
+      "end": 79.4,
+      "duration": 19.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 52.9,
+      "out": 71.9,
+      "kind": "base"
+    },
+    {
+      "id": "send-approval",
+      "start": 79.4,
+      "end": 82.9,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest2.webm",
+      "in": 3.0,
+      "out": 6.2,
+      "kind": "approval",
+      "transaction": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR"
+    },
+    {
+      "id": "send-explorer",
+      "start": 82.9,
+      "end": 86.9,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/send-explorer.webm",
+      "in": 3.4099999999999993,
+      "out": 7.409999999999999,
+      "kind": "explorer",
+      "transaction": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR"
+    },
+    {
+      "id": "phone-chains-addresses",
+      "start": 86.9,
+      "end": 95.4,
+      "duration": 8.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 75.9,
+      "out": 84.4,
+      "kind": "base"
+    },
+    {
+      "id": "phone-chains-refusal",
+      "start": 95.4,
+      "end": 105.9,
+      "duration": 10.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 85.4,
+      "out": 95.9,
+      "kind": "base"
+    },
+    {
+      "id": "chains-approval",
+      "start": 105.9,
+      "end": 109.4,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest2.webm",
+      "in": 20.55,
+      "out": 23.4,
+      "kind": "approval",
+      "transaction": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24"
+    },
+    {
+      "id": "chains-explorer",
+      "start": 109.4,
+      "end": 113.4,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/chains-explorer.webm",
+      "in": 3.369999999999999,
+      "out": 7.369999999999999,
+      "kind": "explorer",
+      "transaction": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24"
+    },
+    {
+      "id": "phone-qday-confirm",
+      "start": 113.4,
+      "end": 121.1,
+      "duration": 7.7,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 99.2,
+      "out": 106.9,
+      "kind": "base"
+    },
+    {
+      "id": "phone-qday-native-key",
+      "start": 121.1,
+      "end": 123.8,
+      "duration": 2.7,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 113.2,
+      "out": 115.9,
+      "kind": "base"
+    },
+    {
+      "id": "phone-qday-original-explorer",
+      "start": 123.8,
+      "end": 130.0,
+      "duration": 6.2,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 115.9,
+      "out": 122.1,
+      "kind": "base"
+    },
+    {
+      "id": "qday-approval",
+      "start": 130.0,
+      "end": 133.5,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest4.webm",
+      "in": 18.85,
+      "out": 22.0,
+      "kind": "approval",
+      "transaction": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX"
+    },
+    {
+      "id": "qday-explorer",
+      "start": 133.5,
+      "end": 137.5,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/qday-explorer.webm",
+      "in": 3.33,
+      "out": 7.33,
+      "kind": "explorer",
+      "transaction": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX"
+    },
+    {
+      "id": "private-original",
+      "start": 137.5,
+      "end": 141.5,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 122.1,
+      "out": 125.4,
+      "kind": "base"
+    },
+    {
+      "id": "private-approval",
+      "start": 141.5,
+      "end": 145.0,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest2.webm",
+      "in": 41.55,
+      "out": 44.4,
+      "kind": "approval",
+      "transaction": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ"
+    },
+    {
+      "id": "private-explorer",
+      "start": 145.0,
+      "end": 149.0,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/private-explorer.webm",
+      "in": 3.369999999999999,
+      "out": 7.369999999999999,
+      "kind": "explorer",
+      "transaction": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ"
+    },
+    {
+      "id": "swap-original",
+      "start": 149.0,
+      "end": 151.9,
+      "duration": 2.9,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 125.8,
+      "out": 127.95,
+      "kind": "base"
+    },
+    {
+      "id": "guardians-original",
+      "start": 151.9,
+      "end": 156.0,
+      "duration": 4.1,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 128.1,
+      "out": 130.95,
+      "kind": "base"
+    },
+    {
+      "id": "recovery-approval",
+      "start": 156.0,
+      "end": 159.5,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest4.webm",
+      "in": 3.0,
+      "out": 5.4,
+      "kind": "approval",
+      "transaction": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB"
+    },
+    {
+      "id": "recovery-explorer",
+      "start": 159.5,
+      "end": 163.5,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/recovery-explorer.webm",
+      "in": 3.4099999999999993,
+      "out": 7.409999999999999,
+      "kind": "explorer",
+      "transaction": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB"
+    },
+    {
+      "id": "extension-activity",
+      "start": 163.5,
+      "end": 167.6,
+      "duration": 4.1,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 131.45,
+      "out": 134.766667,
+      "kind": "base"
+    },
+    {
+      "id": "get-magen-close",
+      "start": 167.6,
+      "end": 179.3,
+      "duration": 11.7,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/videos/magen-near/versions/v12/magen-near-film.mp4",
+      "in": 134.766667,
+      "out": 146.466667,
+      "kind": "base"
+    }
+  ],
+  "voice": [
+    {
+      "id": "s1",
+      "start": 0.15,
+      "end": 17.046,
+      "text": "Magen keeps your Near account, and adds a second lock. A dApp asks for a payment. Magen signs it twice: classical, and quantum safe. Now a simulated attack. A laptop plays the quantum computer and recovers both accounts' keys. The plain account is drained. The Magen account refuses, on chain."
+    },
+    {
+      "id": "s2",
+      "start": 17.683333,
+      "end": 33.598,
+      "text": "Why now? On Near, every account's keys are public. Paste any account, and Magen shows what a quantum computer could take. This one holds six hundred and fifty Near behind classical keys anyone can read. Its keys are listed for anyone, forever. A quantum computer could work backwards from them."
+    },
+    {
+      "id": "s3",
+      "start": 34.25,
+      "end": 52.17,
+      "text": "Magen upgrades the account you already have, in one transaction. Your key stays as the first lock. A new M L D S A sixty five key, made on your device, becomes the second. Same name. Same balance. The old key comes back with one permission: ask the contract to act. On its own, it can no longer move a single coin."
+    },
+    {
+      "id": "upgrade-insert",
+      "start": 53.0,
+      "end": 56.413333,
+      "text": "Separately on web, review the upgrade, then approve."
+    },
+    {
+      "id": "s4",
+      "start": 60.55,
+      "end": 74.203333,
+      "text": "On the phone, Magen upgrades an account the same way, with keys made on the device. Send signs twice, right here, and Near checks both. After the upgrade, Near lists no classical key at all. Even the key that pays fees is post quantum."
+    },
+    {
+      "id": "send-insert",
+      "start": 79.5,
+      "end": 82.977333,
+      "text": "Here is a separate small payment, approved on web."
+    },
+    {
+      "id": "s5",
+      "start": 87.05,
+      "end": 103.455333,
+      "text": "One quantum safe key also controls every chain. Through Near chain signatures, this account has Ethereum, Bitcoin, Solana and Cosmos addresses. Ask with one signature, and Near refuses before the signer is ever called. Those chains stay classical. The control is quantum safe."
+    },
+    {
+      "id": "chains-insert",
+      "start": 106.0,
+      "end": 111.994667,
+      "text": "A separate web request passes both signatures. This requests a signature, not a transfer."
+    },
+    {
+      "id": "s6",
+      "start": 113.55,
+      "end": 124.472667,
+      "text": "When classical keys stop being safe, the Q Day switch adds a native post quantum key to the same account. The explorer then lists only post quantum keys, and marks the account quantum safe."
+    },
+    {
+      "id": "qday-insert",
+      "start": 130.1,
+      "end": 135.262667,
+      "text": "Separately on web, approve a native full access key. It can change the contract."
+    },
+    {
+      "id": "private-original",
+      "start": 137.6,
+      "end": 141.269333,
+      "text": "The web wallet adds private sends to one time accounts."
+    },
+    {
+      "id": "private-insert",
+      "start": 141.6,
+      "end": 147.168,
+      "text": "Review the amount, destination and gas, then approve. The explorer confirms the payment."
+    },
+    {
+      "id": "swap-original",
+      "start": 149.1,
+      "end": 151.724,
+      "text": "Live swap quotes from Near intents."
+    },
+    {
+      "id": "recovery-original",
+      "start": 152.0,
+      "end": 155.882667,
+      "text": "And two of three guardians who can move your locks to a new phone."
+    },
+    {
+      "id": "recovery-insert",
+      "start": 156.1,
+      "end": 160.964,
+      "text": "Review the recovery, approve it, and inspect the recover method on the explorer."
+    },
+    {
+      "id": "activity-original",
+      "start": 163.6,
+      "end": 167.461333,
+      "text": "The extension carries the same wallet into every dApp."
+    },
+    {
+      "id": "s8",
+      "start": 167.75,
+      "end": 178.694,
+      "text": "Magen runs on Near testnet, and is not audited yet. Chain signatures stay classical. Get the extension and the iPhone build from the Magen site. Keep your account. Add the second lock."
+    }
+  ],
+  "insertedBeats": [
+    {
+      "id": "upgrade-approval",
+      "start": 52.9,
+      "end": 56.4,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app.webm",
+      "in": 6.0,
+      "out": 8.6,
+      "kind": "approval",
+      "transaction": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu"
+    },
+    {
+      "id": "upgrade-explorer",
+      "start": 56.4,
+      "end": 60.4,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/upgrade-explorer.webm",
+      "in": 3.4099999999999993,
+      "out": 7.409999999999999,
+      "kind": "explorer",
+      "transaction": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu"
+    },
+    {
+      "id": "send-approval",
+      "start": 79.4,
+      "end": 82.9,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest2.webm",
+      "in": 3.0,
+      "out": 6.2,
+      "kind": "approval",
+      "transaction": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR"
+    },
+    {
+      "id": "send-explorer",
+      "start": 82.9,
+      "end": 86.9,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/send-explorer.webm",
+      "in": 3.4099999999999993,
+      "out": 7.409999999999999,
+      "kind": "explorer",
+      "transaction": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR"
+    },
+    {
+      "id": "chains-approval",
+      "start": 105.9,
+      "end": 109.4,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest2.webm",
+      "in": 20.55,
+      "out": 23.4,
+      "kind": "approval",
+      "transaction": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24"
+    },
+    {
+      "id": "chains-explorer",
+      "start": 109.4,
+      "end": 113.4,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/chains-explorer.webm",
+      "in": 3.369999999999999,
+      "out": 7.369999999999999,
+      "kind": "explorer",
+      "transaction": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24"
+    },
+    {
+      "id": "qday-approval",
+      "start": 130.0,
+      "end": 133.5,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest4.webm",
+      "in": 18.85,
+      "out": 22.0,
+      "kind": "approval",
+      "transaction": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX"
+    },
+    {
+      "id": "qday-explorer",
+      "start": 133.5,
+      "end": 137.5,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/qday-explorer.webm",
+      "in": 3.33,
+      "out": 7.33,
+      "kind": "explorer",
+      "transaction": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX"
+    },
+    {
+      "id": "private-approval",
+      "start": 141.5,
+      "end": 145.0,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest2.webm",
+      "in": 41.55,
+      "out": 44.4,
+      "kind": "approval",
+      "transaction": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ"
+    },
+    {
+      "id": "private-explorer",
+      "start": 145.0,
+      "end": 149.0,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/private-explorer.webm",
+      "in": 3.369999999999999,
+      "out": 7.369999999999999,
+      "kind": "explorer",
+      "transaction": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ"
+    },
+    {
+      "id": "recovery-approval",
+      "start": 156.0,
+      "end": 159.5,
+      "duration": 3.5,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/app-rest4.webm",
+      "in": 3.0,
+      "out": 5.4,
+      "kind": "approval",
+      "transaction": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB"
+    },
+    {
+      "id": "recovery-explorer",
+      "start": 159.5,
+      "end": 163.5,
+      "duration": 4.0,
+      "source": "/Volumes/Extreme SSD/Projects/grokbot/projects/magen/videos/magen-near/versions/v13/raw/recovery-explorer.webm",
+      "in": 3.4099999999999993,
+      "out": 7.409999999999999,
+      "kind": "explorer",
+      "transaction": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB"
+    }
+  ],
+  "notes": "Each v13 approval/explorer shares one actual hash. Separate-web narration prevents conflating v13 with older v12 phone/extension transactions."
+}

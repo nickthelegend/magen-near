@@ -1,0 +1,104 @@
+[
+  {
+    "id": "s1",
+    "expected": "Magen keeps your Near account, and adds a second lock. A dApp asks for a payment. Magen signs it twice: classical, and quantum safe. Now a simulated attack. A laptop plays the quantum computer and recovers both accounts' keys. The plain account is drained. The Magen account refuses, on chain.",
+    "transcript": "Magen keeps your near account and adds a second lock. A D app asks for payment. Magen signs it twice, classical and quantum safe. Now a simulated attack. A laptop plays the quantum computer and recovers both accounts keys. The plain account is drained. The Magen account refuses on chain.",
+    "wordSimilarity": 0.96
+  },
+  {
+    "id": "s2",
+    "expected": "Why now? On Near, every account's keys are public. Paste any account, and Magen shows what a quantum computer could take. This one holds six hundred and fifty Near behind classical keys anyone can read. Its keys are listed for anyone, forever. A quantum computer could work backwards from them.",
+    "transcript": "Why now, on near, every account's keys are public. Paste any account, and Magen shows what a quantum computer could take. This one holds 650 near-behind classical keys anyone can read. Its keys are listed for anyone, forever. A quantum computer could work backwards from them.",
+    "wordSimilarity": 0.917
+  },
+  {
+    "id": "s3",
+    "expected": "Magen upgrades the account you already have, in one transaction. Your key stays as the first lock. A new M L D S A sixty five key, made on your device, becomes the second. Same name. Same balance. The old key comes back with one permission: ask the contract to act. On its own, it can no longer move a single coin.",
+    "transcript": "Magen upgrades the account you already have in one transaction. Your key stays as the first lock. A new MLDS a 65 key made on your device becomes the second. Same name, same balance. The old key comes back with one permission. Ask the contract to act. On its own, it can no longer move a single coin.",
+    "wordSimilarity": 0.933
+  },
+  {
+    "id": "s4",
+    "expected": "On the phone, Magen upgrades an account the same way, with keys made on the device. Send signs twice, right here, and Near checks both. After the upgrade, Near lists no classical key at all. Even the key that pays fees is post quantum.",
+    "transcript": "On the phone, Magen upgrades an account the same way, with keys made on the device. Send signs twice, right here, and near checks both. After the upgrade, Near lists no classical key at all. Even the key that pays fees is post-quantum.",
+    "wordSimilarity": 0.966
+  },
+  {
+    "id": "s5",
+    "expected": "One quantum safe key also controls every chain. Through Near chain signatures, this account has Ethereum, Bitcoin, Solana and Cosmos addresses. Ask with one signature, and Near refuses before the signer is ever called. Those chains stay classical. The control is quantum safe.",
+    "transcript": "One quantum safe key also controls every chain. Through near-chain signatures, this account has Ethereum, Bitcoin, Solana, and Cosmos addresses. Ask with one signature, and near-refuses before the signer is ever called. Those chains stay classical. The control is quantum safe.",
+    "wordSimilarity": 0.929
+  },
+  {
+    "id": "s6",
+    "expected": "When classical keys stop being safe, the Q Day switch adds a native post quantum key to the same account. The explorer then lists only post quantum keys, and marks the account quantum safe.",
+    "transcript": "When classical keys stop being safe, the Q-Day switch adds a native post quantum key to the same account. The Explorer then lists only post quantum keys and marks the account quantum safe.",
+    "wordSimilarity": 0.955
+  },
+  {
+    "id": "s8",
+    "expected": "Magen runs on Near testnet, and is not audited yet. Chain signatures stay classical. Get the extension and the iPhone build from the Magen site. Keep your account. Add the second lock.",
+    "transcript": "Magen runs on near testnet and is not audited yet. Chain signatures stay classical. Get the extension and the iPhone build from the Magen site. Keep your account. Add the second lock.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "private-original",
+    "expected": "The web wallet adds private sends to one time accounts.",
+    "transcript": "The web wallet adds private sends to one-time accounts.",
+    "wordSimilarity": 0.842
+  },
+  {
+    "id": "swap-original",
+    "expected": "Live swap quotes from Near intents.",
+    "transcript": "Live swap quotes from near intense.",
+    "wordSimilarity": 0.833
+  },
+  {
+    "id": "recovery-original",
+    "expected": "And two of three guardians who can move your locks to a new phone.",
+    "transcript": "and two of three guardians who can move your locks to a new phone.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "activity-original",
+    "expected": "The extension carries the same wallet into every dApp.",
+    "transcript": "The extension carries the same wallet into every D app.",
+    "wordSimilarity": 0.842
+  },
+  {
+    "id": "upgrade-insert",
+    "expected": "Separately on web, review the upgrade, then approve.",
+    "transcript": "Separately on web, review the upgrade, then approve.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "send-insert",
+    "expected": "Here is a separate small payment, approved on web.",
+    "transcript": "Here is a separate small payment, approved on web.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "chains-insert",
+    "expected": "A separate web request passes both signatures. This requests a signature, not a transfer.",
+    "transcript": "A separate web request passes both signatures. This requests a signature, not a transfer.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "private-insert",
+    "expected": "Review the amount, destination and gas, then approve. The explorer confirms the payment.",
+    "transcript": "Review the amount, destination, and gas, then approve. The Explorer confirms the payment.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "recovery-insert",
+    "expected": "Review the recovery, approve it, and inspect the recover method on the explorer.",
+    "transcript": "Review the recovery, approve it, and inspect the recover method on the Explorer.",
+    "wordSimilarity": 1.0
+  },
+  {
+    "id": "qday-insert",
+    "expected": "Separately on web, approve a native full access key. It can change the contract.",
+    "transcript": "Separately on web, approve a native full access key. It can change the contract.",
+    "wordSimilarity": 1.0
+  }
+]

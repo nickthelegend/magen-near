@@ -1,0 +1,104 @@
+[
+  {
+    "id": "s1",
+    "text": "Magen keeps your Near account, and adds a second lock. A dApp asks for a payment. Magen signs it twice: classical, and quantum safe. Now a simulated attack. A laptop plays the quantum computer and recovers both accounts' keys. The plain account is drained. The Magen account refuses, on chain.",
+    "source": "v12 verbatim",
+    "speech": 16.896
+  },
+  {
+    "id": "s2",
+    "text": "Why now? On Near, every account's keys are public. Paste any account, and Magen shows what a quantum computer could take. This one holds six hundred and fifty Near behind classical keys anyone can read. Its keys are listed for anyone, forever. A quantum computer could work backwards from them.",
+    "source": "v12 verbatim",
+    "speech": 15.914666666666667
+  },
+  {
+    "id": "s3",
+    "text": "Magen upgrades the account you already have, in one transaction. Your key stays as the first lock. A new M L D S A sixty five key, made on your device, becomes the second. Same name. Same balance. The old key comes back with one permission: ask the contract to act. On its own, it can no longer move a single coin.",
+    "source": "v12 verbatim",
+    "speech": 17.92
+  },
+  {
+    "id": "s4",
+    "text": "On the phone, Magen upgrades an account the same way, with keys made on the device. Send signs twice, right here, and Near checks both. After the upgrade, Near lists no classical key at all. Even the key that pays fees is post quantum.",
+    "source": "v12 verbatim",
+    "speech": 13.653333333333334
+  },
+  {
+    "id": "s5",
+    "text": "One quantum safe key also controls every chain. Through Near chain signatures, this account has Ethereum, Bitcoin, Solana and Cosmos addresses. Ask with one signature, and Near refuses before the signer is ever called. Those chains stay classical. The control is quantum safe.",
+    "source": "v12 verbatim",
+    "speech": 16.405333333333335
+  },
+  {
+    "id": "s6",
+    "text": "When classical keys stop being safe, the Q Day switch adds a native post quantum key to the same account. The explorer then lists only post quantum keys, and marks the account quantum safe.",
+    "source": "v12 verbatim",
+    "speech": 10.922666666666666
+  },
+  {
+    "id": "s8",
+    "text": "Magen runs on Near testnet, and is not audited yet. Chain signatures stay classical. Get the extension and the iPhone build from the Magen site. Keep your account. Add the second lock.",
+    "source": "v12 verbatim",
+    "speech": 10.944
+  },
+  {
+    "id": "private-original",
+    "text": "The web wallet adds private sends to one time accounts.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed",
+    "speech": 3.6693333333333333
+  },
+  {
+    "id": "swap-original",
+    "text": "Live swap quotes from Near intents.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed",
+    "speech": 2.624
+  },
+  {
+    "id": "recovery-original",
+    "text": "And two of three guardians who can move your locks to a new phone.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed",
+    "speech": 3.8826666666666667
+  },
+  {
+    "id": "activity-original",
+    "text": "The extension carries the same wallet into every dApp.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed",
+    "speech": 3.8613333333333335
+  },
+  {
+    "id": "upgrade-insert",
+    "text": "Separately on web, review the upgrade, then approve.",
+    "source": "short v13-derived confirmation, with explicit separate-web context",
+    "speech": 3.4133333333333336
+  },
+  {
+    "id": "send-insert",
+    "text": "Here is a separate small payment, approved on web.",
+    "source": "short v13-derived confirmation, with explicit separate-web context",
+    "speech": 3.477333333333333
+  },
+  {
+    "id": "chains-insert",
+    "text": "A separate web request passes both signatures. This requests a signature, not a transfer.",
+    "source": "short v13-derived confirmation, with explicit separate-web context",
+    "speech": 5.994666666666666
+  },
+  {
+    "id": "private-insert",
+    "text": "Review the amount, destination and gas, then approve. The explorer confirms the payment.",
+    "source": "short v13-derived confirmation, with explicit separate-web context",
+    "speech": 5.568
+  },
+  {
+    "id": "recovery-insert",
+    "text": "Review the recovery, approve it, and inspect the recover method on the explorer.",
+    "source": "short v13-derived confirmation, with explicit separate-web context",
+    "speech": 4.864
+  },
+  {
+    "id": "qday-insert",
+    "text": "Separately on web, approve a native full access key. It can change the contract.",
+    "source": "short v13-derived confirmation, with explicit separate-web context",
+    "speech": 5.1626666666666665
+  }
+]
