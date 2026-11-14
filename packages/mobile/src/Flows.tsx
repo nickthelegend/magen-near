@@ -231,8 +231,8 @@ export function SwapTab(p: P) {
 /* ---------- Bridge ---------- */
 export function BridgeTab(p: P) {
   const [dir, setDir] = useState<'in' | 'out'>('in');
-  return dir === 'in' ? <BridgeIn {...p} seg={<Seg value={dir} set={setDir} items={[['in', 'Bring to NEAR', ArrowDownToLine], ['out', 'Send to Solana', ArrowUpFromLine]]} />} />
-    : <BridgeOut {...p} seg={<Seg value={dir} set={setDir} items={[['in', 'Bring to NEAR', ArrowDownToLine], ['out', 'Send to Solana', ArrowUpFromLine]]} />} />;
+  return dir === 'in' ? <BridgeIn {...p} seg={<Seg value={dir} set={setDir} items={[['in', 'Bring to NEAR', ArrowDownToLine], ['out', 'Send out', ArrowUpFromLine]]} />} />
+    : <BridgeOut {...p} seg={<Seg value={dir} set={setDir} items={[['in', 'Bring to NEAR', ArrowDownToLine], ['out', 'Send out', ArrowUpFromLine]]} />} />;
 }
 
 const DEMO = 'magen-noam.testnet';
@@ -302,14 +302,15 @@ function BridgeIn(p: P & { seg: any }) {
 }
 
 const arrived = (s: { status: string; destTx?: string } | null) => !!s && (!!s.destTx || ['Finalised', 'Claimed', 'Settled'].includes(s.status));
-const PLAIN: Record<string, string> = { Initialised: 'Started on NEAR. The bridge is picking it up…', Signed: 'The bridge signed it. Sending to Solana…' };
+const PLAIN: Record<string, string> = { Initialised: 'Started on NEAR. The bridge is picking it up…', Signed: 'The bridge signed it. Sending to the destination chain…' };
 function BridgeOut(p: P & { seg: any }) {
   const { vault, live, refresh } = p;
-  const route = OUT_ROUTES.find(r => r.id === 'solana')!;
+  const [rid, setRid] = useState('solana'); const route = OUT_ROUTES.find(r => r.id === rid)!;
+  const [mpcEth, setMpcEth] = useState(''); useEffect(() => { chainAddresses(vault.wallet).then((a: any[]) => setMpcEth(a.find(x => x.id === 'ethereum')?.address ?? '')).catch(() => {}); }, [vault.wallet]);
   const [mySol, setMySol] = useState('');
   useEffect(() => { if (vault.mnemonic) setTimeout(() => { try { setMySol(derived(vault.mnemonic!).chains.find(c => c.id === 'solana')?.address ?? ''); } catch { /* typed instead */ } }, 30); }, [vault.mnemonic]);
   const [typed, setTyped] = useState('');
-  const to = mySol || typed.trim();
+  const to = route.id === 'solana' ? (mySol || typed.trim()) : mpcEth;
   const [amt, setAmt] = useState('0.5');
   const [fee, setFee] = useState<bigint | null>(null); const [feeErr, setFeeErr] = useState('');
   const [busy, setBusy] = useState(''); const [err, setErr] = useState('');
@@ -317,9 +318,9 @@ function BridgeOut(p: P & { seg: any }) {
   const [st, setSt] = useState<{ status: string; destTx?: string } | null>(null);
   const [dest, setDest] = useState<number | null>(null);
   let amount = 0n; try { amount = amt ? BigInt(nearAmount(amt)) : 0n; } catch { /* invalid */ }
-  const validTo = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(to);
-  useEffect(() => { let on = true; setFee(null); setFeeErr(''); if (!validTo || amount <= 0n) return; const t = setTimeout(() => retrying(() => outFee(vault.wallet, route, to, amount)).then(q => on && setFee(q.fee)).catch(e => on && setFeeErr(nice(e))), 300); return () => { on = false; clearTimeout(t); }; }, [to, amt]);
-  useEffect(() => { if (!validTo) return; let on = true; const load = () => splBalance(to).then(b => on && setDest(Number(b.amount) / 10 ** b.decimals)).catch(() => {}); load(); const i = setInterval(load, 10000); return () => { on = false; clearInterval(i); }; }, [to, st?.status]);
+  const validTo = route.id === 'solana' ? /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(to) : /^0x[0-9a-fA-F]{40}$/.test(to);
+  useEffect(() => { let on = true; setFee(null); setFeeErr(''); if (!validTo || amount <= 0n) return; const t = setTimeout(() => retrying(() => outFee(vault.wallet, route, to, amount)).then(q => on && setFee(q.fee)).catch(e => on && setFeeErr(nice(e))), 300); return () => { on = false; clearTimeout(t); }; }, [to, amt, rid]);
+  useEffect(() => { setDest(null); if (!validTo || route.id !== 'solana') return; let on = true; const load = () => splBalance(to).then(b => on && setDest(Number(b.amount) / 10 ** b.decimals)).catch(() => {}); load(); const i = setInterval(load, 10000); return () => { on = false; clearInterval(i); }; }, [to, st?.status]);
   useEffect(() => {
     if (!res?.success) return;
     let on = true; let n = 0;
@@ -340,16 +341,16 @@ function BridgeOut(p: P & { seg: any }) {
   const done = arrived(st);
   const version = live?.status?.version;
   return <Screen notice={<>{!!busy && <TxBanner state="pending" title="Sending to the bridge…" sub="Your wallet checks both signatures, wraps NEAR and hands it to Omni Bridge." />}
-      {res && (res.success ? <TxBanner state={done ? 'ok' : 'pending'} title={done ? 'Arrived on Solana.' : st ? (PLAIN[st.status] ?? `Bridge status: ${st.status}`) : 'Signed on NEAR. Waiting for the bridge relayer…'}
+      {res && (res.success ? <TxBanner state={done ? 'ok' : 'pending'} title={done ? `Arrived on ${route.chain}.` : st ? (PLAIN[st.status] ?? `Bridge status: ${st.status}`) : 'Signed on NEAR. Waiting for the bridge relayer…'}
         sub={done ? 'Both signatures were checked on NEAR before the bridge got a single token.' : 'This usually takes a minute or two. You can leave this screen.'}
-        links={[['NEAR transaction', txUrl(res.hash)], ...(st?.destTx ? [['Solana transaction', route.explorerTx(st.destTx)] as [string, string]] : []), ...(done ? [['Your Solana tokens', `https://explorer.solana.com/address/${to}/tokens?cluster=devnet`] as [string, string]] : [])]} />
+        links={[['NEAR transaction', txUrl(res.hash)], ...(st?.destTx ? [[`${route.chain} transaction`, route.explorerTx(st.destTx)] as [string, string]] : []), ...(done ? [[`Your ${route.chain} tokens`, route.id === 'solana' ? `https://explorer.solana.com/address/${to}/tokens?cluster=devnet` : route.explorerAddr(to)] as [string, string]] : [])]} />
         : <TxBanner state="bad" title={friendlyError(res.error)} sub="Nothing left NEAR." links={[['View the transaction', txUrl(res.hash)]]} />)}
       {!!err && <Err text={err} />}</>}
-    action={res?.success ? <Btn title="Send more to Solana" kind="ghost" onPress={() => { setRes(null); setSt(null); }} />
+    action={res?.success ? <Btn title={`Send more to ${route.chain}`} kind="ghost" onPress={() => { setRes(null); setSt(null); }} />
     : <Btn title={busy || 'Sign twice and bridge'} busy={!!busy} disabled={!fee || !validTo || (version && version !== 'magen-3')} onPress={go} icon={<ShieldSend size={22} />} />}>
     <Back sheet go={p.go} title="Bridge" />
     {p.seg}
-    <Route from={['near', 'NEAR']} fromNet="testnet" to={['solana', 'Solana']} toNet="devnet" via="Omni Bridge" />
+    <Route from={['near', 'NEAR']} fromNet="testnet" to={[route.id, route.chain]} toNet={route.network.replace(/^(Base|Arbitrum) /, '')} via="Omni Bridge" />
     <Card style={{ padding: 18, gap: 10 }}>
       <T s="label">Amount</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 60 }}>
@@ -361,17 +362,18 @@ function BridgeOut(p: P & { seg: any }) {
     {vault.mnemonic ? null : <Card style={{ padding: 18, gap: 10 }}><T s="label">Your Solana devnet address</T>
       <TextInput selectionColor={C.accent} style={[styles.input, { fontFamily: MONO, fontSize: 13 }]} placeholder="Solana address" placeholderTextColor={C.text3} value={typed} onChangeText={setTyped} autoCapitalize="none" autoCorrect={false} />
       <T style={{ color: C.text3, fontSize: 12.5 }}>Wallets made from 12 words fill this in for you.</T></Card>}
-    <KV rows={[['To', to ? <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}><Image source={LOGO.solana} style={{ width: 13, height: 13 }} resizeMode="contain" /></View><T style={{ fontSize: 14, fontWeight: '600' }}>{mySol ? 'Your Solana · ' : ''}<T style={{ fontFamily: MONO, fontSize: 13 }}>{short(to, 5, 5)}</T></T></View> : <ActivityIndicator color={C.accent} size="small" />], ['Network', 'Solana devnet'], ['Time', 'About 1–2 min (bridge relayer)'],
+    <KV rows={[['To', to ? <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>{LOGO[route.id] ? <Image source={LOGO[route.id]} style={{ width: 13, height: 13 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '800', fontSize: 11 }}>{route.chain[0]}</T>}</View><T style={{ fontSize: 14, fontWeight: '600' }}>{route.id === 'solana' ? (mySol ? 'Your Solana · ' : '') : 'Your MPC address · '}<T style={{ fontFamily: MONO, fontSize: 13 }}>{short(to, 5, 5)}</T></T></View> : <ActivityIndicator color={C.accent} size="small" />], ['Network', `${route.chain} ${route.network}`], ['Time', 'About 1–2 min (bridge relayer)'],
       ['Bridge fee', fee === null ? (feeErr ? '—' : '…') : `${units(fee, 24, 4)} wNEAR`], ['Arrives', fee !== null && amount > fee ? `${units(amount - fee, 24, 4)} wNEAR` : '…'],
-      ['On Solana now', dest === null ? '…' : `${dest.toFixed(4)} wNEAR`]]} />
+      ['On Solana now', route.id !== 'solana' ? 'see explorer after arrival' : dest === null ? '…' : `${dest.toFixed(4)} wNEAR`]]} />
     <Card style={{ paddingVertical: 4 }}>
       <T style={{ color: C.text2, fontSize: 13, fontWeight: '600', paddingHorizontal: 16, paddingTop: 10 }}>DESTINATION NETWORK</T>
-      {OUT_ROUTES.map((r, i) => { const on = r.id === 'solana'; return <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, height: 50, paddingHorizontal: 16, borderTopWidth: i ? 1 : 0, borderTopColor: 'rgba(255,255,255,0.06)', opacity: on ? 1 : 0.55 }}>
+      {OUT_ROUTES.map((r, i) => { const on = r.id === rid;
+        return <Pressable key={r.id} disabled={!!busy || !!res} onPress={() => { Haptics.selectionAsync(); setRid(r.id); setRes(null); setSt(null); }} accessibilityRole="button" accessibilityState={{ selected: on }} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, height: 52, paddingHorizontal: 16, borderTopWidth: i ? 1 : 0, borderTopColor: 'rgba(255,255,255,0.06)', backgroundColor: on ? C.accentSoft : 'transparent' }}>
         <View style={{ width: 26, height: 26, borderRadius: 13, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>{LOGO[r.id] ? <Image source={LOGO[r.id]} style={{ width: 15, height: 15 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '800', fontSize: 12 }}>{r.chain[0]}</T>}</View>
         <T style={{ flex: 1, fontSize: 15.5, fontWeight: '600' }}>{r.chain} <T style={{ color: C.text2, fontSize: 13 }}>{r.network}</T></T>
-        {on ? <Check color={C.accent} size={18} /> : <T style={{ color: C.text2, fontSize: 13 }}>not in the app yet</T>}</View>; })}
+        {on ? <Check color={C.accent} size={18} /> : <T style={{ color: C.text2, fontSize: 13 }}>Live on testnet</T>}</Pressable>; })}
     </Card>
-    {(!!busy || res?.success) && <Steps at={done ? 3 : res?.success ? (st && st.status !== 'Initialised' ? 2 : 1) : 0} logo={LOGO.solana} items={[['Signed twice on NEAR', res?.success ? 'Both locks verified · wNEAR handed to Omni' : 'ed25519 + ML-DSA-65'], ['Bridge relaying', st ? (PLAIN[st.status] ?? `Status: ${st.status}`) : 'Omni picks it up on NEAR'], ['Arrived on Solana', done ? 'wNEAR is in your Solana address' : 'Usually a minute or two']]} />}
+    {(!!busy || res?.success) && <Steps at={done ? 3 : res?.success ? (st && st.status !== 'Initialised' ? 2 : 1) : 0} logo={LOGO.solana} items={[['Signed twice on NEAR', res?.success ? 'Both locks verified · wNEAR handed to Omni' : 'ed25519 + ML-DSA-65'], ['Bridge relaying', st ? (PLAIN[st.status] ?? `Status: ${st.status}`) : 'Omni picks it up on NEAR'], [`Arrived on ${route.chain}`, done ? `wNEAR is in your ${route.chain} address` : 'Usually a few minutes']]} />}
     {version && version !== 'magen-3' && <Err text={`This wallet runs contract ${version}. Bridging needs magen-3: create a new wallet to bridge.`} />}
     {!!feeErr && <Err text={feeErr} />}
     <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><Atom color={C.accent} size={14} /><T style={{ color: C.text3, fontSize: 12, flex: 1, lineHeight: 17 }}>The bridge relayer and Solana are classical. What Magen guarantees: nothing leaves NEAR without your quantum-safe signature.</T></View>

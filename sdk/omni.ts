@@ -14,12 +14,13 @@ export const UTXO = {
 } as const;
 export type UtxoChain = keyof typeof UTXO;
 
-export type OutRoute = { id: string; chain: string; prefix: 'sol' | 'eth' | 'base' | 'arb' | 'avax'; network: string; explorerTx: (h: string) => string; explorerAddr: (a: string) => string };
+export type OutRoute = { id: string; chain: string; prefix: 'sol' | 'eth' | 'base' | 'arb' | 'avax' | 'bnb'; network: string; explorerTx: (h: string) => string; explorerAddr: (a: string) => string };
 export const OUT_ROUTES: OutRoute[] = [
   { id: 'solana', chain: 'Solana', prefix: 'sol', network: 'devnet', explorerTx: h => `https://explorer.solana.com/tx/${h}?cluster=devnet`, explorerAddr: a => `https://explorer.solana.com/address/${a}?cluster=devnet` },
   { id: 'base', chain: 'Base', prefix: 'base', network: 'Base Sepolia', explorerTx: h => `https://sepolia.basescan.org/tx/${h}`, explorerAddr: a => `https://sepolia.basescan.org/address/${a}` },
   { id: 'ethereum', chain: 'Ethereum', prefix: 'eth', network: 'Sepolia', explorerTx: h => `https://sepolia.etherscan.io/tx/${h}`, explorerAddr: a => `https://sepolia.etherscan.io/address/${a}` },
   { id: 'arbitrum', chain: 'Arbitrum', prefix: 'arb', network: 'Arbitrum Sepolia', explorerTx: h => `https://sepolia.arbiscan.io/tx/${h}`, explorerAddr: a => `https://sepolia.arbiscan.io/address/${a}` },
+  { id: 'bnb', chain: 'BNB Chain', prefix: 'bnb', network: 'BNB testnet', explorerTx: h => `https://testnet.bscscan.com/tx/${h}`, explorerAddr: a => `https://testnet.bscscan.com/address/${a}` },
 ];
 /** wNEAR's SPL mint on Solana devnet, as the bridge reports it (get_token_address). */
 export const WNEAR_SOL_MINT = '3wQct2e43J1Z99h2RWrhPAhf6E32ZpuzEt6tgwfEAKAy';
