@@ -1,0 +1,426 @@
+{
+ "segments": [
+  {
+   "id": "landing",
+   "src": "raw/L-landing.mp4",
+   "a": 0.0,
+   "b": 22.0,
+   "kind": "web",
+   "voice": "landing",
+   "vat": 0.4
+  },
+  {
+   "id": "install",
+   "src": "raw/cfr/P0-install.mp4",
+   "a": 2.0,
+   "b": 9.0,
+   "kind": "phone",
+   "voice": "install",
+   "vat": 2.5
+  },
+  {
+   "id": "name",
+   "src": "raw/cfr/P0-install.mp4",
+   "a": 17.0,
+   "b": 23.0,
+   "kind": "phone",
+   "voice": "create",
+   "vat": 0.3
+  },
+  {
+   "id": "words",
+   "src": "raw/cfr/P0-install.mp4",
+   "a": 24.0,
+   "b": 28.0,
+   "kind": "phone"
+  },
+  {
+   "id": "chains",
+   "src": "raw/cfr/P0-install.mp4",
+   "a": 30.0,
+   "b": 40.0,
+   "kind": "phone",
+   "voice": "chains",
+   "vat": 0.3
+  },
+  {
+   "id": "create",
+   "src": "raw/cfr/P0-install.mp4",
+   "a": 40.5,
+   "b": 56.0,
+   "kind": "phone",
+   "voice": "create-sign",
+   "vat": 2.0
+  },
+  {
+   "id": "ready",
+   "src": "raw/cfr/P0-install.mp4",
+   "a": 57.0,
+   "b": 62.0,
+   "kind": "phone"
+  },
+  {
+   "id": "home",
+   "src": "raw/cfr/P3a-home-base.mp4",
+   "a": 0.0,
+   "b": 3.6,
+   "kind": "phone",
+   "voice": "home",
+   "vat": 0.2
+  },
+  {
+   "id": "recv",
+   "src": "raw/cfr/P1-recv-send.mp4",
+   "a": 2.2,
+   "b": 9.8,
+   "kind": "phone",
+   "voice": "receive",
+   "vat": 0.3
+  },
+  {
+   "id": "send-sheet",
+   "src": "raw/cfr/P1-recv-send.mp4",
+   "a": 38.0,
+   "b": 56.0,
+   "kind": "phone",
+   "voice": "send",
+   "vat": 0.2
+  },
+  {
+   "id": "send-x",
+   "src": "raw/cfr/P1-recv-send.mp4",
+   "a": 58.0,
+   "b": 66.0,
+   "kind": "phone",
+   "voice": "send-explorer",
+   "vat": 0.3
+  },
+  {
+   "id": "send-rcv",
+   "src": "raw/cfr/P1-recv-send.mp4",
+   "a": 78.0,
+   "b": 88.0,
+   "kind": "phone"
+  },
+  {
+   "id": "swap-0",
+   "src": "raw/cfr/P2-swap.mp4",
+   "a": 4.2,
+   "b": 15.0,
+   "kind": "phone",
+   "voice": "swap",
+   "vat": 0.3
+  },
+  {
+   "id": "swap-sheet",
+   "src": "raw/cfr/P2-swap.mp4",
+   "a": 16.0,
+   "b": 19.5,
+   "kind": "phone"
+  },
+  {
+   "id": "swap-run",
+   "src": "raw/cfr/P2-swap.mp4",
+   "a": 20.0,
+   "b": 34.0,
+   "kind": "phone"
+  },
+  {
+   "id": "swap-x",
+   "src": "raw/cfr/P2-swap.mp4",
+   "a": 38.0,
+   "b": 48.0,
+   "kind": "phone",
+   "voice": "swap-done",
+   "vat": 0.3
+  },
+  {
+   "id": "swap-home",
+   "src": "raw/cfr/P2-swap.mp4",
+   "a": 74.0,
+   "b": 82.0,
+   "kind": "phone"
+  },
+  {
+   "id": "br-pick",
+   "src": "raw/cfr/P3a-home-base.mp4",
+   "a": 6.0,
+   "b": 11.0,
+   "kind": "phone",
+   "voice": "out",
+   "vat": 0.3
+  },
+  {
+   "id": "br-base",
+   "src": "raw/cfr/P3a-home-base.mp4",
+   "a": 12.0,
+   "b": 14.5,
+   "kind": "phone"
+  },
+  {
+   "id": "br-sheet",
+   "src": "raw/cfr/P3a-home-base.mp4",
+   "a": 18.5,
+   "b": 23.0,
+   "kind": "phone"
+  },
+  {
+   "id": "br-run",
+   "src": "raw/cfr/P3a-home-base.mp4",
+   "a": 24.0,
+   "b": 38.4,
+   "kind": "phone"
+  },
+  {
+   "id": "base-done",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 0.0,
+   "b": 4.0,
+   "kind": "phone",
+   "voice": "out-done",
+   "vat": 0.3
+  },
+  {
+   "id": "base-x",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 22.0,
+   "b": 34.0,
+   "kind": "phone"
+  },
+  {
+   "id": "sol-pick",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 40.0,
+   "b": 46.0,
+   "kind": "phone"
+  },
+  {
+   "id": "sol-form",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 53.0,
+   "b": 59.0,
+   "kind": "phone"
+  },
+  {
+   "id": "sol-run",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 60.0,
+   "b": 66.0,
+   "kind": "phone"
+  },
+  {
+   "id": "sol-done",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 80.0,
+   "b": 86.0,
+   "kind": "phone"
+  },
+  {
+   "id": "sol-x",
+   "src": "raw/cfr/P3b-base-arrive.mp4",
+   "a": 238.4,
+   "b": 241.6,
+   "kind": "phone"
+  },
+  {
+   "id": "eth-to",
+   "src": "raw/cfr/P4-eth.mp4",
+   "a": 21.0,
+   "b": 27.0,
+   "kind": "phone",
+   "voice": "eth",
+   "vat": 0.2
+  },
+  {
+   "id": "eth-sheet",
+   "src": "raw/cfr/P4-eth.mp4",
+   "a": 28.0,
+   "b": 33.0,
+   "kind": "phone"
+  },
+  {
+   "id": "eth-run",
+   "src": "raw/cfr/P4-eth.mp4",
+   "a": 38.0,
+   "b": 52.0,
+   "kind": "phone"
+  },
+  {
+   "id": "eth-done",
+   "src": "raw/cfr/P4-eth.mp4",
+   "a": 56.0,
+   "b": 60.0,
+   "kind": "phone",
+   "voice": "eth-done",
+   "vat": 0.3
+  },
+  {
+   "id": "eth-x",
+   "src": "raw/cfr/P4-eth.mp4",
+   "a": 72.0,
+   "b": 82.0,
+   "kind": "phone"
+  },
+  {
+   "id": "eth-rcv",
+   "src": "raw/cfr/P4-eth.mp4",
+   "a": 84.0,
+   "b": 96.0,
+   "kind": "phone"
+  },
+  {
+   "id": "atk-0",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 4.0,
+   "b": 9.0,
+   "kind": "phone",
+   "voice": "attack",
+   "vat": 0.3
+  },
+  {
+   "id": "atk-sheet",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 10.0,
+   "b": 13.0,
+   "kind": "phone"
+  },
+  {
+   "id": "atk-run",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 24.0,
+   "b": 37.0,
+   "kind": "phone"
+  },
+  {
+   "id": "atk-x",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 38.0,
+   "b": 47.0,
+   "kind": "phone"
+  },
+  {
+   "id": "atk-err",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 50.0,
+   "b": 57.0,
+   "kind": "phone"
+  },
+  {
+   "id": "priv-0",
+   "src": "raw/cfr/P6-private-lock.mp4",
+   "a": 31.6,
+   "b": 33.4,
+   "kind": "phone",
+   "voice": "private",
+   "vat": 0.2
+  },
+  {
+   "id": "priv-sheet",
+   "src": "raw/cfr/P6-private-lock.mp4",
+   "a": 34.0,
+   "b": 38.5,
+   "kind": "phone"
+  },
+  {
+   "id": "priv-run",
+   "src": "raw/cfr/P6-private-lock.mp4",
+   "a": 40.0,
+   "b": 48.0,
+   "kind": "phone"
+  },
+  {
+   "id": "priv-x",
+   "src": "raw/cfr/P6-private-lock.mp4",
+   "a": 50.0,
+   "b": 60.0,
+   "kind": "phone"
+  },
+  {
+   "id": "guard-0",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 62.0,
+   "b": 66.0,
+   "kind": "phone",
+   "voice": "guardians",
+   "vat": 0.3
+  },
+  {
+   "id": "guard-sheet",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 70.0,
+   "b": 73.5,
+   "kind": "phone"
+  },
+  {
+   "id": "guard-done",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 80.0,
+   "b": 89.0,
+   "kind": "phone"
+  },
+  {
+   "id": "qday-0",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 90.0,
+   "b": 96.0,
+   "kind": "phone",
+   "voice": "qday",
+   "vat": 0.3
+  },
+  {
+   "id": "qday-c",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 98.0,
+   "b": 101.5,
+   "kind": "phone"
+  },
+  {
+   "id": "qday-sheet",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 104.0,
+   "b": 106.0,
+   "kind": "phone"
+  },
+  {
+   "id": "qday-run",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 106.0,
+   "b": 120.0,
+   "kind": "phone"
+  },
+  {
+   "id": "qday-keys",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 124.0,
+   "b": 136.0,
+   "kind": "phone"
+  },
+  {
+   "id": "activity",
+   "src": "raw/cfr/P5-attack.mp4",
+   "a": 142.0,
+   "b": 151.0,
+   "kind": "phone",
+   "voice": "activity",
+   "vat": 0.3
+  },
+  {
+   "id": "lock",
+   "src": "raw/cfr/P6-private-lock.mp4",
+   "a": 64.0,
+   "b": 79.0,
+   "kind": "phone",
+   "voice": "lock",
+   "vat": 3.0
+  },
+  {
+   "id": "card",
+   "src": null,
+   "a": 0,
+   "b": 6.5,
+   "kind": "card",
+   "voice": "close",
+   "vat": 0.6
+  }
+ ]
+}

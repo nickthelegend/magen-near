@@ -1,0 +1,90 @@
+[
+ {
+  "id": "landing",
+  "text": "Bitcoin, Ethereum, Solana and Near all sign with keys a large quantum computer could crack. Every account that has ever signed has already shown its public key. Magen adds a quantum safe lock, and puts every chain behind it."
+ },
+ {
+  "id": "install",
+  "text": "Here it is on iPhone."
+ },
+ {
+  "id": "create",
+  "text": "Get a new wallet. Pick a name. Twelve words back it up, and they stay hidden."
+ },
+ {
+  "id": "chains",
+  "text": "The same twelve words make your Bitcoin, Ethereum, Solana and Zcash addresses, plus an M L D S A sixty five quantum safe key."
+ },
+ {
+  "id": "create-sign",
+  "text": "One transaction upgrades the account. Approve it."
+ },
+ {
+  "id": "home",
+  "text": "Your wallet, live on Near testnet, with two locks on every move."
+ },
+ {
+  "id": "receive",
+  "text": "Receive on any chain, each with its own Q R code."
+ },
+ {
+  "id": "send",
+  "text": "Send half a Near. The approval shows everything, and it is signed twice: classical and quantum safe."
+ },
+ {
+  "id": "send-explorer",
+  "text": "On the explorer the signer key is the quantum safe one. And here is the receiver, magen noam, holding the money."
+ },
+ {
+  "id": "swap",
+  "text": "Swap one Near for U S D T on Ref Finance. Four calls, one approval, two signatures."
+ },
+ {
+  "id": "swap-done",
+  "text": "One point two four U S D T arrived, and the explorer shows Ref paying it to the wallet."
+ },
+ {
+  "id": "out",
+  "text": "Bridge out to any chain Omni Bridge lists live: Base, Ethereum, Arbitrum, Solana and more. Same approval, same two signatures."
+ },
+ {
+  "id": "out-done",
+  "text": "Seconds later it lands on Base, at this wallet's own address. Then Solana: the receiving account holds the wrapped Near."
+ },
+ {
+  "id": "eth",
+  "text": "Now Ethereum, from Near. Near's chain signatures sign for your Ethereum address, but only after your wallet checks both locks."
+ },
+ {
+  "id": "eth-done",
+  "text": "Signed on Near, then mined on Sepolia. Etherscan shows the payment from your M P C address, and the receiver's balance."
+ },
+ {
+  "id": "attack",
+  "text": "Now the attack. The same request with only the classical key. Near refuses it on chain, so the signer never signs."
+ },
+ {
+  "id": "private",
+  "text": "Private send pays a one time account only the receiver can open. Here it is on the explorer, holding the funds."
+ },
+ {
+  "id": "guardians",
+  "text": "Two of three guardians can recover the wallet, and none of them can ever spend."
+ },
+ {
+  "id": "qday",
+  "text": "And the Q Day switch. One transaction makes your quantum safe key a native Near key. Near now lists an M L D S A sixty five key on the account."
+ },
+ {
+  "id": "activity",
+  "text": "Activity keeps every move, each one linked to the explorer."
+ },
+ {
+  "id": "lock",
+  "text": "And Magen locks itself behind Face I D."
+ },
+ {
+  "id": "close",
+  "text": "Every chain. Two locks. One phone. That's Magen."
+ }
+]

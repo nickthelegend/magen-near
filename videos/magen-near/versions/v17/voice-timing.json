@@ -1,0 +1,112 @@
+[
+ {
+  "id": "landing",
+  "text": "Bitcoin, Ethereum, Solana and Near all sign with keys a large quantum computer could crack. Every account that has ever signed has already shown its public key. Magen adds a quantum safe lock, and puts every chain behind it.",
+  "speech": 13.461
+ },
+ {
+  "id": "install",
+  "text": "Here it is on iPhone.",
+  "speech": 2.027
+ },
+ {
+  "id": "create",
+  "text": "Get a new wallet. Pick a name. Twelve words back it up, and they stay hidden.",
+  "speech": 4.608
+ },
+ {
+  "id": "chains",
+  "text": "The same twelve words make your Bitcoin, Ethereum, Solana and Zcash addresses, plus an M L D S A sixty five quantum safe key.",
+  "speech": 8.448
+ },
+ {
+  "id": "create-sign",
+  "text": "One transaction upgrades the account. Approve it.",
+  "speech": 3.52
+ },
+ {
+  "id": "home",
+  "text": "Your wallet, live on Near testnet, with two locks on every move.",
+  "speech": 4.053
+ },
+ {
+  "id": "receive",
+  "text": "Receive on any chain, each with its own Q R code.",
+  "speech": 3.755
+ },
+ {
+  "id": "send",
+  "text": "Send half a Near. The approval shows everything, and it is signed twice: classical and quantum safe.",
+  "speech": 6.016
+ },
+ {
+  "id": "send-explorer",
+  "text": "On the explorer the signer key is the quantum safe one. And here is the receiver, magen noam, holding the money.",
+  "speech": 6.869
+ },
+ {
+  "id": "swap",
+  "text": "Swap one Near for U S D T on Ref Finance. Four calls, one approval, two signatures.",
+  "speech": 6.144
+ },
+ {
+  "id": "swap-done",
+  "text": "One point two four U S D T arrived, and the explorer shows Ref paying it to the wallet.",
+  "speech": 5.781
+ },
+ {
+  "id": "out",
+  "text": "Bridge out to any chain Omni Bridge lists live: Base, Ethereum, Arbitrum, Solana and more. Same approval, same two signatures.",
+  "speech": 8.491
+ },
+ {
+  "id": "out-done",
+  "text": "Seconds later it lands on Base, at this wallet's own address. Then Solana: the receiving account holds the wrapped Near.",
+  "speech": 7.083
+ },
+ {
+  "id": "eth",
+  "text": "Now Ethereum, from Near. Near's chain signatures sign for your Ethereum address, but only after your wallet checks both locks.",
+  "speech": 7.915
+ },
+ {
+  "id": "eth-done",
+  "text": "Signed on Near, then mined on Sepolia. Etherscan shows the payment from your M P C address, and the receiver's balance.",
+  "speech": 7.424
+ },
+ {
+  "id": "attack",
+  "text": "Now the attack. The same request with only the classical key. Near refuses it on chain, so the signer never signs.",
+  "speech": 7.061
+ },
+ {
+  "id": "private",
+  "text": "Private send pays a one time account only the receiver can open. Here it is on the explorer, holding the funds.",
+  "speech": 6.891
+ },
+ {
+  "id": "guardians",
+  "text": "Two of three guardians can recover the wallet, and none of them can ever spend.",
+  "speech": 4.672
+ },
+ {
+  "id": "qday",
+  "text": "And the Q Day switch. One transaction makes your quantum safe key a native Near key. Near now lists an M L D S A sixty five key on the account.",
+  "speech": 9.152
+ },
+ {
+  "id": "activity",
+  "text": "Activity keeps every move, each one linked to the explorer.",
+  "speech": 4.032
+ },
+ {
+  "id": "lock",
+  "text": "And Magen locks itself behind Face I D.",
+  "speech": 3.435
+ },
+ {
+  "id": "close",
+  "text": "Every chain. Two locks. One phone. That's Magen.",
+  "speech": 3.733
+ }
+]
