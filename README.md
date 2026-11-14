@@ -133,6 +133,10 @@ It follows wallet-selector's action shape (one `Transfer` or `FunctionCall` per 
 - In-place upgrade refuses accounts that already run a contract or hold non-ed25519 keys. Testnet only; no audit. Guardian recovery is scripted (`scripts/live-guardians.ts`); the in-app flow sets guardians and shows them, an in-app recovery screen is next. The phone app creates magen-3 wallets: guardians, Q-Day, swaps, Omni bridges and Chain Signatures sends all run in it; guardian recovery itself is still scripted.
 - The testnet faucet was rate-limiting during the build, so demo accounts were created through the `testnet` registrar contract or as sub-accounts, paid by our own testnet account.
 
+## Other projects by the same team in this hackathon
+
+Lead: Nivesh Gajengi. Nivesh also leads **Kotoba** (https://github.com/nickthelegend/kotoba-near), a word-mention prediction market settled in a TEE. The two are independent products.
+
 ## Prior work
 
 An October 2026 prototype (near-hybrid-pq-wallet) explored dual-signature verification; Magen is a new codebase written Nov 13-14 for NEAR HACKATHON. No October source was copied; dated commits start at scaffold 7997402.
@@ -141,7 +145,7 @@ MIT. Copyright (c) 2026 Nivesh Gajengi.
 
 ## Camera-approved signing pass (Nov 14)
 
-The current 1:49 film shows landing, six real approvals, and each matching successful NearValidate receipt. Kokoro am_echo at 0.95; original cinematic low drone, no subtitles or overlay captions. Native Q-Day key state is shown in the app from a live RPC query.
+The Nov 14 signing-pass film (v13, 1:49, superseded by the v17 iPhone film) showed landing, six real approvals, and each matching successful NearValidate receipt. Kokoro am_echo at 0.95; original cinematic low drone, no subtitles or overlay captions. Native Q-Day key state is shown in the app from a live RPC query.
 
 | Action | FINAL testnet receipt |
 |---|---|
