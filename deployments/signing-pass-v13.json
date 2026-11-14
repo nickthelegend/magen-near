@@ -1,0 +1,35 @@
+{
+  "network": "testnet",
+  "account": "magen-sign-mwfqr4m8.testnet",
+  "scenes": [
+    {
+      "name": "landing",
+      "start": 0.901,
+      "end": 4.503
+    }
+  ],
+  "transactions": [
+    {
+      "step": "upgrade",
+      "hash": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu",
+      "signer": "magen-sign-mwfqr4m8.testnet",
+      "receiver": "magen-sign-mwfqr4m8.testnet",
+      "status": {
+        "SuccessValue": ""
+      },
+      "signingKey": "ed25519"
+    }
+  ],
+  "pending": [
+    {
+      "step": "upgrade",
+      "hash": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu",
+      "at": "2026-11-14T01:51:26.834Z"
+    }
+  ],
+  "error": {
+    "phase": "upgrade",
+    "message": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+    "at": "2026-11-14T01:51:58.505Z"
+  }
+}

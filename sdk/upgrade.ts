@@ -89,7 +89,7 @@ const edBytes = (k: string) => base58.decode(k.slice('ed25519:'.length));
  * `feeKey: 'ed25519'` re-adds the old key as the execute-only key (used by the key-recovery drill).
  * Returns `fee`, the signer that pays gas for `execute` afterwards.
  */
-export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Uint8Array, existingKeys: string[], pqSeed?: string, onSigned?: (h: string) => void, feeKey: 'ml-dsa' | 'ed25519' = 'ml-dsa') {
+export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Uint8Array, existingKeys: string[], pqSeed?: string, onSigned?: (h: string) => void, feeKey: 'ml-dsa' | 'ed25519' = 'ml-dsa', onPrepared?: (vault: {wallet:string;keys:Keys;relay:Signer}) => Promise<void>) {
   const keys: Keys = { ed: base64.encode(seed), pq: pqSeed ?? generateKeys().pq };
   const pk = publicKeys(keys);
   const signer: Signer = { account, seed: base64.encode(seed) };
@@ -102,6 +102,7 @@ export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Ui
     ...existingKeys.map(k => actions.deleteKey(edBytes(k))),
     feeKey === 'ml-dsa' ? actions.addFnKey(signerPublic(fee), account, ['execute'], FEE_ALLOWANCE, 2) : actions.addFnKey(edBytes(own), account, ['execute'], FEE_ALLOWANCE),
   ];
+  await onPrepared?.({wallet:account,keys,relay:fee});
   const result = outcome(await submit(signer, account, ops, onSigned));
   return { result, keys, signer, fee };
 }

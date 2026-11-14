@@ -73,12 +73,12 @@ function Upgrade({ preset = '', create = false, back }: { preset?: string; creat
       if (!s) throw Error('Check the account first.');
       setBusy('Making your ML-DSA-65 key and sending the upgrade…');
       const wasm = new Uint8Array(await (await fetch('/wallet.wasm')).arrayBuffer());
-      const up = await upgradeInPlace(id, s, wasm, keys);
+      const up = await upgradeInPlace(id, s, wasm, keys, undefined, undefined, 'ml-dsa', async v => { const sealed = await adopt(v, pw); downloadJson(sealed, `magen-${id}-backup.json`); });
       if (!up.result.success) throw Error(friendlyError(up.result.error));
       const vault = { wallet: id, keys: up.keys, relay: up.fee };
       setBusy('Encrypting your backup…');
       const sealed = await adopt(vault, pw);
-      downloadJson(sealed, `magen-${id}-backup.json`);
+      // The backup was already saved before approval/broadcast.
       setDone({ hash: up.result.hash, account: id });
     } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
   };
