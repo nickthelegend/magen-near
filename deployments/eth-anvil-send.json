@@ -1,0 +1,17 @@
+{
+  "network": "anvil (local, chainId 31337, port 5348)",
+  "signer": "m/44'/60'/0'/0/0 of the public BIP-39 test phrase 'abandon x11 about'",
+  "from": "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+  "expectedFrom": "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+  "to": "0x000000000000000000000000000000000000dEaD",
+  "valueWei": "10000000000000000",
+  "type": "0x2",
+  "txHash": "0x168eba2c6b899776f991c591a093b6bea65d814d5a9c8dadb653e14b97534358",
+  "status": "0x1",
+  "blockNumber": "2",
+  "gasUsed": "21000",
+  "receiptFrom": "0x9858effd232b4033e47d90003d41ec34ecaeda94",
+  "recipientDeltaWei": "10000000000000000",
+  "builtBy": "sdk/multichain.ts ethSend (hand-built EIP-1559, RLP, secp256k1 recovered signature)",
+  "at": "2026-11-14T09:45:42.761Z"
+}

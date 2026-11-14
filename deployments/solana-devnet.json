@@ -1,0 +1,16 @@
+{
+  "network": "solana-devnet",
+  "rpc": "https://api.devnet.solana.com",
+  "derivation": "m/44'/501'/0'/0' SLIP-10 ed25519 from a throwaway BIP-39 phrase (kept in .demo/, gitignored)",
+  "sender": "Hi2GtSWpHBAJBgYta1CUTTw56hRakjJYTSLQRJVg5D7V",
+  "receiver": "B9AgdsWXC7nwKbnGwiWUcRTGCHgC3VUf8B7hppBWAfZw",
+  "at": "2026-11-14T09:45:03.089Z",
+  "airdrop": {
+    "lamports": "1000000000",
+    "error": "Solana devnet RPC answered HTTP 410:  {\"jsonrpc\":\"2.0\",\"error\":{\"code\": 410,\"message\":\"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com\"}, \"id\": 1 } \r\n"
+  },
+  "send": {
+    "skipped": "airdrop was refused, so there was nothing to send"
+  },
+  "localProof": "deployments/solana-local-send.json: the same solanaAirdrop + solanaSend code confirmed an airdrop and a 0.01 SOL transfer on a local solana-test-validator"
+}

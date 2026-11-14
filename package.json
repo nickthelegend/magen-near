@@ -17,14 +17,20 @@
     "@noble/hashes": "^2.0.1",
     "@noble/post-quantum": "^0.5.2",
     "@scure/base": "^2.0.0",
+    "@scure/bip32": "^2.4.0",
     "@scure/bip39": "^1.6.0",
     "qrcode-generator": "^2.0.4"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "bech32": "^2.0.0",
+    "bs58check": "^4.0.0",
+    "ed25519-hd-key": "^2.0.0",
+    "near-seed-phrase": "^0.2.1",
     "near-workspaces": "^5.0.0",
     "playwright": "^1.56.0",
     "tsx": "^4.20.0",
+    "tweetnacl": "^1.0.3",
     "typescript": "^5.9.3"
   }
 }

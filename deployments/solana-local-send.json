@@ -1,0 +1,11 @@
+{
+  "network": "solana-test-validator (local, Agave)",
+  "why": "api.devnet.solana.com closed its RPC faucet (HTTP 410), so the same solanaAirdrop/solanaSend code ran against a local validator",
+  "sender": "Hi2GtSWpHBAJBgYta1CUTTw56hRakjJYTSLQRJVg5D7V",
+  "receiver": "B9AgdsWXC7nwKbnGwiWUcRTGCHgC3VUf8B7hppBWAfZw",
+  "airdrop": "axPBjTYUSGC5MDkAwc3qFqRUbSMLbe4QcAvpfaHpCnJN2KZuMD5yTJySvGf9cf9FpCsM7prpirdKhvFXTVo9CiL",
+  "send": "4NojRCmQvhbWLQmZey25zw4L6mVc6kbYjy5PpWMhvngVj831EhSASR4U59u2GTNRa6zq3QZn5CFqzz8AnEMFWMCQ",
+  "receiverLamports": "10000000",
+  "senderLamports": "989995000",
+  "at": "2026-11-14T09:46:15.609Z"
+}
