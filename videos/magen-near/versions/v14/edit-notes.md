@@ -1,0 +1,9 @@
+# Magen v14 — v12 plus transaction confirmations
+
+Edit-only authorization: no deployment, dev server, browser launch, chain request or testnet spend. Source is the requested shared v12 master, SHA256 `12ea46b8ab9db2e21488169d673aef9c2581d70492e0f3877acf1e6d3956ebdb` (146.466667s). Reviewed all146 one-second samples and the final static end-card tail before editing. V12 scene boundaries are recorded in source-chapters.json.
+
+Keep landing → extension Signed twice → complete steal-the-key drill → root.near readiness scan → extension upgrade/how-it-works/home → native phone upgrade/send → native phone chains/refusal → native phone Q-Day/explorer key list → private send → swap → guardians/recovery → extension activity → Get Magen/close. Only repeated phone waiting/result holds are shortened. Existing phone/extension framing and side headings remain unchanged. No new graphics, subtitles, strips, badges or boxed captions.
+
+Six v13 inserts: each actual approval click followed immediately by its own recorded NearValidate receipt (4s). The v13 transactions differ from the older v12 extension/phone examples in account and amount. Do not misrepresent them as the same transaction. Keep each approval/receipt pair contiguous after the corresponding v12 feature and introduce it verbally as a separate web example. The dApp's original extension window already is its approval and is never duplicated. No unrelated explorer receipt is placed after it.
+
+Keep every original v12 narration word (split the phase-2 sentence between its four feature shots); render with Kokoro am_echo0.95. Add six short transaction-confirmation lines only. Use the original v13 deterministic cinematic drone design throughout, ducked under voice. Preview and delivery files stay in the shared versions/v14 folder. Neither canonical film is overwritten. Commit only edit/narration/QA sources in this folder; never commit rendered video/audio.

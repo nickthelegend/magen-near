@@ -1,0 +1,87 @@
+[
+  {
+    "id": "s1",
+    "text": "Magen keeps your Near account, and adds a second lock. A dApp asks for a payment. Magen signs it twice: classical, and quantum safe. Now a simulated attack. A laptop plays the quantum computer and recovers both accounts' keys. The plain account is drained. The Magen account refuses, on chain.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "s2",
+    "text": "Why now? On Near, every account's keys are public. Paste any account, and Magen shows what a quantum computer could take. This one holds six hundred and fifty Near behind classical keys anyone can read. Its keys are listed for anyone, forever. A quantum computer could work backwards from them.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "s3",
+    "text": "Magen upgrades the account you already have, in one transaction. Your key stays as the first lock. A new M L D S A sixty five key, made on your device, becomes the second. Same name. Same balance. The old key comes back with one permission: ask the contract to act. On its own, it can no longer move a single coin.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "s4",
+    "text": "On the phone, Magen upgrades an account the same way, with keys made on the device. Send signs twice, right here, and Near checks both. After the upgrade, Near lists no classical key at all. Even the key that pays fees is post quantum.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "s5",
+    "text": "One quantum safe key also controls every chain. Through Near chain signatures, this account has Ethereum, Bitcoin, Solana and Cosmos addresses. Ask with one signature, and Near refuses before the signer is ever called. Those chains stay classical. The control is quantum safe.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "s6",
+    "text": "When classical keys stop being safe, the Q Day switch adds a native post quantum key to the same account. The explorer then lists only post quantum keys, and marks the account quantum safe.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "s8",
+    "text": "Magen runs on Near testnet, and is not audited yet. Chain signatures stay classical. Get the extension and the iPhone build from the Magen site. Keep your account. Add the second lock.",
+    "source": "v12 verbatim"
+  },
+  {
+    "id": "private-original",
+    "text": "The web wallet adds private sends to one time accounts.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed"
+  },
+  {
+    "id": "swap-original",
+    "text": "Live swap quotes from Near intents.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed"
+  },
+  {
+    "id": "recovery-original",
+    "text": "And two of three guardians who can move your locks to a new phone.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed"
+  },
+  {
+    "id": "activity-original",
+    "text": "The extension carries the same wallet into every dApp.",
+    "source": "v12 s7 split at feature boundaries; punctuation only changed"
+  },
+  {
+    "id": "upgrade-insert",
+    "text": "Separately on web, review the upgrade, then approve.",
+    "source": "short v13-derived confirmation, with explicit separate-web context"
+  },
+  {
+    "id": "send-insert",
+    "text": "Here is a separate small payment, approved on web.",
+    "source": "short v13-derived confirmation, with explicit separate-web context"
+  },
+  {
+    "id": "chains-insert",
+    "text": "A separate web request passes both signatures. This requests a signature, not a transfer.",
+    "source": "short v13-derived confirmation, with explicit separate-web context"
+  },
+  {
+    "id": "private-insert",
+    "text": "Review the amount, destination and gas, then approve. The explorer confirms the payment.",
+    "source": "short v13-derived confirmation, with explicit separate-web context"
+  },
+  {
+    "id": "recovery-insert",
+    "text": "Review the recovery, approve it, and inspect the recover method on the explorer.",
+    "source": "short v13-derived confirmation, with explicit separate-web context"
+  },
+  {
+    "id": "qday-insert",
+    "text": "Separately on web, approve a native full access key. It can change the contract.",
+    "source": "short v13-derived confirmation, with explicit separate-web context"
+  }
+]
