@@ -1,0 +1,27 @@
+{
+  "network": "NEAR testnet + Ethereum Sepolia (chain 11155111)",
+  "wallet": "magen-ana.testnet",
+  "mpc": "v1.signer-prod.testnet",
+  "at": "2026-11-14T19:09:43.751Z",
+  "from": "0xf06d7f1851db534a680e6e856697cbbd4557a38b",
+  "to": "0x4B2ACf80Bc6E07bbF5690f0710e25C528cb63F80",
+  "value_eth": "0.001",
+  "refused_without_ml_dsa": {
+    "near_tx": "3QXq3Wegps8W2mKb13PoxcjoAMwA2vHzgrdE5UzCW2y8",
+    "success": false,
+    "error": "quantum half missing: []"
+  },
+  "gated_sign": {
+    "near_tx": "Efwjsz3s1SQfYarn3Mkym8XQxRxNkvifa5cSDFJdHZ6M",
+    "success": true,
+    "scheme": "Secp256k1",
+    "explorer": "https://testnet.nearblocks.io/txns/Efwjsz3s1SQfYarn3Mkym8XQxRxNkvifa5cSDFJdHZ6M"
+  },
+  "sepolia": {
+    "tx": "0xd8cee16543ec97decb4370d601d3d7e01d0e74dbc11b1132139ec2980a1092c0",
+    "status": "0x1",
+    "block": 12135093,
+    "from": "0xf06d7f1851db534a680e6e856697cbbd4557a38b",
+    "explorer": "https://sepolia.etherscan.io/tx/0xd8cee16543ec97decb4370d601d3d7e01d0e74dbc11b1132139ec2980a1092c0"
+  }
+}
