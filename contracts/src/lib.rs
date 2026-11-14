@@ -1,4 +1,6 @@
-//! Magen wallet contract (magen-2).
+//! Magen wallet contract (magen-3).
+//! magen-3 adds an optional gas budget per call and `batch`: up to 4 calls run in order under ONE dual-signed
+//! intent (for example wrap NEAR, register storage and swap on a DEX).
 //! Every spend needs two signatures over the same intent: ed25519 and ML-DSA-65, both verified on chain
 //! with NEAR host functions. Optional guardians (ML-DSA-65 keys, k-of-n) can rotate both locks if the
 //! owner loses their device. The Q-Day switch adds the ML-DSA-65 key as a native access key.
@@ -21,10 +23,19 @@ pub struct Intent { pub network: String, pub wallet: AccountId, pub nonce: U64, 
 #[serde(crate = "near_sdk::serde", tag = "kind", deny_unknown_fields)]
 pub enum Action {
     #[serde(rename = "send")] Send { receiver: AccountId, amount: U128 },
-    #[serde(rename = "call")] Call { receiver: AccountId, method: String, args: Base64VecU8, deposit: U128 },
+    #[serde(rename = "call")] Call { receiver: AccountId, method: String, args: Base64VecU8, deposit: U128, #[serde(default)] gas: Option<u64> },
+    #[serde(rename = "batch")] Batch { calls: Vec<CallSpec> },
     #[serde(rename = "migrate")] Migrate,
     #[serde(rename = "guardians")] Guardians { keys: Vec<Base64VecU8>, threshold: u8 },
 }
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde", deny_unknown_fields)]
+pub struct CallSpec { pub receiver: AccountId, pub method: String, pub args: Base64VecU8, pub deposit: U128, #[serde(default)] pub gas: Option<u64> }
+
+const MAX_BATCH: usize = 4;
+/// Total Tgas a batch may attach (the transaction itself is capped at 300 Tgas).
+const MAX_CALL_TGAS: u64 = 240;
 
 /// Guardians sign this to rotate both locks.
 #[derive(Serialize, Deserialize)]
@@ -62,7 +73,7 @@ impl Wallet {
             "wallet": env::current_account_id(), "nonce": self.nonce.to_string(), "migrated": self.migrated,
             "migration_pending": self.migration_pending, "ed": Base64VecU8(self.ed.clone()), "pq": Base64VecU8(self.pq.clone()),
             "guardians": self.guardians.iter().map(|g| Base64VecU8(g.clone())).collect::<Vec<_>>(),
-            "threshold": self.threshold, "recovery_nonce": self.recovery_nonce.to_string(), "version": "magen-2"
+            "threshold": self.threshold, "recovery_nonce": self.recovery_nonce.to_string(), "version": "magen-3"
         })
     }
 
@@ -84,10 +95,28 @@ impl Wallet {
         let is_migration = matches!(i.action, Action::Migrate);
         let operation = match i.action {
             Action::Send { receiver, amount } => { self.check_target(&receiver, amount.0); Promise::new(receiver).transfer(NearToken::from_yoctonear(amount.0)) }
-            Action::Call { receiver, method, args, deposit } => {
+            Action::Call { receiver, method, args, deposit, gas } => {
                 self.check_target(&receiver, deposit.0);
                 assert!(!method.is_empty() && method.len() <= 128, "invalid method");
-                Promise::new(receiver).function_call(method, args.0, NearToken::from_yoctonear(deposit.0), Gas::from_tgas(35))
+                let tgas = gas.unwrap_or(35);
+                assert!((5..=MAX_CALL_TGAS).contains(&tgas), "gas out of range");
+                Promise::new(receiver).function_call(method, args.0, NearToken::from_yoctonear(deposit.0), Gas::from_tgas(tgas))
+            }
+            Action::Batch { calls } => {
+                assert!(!calls.is_empty() && calls.len() <= MAX_BATCH, "batch needs 1 to 4 calls");
+                let total_deposit: u128 = calls.iter().map(|c| c.deposit.0).sum();
+                let total_gas: u64 = calls.iter().map(|c| c.gas.unwrap_or(35)).sum();
+                assert!(total_gas <= MAX_CALL_TGAS, "batch gas too high");
+                let mut chain: Option<Promise> = None;
+                for c in calls {
+                    self.check_target(&c.receiver, total_deposit);
+                    assert!(!c.method.is_empty() && c.method.len() <= 128, "invalid method");
+                    let tgas = c.gas.unwrap_or(35);
+                    assert!(tgas >= 5, "gas out of range");
+                    let p = Promise::new(c.receiver).function_call(c.method, c.args.0, NearToken::from_yoctonear(c.deposit.0), Gas::from_tgas(tgas));
+                    chain = Some(match chain { None => p, Some(prev) => prev.then(p) });
+                }
+                chain.unwrap()
             }
             Action::Migrate => {
                 assert!(!self.migrated, "already migrated");

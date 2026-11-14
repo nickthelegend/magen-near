@@ -16,6 +16,7 @@ export function previewTransaction(signer:string,receiver:string,ops:Uint8Array[
  if(act.kind==='send'){r.title='Send '+near(BigInt(act.amount));r.amount=near(BigInt(act.amount));r.details.unshift('Destination: '+act.receiver);}
  if(act.kind==='migrate'){r.title='Q-Day switch';r.details.unshift('Add your native ML-DSA-65 full-access key. It can control this account alone.');}
  if(act.kind==='guardians'){r.title='Set up guardians';r.details.unshift(`${act.threshold} of ${act.keys.length} ML-DSA-65 guardians can rotate both locks.`);}
+ if(act.kind==='batch')describeBatch(r,act.calls);
  if(act.kind==='call'){r.title=act.method==='sign'?'Cross-chain signature request':'Contract call';r.details.unshift('Call: '+act.receiver+' → '+act.method,'Forwarded deposit: '+near(BigInt(act.deposit)));}
  if(!a.pq_sig)r.details.unshift('Deliberate rejection test: quantum half is missing.');
  }else if(method==='recover'){const i=JSON.parse(a.request);r.title='Guardian recovery';r.details.push('Rotate both locks on '+i.wallet,`${a.signatures?.length??0} guardian signatures; funds stay in the account.`);}
@@ -28,4 +29,17 @@ export function previewTransaction(signer:string,receiver:string,ops:Uint8Array[
  default:throw Error('Cannot preview this transaction action.');
  }}
  r.method=methods.join(' + ');r.gas=(Number(gas)/1e12).toFixed(0)+' Tgas attached + protocol fees';if(!r.dual)r.amount=near(deposit);return r;
+}
+
+const amt24=(v:string)=>{const n=BigInt(v);const a=n/10n**24n,b=(n%10n**24n).toString().padStart(24,'0').slice(0,4);return a+'.'+b;};
+/** Plain words for a magen-3 batch: swap on Ref, bridge out through Omni, or a list of calls. */
+function describeBatch(r:Approval,calls:any[]){
+ const dec=(c:any)=>{try{return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(c.args),(x:string)=>x.charCodeAt(0))));}catch{return {};}};
+ const ftc=calls.find((c:any)=>c.method==='ft_transfer_call');const wrap=calls.find((c:any)=>c.method==='near_deposit');
+ let msg:any=null;if(ftc){try{msg=JSON.parse(dec(ftc).msg);}catch{}}
+ if(wrap)r.amount=near(BigInt(wrap.deposit));
+ if(msg?.actions){const a=msg.actions[0];r.title='Swap on Ref Finance';r.details.unshift(`Swap ${near(BigInt(a.amount_in))} for at least ${amt24(a.min_amount_out)} ${a.token_out.split('.')[0].toUpperCase()} (pool ${a.pool_id})`);}
+ else if(msg?.recipient){const [chain,addr]=String(msg.recipient).split(':');r.title='Bridge out with Omni';r.details.unshift(`To your ${({sol:'Solana devnet',eth:'Ethereum Sepolia',base:'Base Sepolia',arb:'Arbitrum Sepolia',avax:'Avalanche Fuji'} as any)[chain]??chain} address ${addr}`,`Bridge fee: ${amt24(msg.fee)} wNEAR`);}
+ else r.title='Batch of '+calls.length+' calls';
+ calls.forEach((c:any,i:number)=>r.details.push(`${i+1}. ${c.receiver} → ${c.method}${c.gas?` (${c.gas} Tgas)`:''}`));
 }

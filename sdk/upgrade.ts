@@ -89,12 +89,12 @@ const edBytes = (k: string) => base58.decode(k.slice('ed25519:'.length));
  * `feeKey: 'ed25519'` re-adds the old key as the execute-only key (used by the key-recovery drill).
  * Returns `fee`, the signer that pays gas for `execute` afterwards.
  */
-export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Uint8Array, existingKeys: string[], pqSeed?: string, onSigned?: (h: string) => void, feeKey: 'ml-dsa' | 'ed25519' = 'ml-dsa', onPrepared?: (vault: {wallet:string;keys:Keys;relay:Signer}) => Promise<void>) {
+export async function upgradeInPlace(account: string, seed: Uint8Array, wasm: Uint8Array, existingKeys: string[], pqSeed?: string, onSigned?: (h: string) => void, feeKey: 'ml-dsa' | 'ed25519' = 'ml-dsa', onPrepared?: (vault: {wallet:string;keys:Keys;relay:Signer}) => Promise<void>, feeSeedFixed?: string) {
   const keys: Keys = { ed: base64.encode(seed), pq: pqSeed ?? generateKeys().pq };
   const pk = publicKeys(keys);
   const signer: Signer = { account, seed: base64.encode(seed) };
   const own = edKeyString(seed);
-  const feeSeed = feeKey === 'ml-dsa' ? base64.encode(random()) : base64.encode(seed);
+  const feeSeed = feeKey === 'ml-dsa' ? (feeSeedFixed ?? base64.encode(random())) : base64.encode(seed);
   const fee: Signer = feeKey === 'ml-dsa' ? { account, seed: feeSeed, pq: true } : { account, seed: base64.encode(seed) };
   const ops = [
     actions.deploy(wasm),
