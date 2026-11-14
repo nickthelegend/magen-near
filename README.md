@@ -130,7 +130,7 @@ It follows wallet-selector's action shape (one `Transfer` or `FunctionCall` per 
 - The execute-only key pays fees; a thief holding only it can burn at most its 1 NEAR fee allowance, never move funds.
 - After the Q-Day switch the ML-DSA-65 key alone controls the account at the protocol level (by design).
 - **Chain Signatures and validator keys stay classical** on NEAR today; Magen does not make BTC/ETH addresses or consensus quantum-safe.
-- In-place upgrade refuses accounts that already run a contract or hold non-ed25519 keys. Testnet only; no audit. Guardian recovery is scripted (`scripts/live-guardians.ts`); the in-app flow sets guardians and shows them, an in-app recovery screen is next. The phone app still embeds magen-1 (no guardians).
+- In-place upgrade refuses accounts that already run a contract or hold non-ed25519 keys. Testnet only; no audit. Guardian recovery is scripted (`scripts/live-guardians.ts`); the in-app flow sets guardians and shows them, an in-app recovery screen is next. The phone app creates magen-3 wallets: guardians, Q-Day, swaps, Omni bridges and Chain Signatures sends all run in it; guardian recovery itself is still scripted.
 - The testnet faucet was rate-limiting during the build, so demo accounts were created through the `testnet` registrar contract or as sub-accounts, paid by our own testnet account.
 
 ## Prior work

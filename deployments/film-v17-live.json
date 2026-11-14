@@ -1,0 +1,18 @@
+{
+  "network": "NEAR testnet (+ Ethereum Sepolia, Base Sepolia, Solana devnet destinations)",
+  "recorded": "2026-11-14 19:49-20:20 UTC, v17 film: every action approved on camera in the iPhone app (iOS Simulator, Release build)",
+  "wallet": "tovmagen.testnet (created on camera)",
+  "transactions": [
+    { "what": "create tovmagen.testnet + upgrade in place (helper create, then the Magen contract, ed25519 + ML-DSA-65 locks)", "near": ["GUqocqtdbntKGxowwqoMDiYBEjDwwzkHapixdeQ2W9oX", "95SyBitTGg3f6HREhg22kvYYWCtVbeTG9pKMWhuSaY18"] },
+    { "what": "send 0.5 NEAR to magen-noam.testnet (dual-signed); receiver account shown on NEAR Rocks", "near": "FpPbme5YRwZdd8vqCPnaerbRyckuZWreUiBieVm7fQbg" },
+    { "what": "swap 1 NEAR -> 1.2407 USDT on Ref (4 calls, one dual-signed approval)", "near": "7LiN8mx62Yhukds6FpYrYx1xbw572Wuv43bUkypiRZgc" },
+    { "what": "bridge out 0.5 NEAR -> Base Sepolia via Omni, paid to the wallet's Chain Signatures EVM address", "near": "4GtKnQxq3J1MyvmLcLLo2g4N4Zkq2iQhSzfTsagqYiy2", "omni_signed": "3fh3nD9typSok2hA6K85CRzy3egjCe99VRd3c5SyVw5b", "base_sepolia": "0x3aee1f45c264db39646cd24a4a7cf4c9d78c2ea731ac7a7fe59d26dd24b1cf19" },
+    { "what": "bridge out 0.5 NEAR -> Solana devnet via Omni; receiving account holds 0.4379 wNEAR", "near": "4BCxykpwpknmQwit77cB77rR7VjwhnCCwvMg4pHyZnHu", "omni_signed": "s1zewhmTzMngmTvq8TY1Bjst2Y2vaTSbuwr3fKh34ic", "solana_devnet": "21jeNZd7WNTjFTvTppyVkguxvsCBkJjoRkFHZ8MVEW72x6X22VAUuDFve5iM9MY162gMhRAiF1jxL6qVqxrKw8me" },
+    { "what": "send 0.001 ETH on Sepolia: dual-signed execute -> v1.signer-prod.testnet sign -> broadcast from the MPC address", "near": "DTF3hnGkvjp8VoRZRBNANjihByvVNwadigX24uBJm8Sz", "sepolia": "0x0fcbf15d9e00a44ef61e66f0ff63bef01e797ee033c6c9081abdb168c600f1c1", "from": "0x3d839b64cc5c1df42819dbce6cc28d5c93a23813", "to": "0x4B2ACf80Bc6E07bbF5690f0710e25C528cb63F80" },
+    { "what": "Test my quantum lock: the same MPC request with the ML-DSA half left out, refused on NEAR (quantum half missing)", "near": "EhaTuYufMuox5DSa8QmKNq5LRBZQ5qYcXcFeaWFoHufs", "success": false },
+    { "what": "set 2-of-3 ML-DSA-65 guardians (dual-signed)", "near": "Awc5B4NQPxA2x7kvHcHEcWYKaz86yHknWgMcnrCFByYf" },
+    { "what": "Q-Day switch: native ML-DSA-65 full-access key (dual-signed)", "near": "E8kQL4Yy6JyeXezxKaCqcEkwRgEgX31r25qtxYwksHWG" },
+    { "what": "private send 0.1 NEAR to a one-time account (77e73cfe...), shown holding 0.1 NEAR", "near": "CFT1vWerGQnoxHxn4Jj71VkJLCBqqAFGMtU27MBJayWu" }
+  ],
+  "note": "Ref swap source tx inferred from the account history order; every other hash matches what the phone showed on camera."
+}
