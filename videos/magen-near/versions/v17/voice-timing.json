@@ -10,9 +10,19 @@
   "speech": 2.027
  },
  {
+  "id": "home",
+  "text": "This is your wallet: one balance, four actions, every token, and the quantum lock on top of all of it.",
+  "speech": 6.101
+ },
+ {
+  "id": "add",
+  "text": "Wallets live side by side. Tap add, and make a new one.",
+  "speech": 3.904
+ },
+ {
   "id": "create",
-  "text": "Get a new wallet. Pick a name. Twelve words back it up, and they stay hidden.",
-  "speech": 4.608
+  "text": "Pick a name. Magen checks it is free. Then twelve words, your one backup. They stay hidden.",
+  "speech": 5.525
  },
  {
   "id": "chains",
@@ -21,28 +31,28 @@
  },
  {
   "id": "create-sign",
-  "text": "One transaction upgrades the account. Approve it.",
-  "speech": 3.52
+  "text": "One transaction creates the account and adds both locks. Approve it.",
+  "speech": 4.693
  },
  {
-  "id": "home",
-  "text": "Your wallet, live on Near testnet, with two locks on every move.",
-  "speech": 4.053
+  "id": "two",
+  "text": "The new wallet is live, with its own orb. Two wallets, one phone.",
+  "speech": 4.181
+ },
+ {
+  "id": "send",
+  "text": "Now send half a Near from the first wallet to the new one. Signed twice: classical and quantum safe.",
+  "speech": 6.016
+ },
+ {
+  "id": "recv2",
+  "text": "Switch to the receiver. Its balance went up by half a Near, and the explorer shows the payment.",
+  "speech": 5.525
  },
  {
   "id": "receive",
   "text": "Receive on any chain, each with its own Q R code.",
   "speech": 3.755
- },
- {
-  "id": "send",
-  "text": "Send half a Near. The approval shows everything, and it is signed twice: classical and quantum safe.",
-  "speech": 6.016
- },
- {
-  "id": "send-explorer",
-  "text": "On the explorer the signer key is the quantum safe one. And here is the receiver, magen noam, holding the money.",
-  "speech": 6.869
  },
  {
   "id": "swap",

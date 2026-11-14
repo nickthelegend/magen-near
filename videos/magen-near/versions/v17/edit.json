@@ -19,54 +19,139 @@
    "vat": 2.5
   },
   {
+   "id": "tour",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 0.0,
+   "b": 12.0,
+   "kind": "phone",
+   "voice": "home",
+   "vat": 0.4
+  },
+  {
+   "id": "menu",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 14.0,
+   "b": 17.5,
+   "kind": "phone"
+  },
+  {
+   "id": "switch1",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 18.0,
+   "b": 23.5,
+   "kind": "phone",
+   "voice": "add",
+   "vat": 0.2
+  },
+  {
+   "id": "intro",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 25.0,
+   "b": 29.5,
+   "kind": "phone"
+  },
+  {
    "id": "name",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 17.0,
-   "b": 23.0,
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 40.0,
+   "b": 48.5,
    "kind": "phone",
    "voice": "create",
    "vat": 0.3
   },
   {
    "id": "words",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 24.0,
-   "b": 28.0,
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 51.0,
+   "b": 55.5,
+   "kind": "phone"
+  },
+  {
+   "id": "tick",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 58.0,
+   "b": 60.6,
    "kind": "phone"
   },
   {
    "id": "chains",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 30.0,
-   "b": 40.0,
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 62.6,
+   "b": 72.0,
    "kind": "phone",
    "voice": "chains",
    "vat": 0.3
   },
   {
-   "id": "create",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 40.5,
-   "b": 56.0,
+   "id": "createstep",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 74.0,
+   "b": 80.0,
    "kind": "phone",
    "voice": "create-sign",
-   "vat": 2.0
+   "vat": 0.3
   },
   {
-   "id": "ready",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 57.0,
-   "b": 62.0,
+   "id": "approve",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 83.0,
+   "b": 91.0,
    "kind": "phone"
   },
   {
-   "id": "home",
-   "src": "raw/cfr/P3a-home-base.mp4",
-   "a": 0.0,
-   "b": 3.6,
+   "id": "ready",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 92.0,
+   "b": 99.0,
+   "kind": "phone"
+  },
+  {
+   "id": "home2",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 101.8,
+   "b": 106.0,
    "kind": "phone",
-   "voice": "home",
-   "vat": 0.2
+   "voice": "two",
+   "vat": 0.3
+  },
+  {
+   "id": "switch2",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 106.0,
+   "b": 112.5,
+   "kind": "phone"
+  },
+  {
+   "id": "send2",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 142.0,
+   "b": 158.0,
+   "kind": "phone",
+   "voice": "send",
+   "vat": 0.3
+  },
+  {
+   "id": "tov-after",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 158.0,
+   "b": 160.0,
+   "kind": "phone"
+  },
+  {
+   "id": "rcv-home",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 160.5,
+   "b": 170.0,
+   "kind": "phone",
+   "voice": "recv2",
+   "vat": 0.8
+  },
+  {
+   "id": "rcv-x",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 226.5,
+   "b": 237.0,
+   "kind": "phone"
   },
   {
    "id": "recv",
@@ -76,31 +161,6 @@
    "kind": "phone",
    "voice": "receive",
    "vat": 0.3
-  },
-  {
-   "id": "send-sheet",
-   "src": "raw/cfr/P1-recv-send.mp4",
-   "a": 38.0,
-   "b": 56.0,
-   "kind": "phone",
-   "voice": "send",
-   "vat": 0.2
-  },
-  {
-   "id": "send-x",
-   "src": "raw/cfr/P1-recv-send.mp4",
-   "a": 58.0,
-   "b": 66.0,
-   "kind": "phone",
-   "voice": "send-explorer",
-   "vat": 0.3
-  },
-  {
-   "id": "send-rcv",
-   "src": "raw/cfr/P1-recv-send.mp4",
-   "a": 78.0,
-   "b": 88.0,
-   "kind": "phone"
   },
   {
    "id": "swap-0",

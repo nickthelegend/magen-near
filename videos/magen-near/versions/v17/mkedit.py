@@ -1,13 +1,15 @@
 # v17 edit list: (id, take, a, b, voice, vat). Landing take, then the iPhone takes recorded on the v17 build.
 import json
 L='raw/L-landing.mp4'; T=lambda n: f'raw/cfr/{n}.mp4'
-P0,P1,P2,P3a,P3b,P4,P5,P6=(T(n) for n in ('P0-install','P1-recv-send','P2-swap','P3a-home-base','P3b-base-arrive','P4-eth','P5-attack','P6-private-lock'))
+P0,P1,P2,P3a,P3b,P4,P5,P6,Q0=(T(n) for n in ('P0-install','P1-recv-send','P2-swap','P3a-home-base','P3b-base-arrive','P4-eth','P5-attack','P6-private-lock','Q0-tour'))
 S=[('landing',L,0.0,22.0,'landing',0.4,'web'),
- ('install',P0,2.0,9.0,'install',2.5),('name',P0,17.0,23.0,'create',0.3),('words',P0,24.0,28.0,None,0),
- ('chains',P0,30.0,40.0,'chains',0.3),('create',P0,40.5,56.0,'create-sign',2.0),('ready',P0,57.0,62.0,None,0),
- ('home',P3a,0.0,3.6,'home',0.2),
- ('recv',P1,2.2,9.8,'receive',0.3),('send-sheet',P1,38.0,56.0,'send',0.2),
- ('send-x',P1,58.0,66.0,'send-explorer',0.3),('send-rcv',P1,78.0,88.0,None,0),
+ ('install',P0,2.0,9.0,'install',2.5),
+ ('tour',Q0,0.0,12.0,'home',0.4),('menu',Q0,14.0,17.5,None,0),('switch1',Q0,18.0,23.5,'add',0.2),('intro',Q0,25.0,29.5,None,0),
+ ('name',Q0,40.0,48.5,'create',0.3),('words',Q0,51.0,55.5,None,0),('tick',Q0,58.0,60.6,None,0),
+ ('chains',Q0,62.6,72.0,'chains',0.3),('createstep',Q0,74.0,80.0,'create-sign',0.3),('approve',Q0,83.0,91.0,None,0),('ready',Q0,92.0,99.0,None,0),
+ ('home2',Q0,101.8,106.0,'two',0.3),('switch2',Q0,106.0,112.5,None,0),
+ ('send2',Q0,142.0,158.0,'send',0.3),('tov-after',Q0,158.0,160.0,None,0),('rcv-home',Q0,160.5,170.0,'recv2',0.8),('rcv-x',Q0,226.5,237.0,None,0),
+ ('recv',P1,2.2,9.8,'receive',0.3),
  ('swap-0',P2,4.2,15.0,'swap',0.3),('swap-sheet',P2,16.0,19.5,None,0),('swap-run',P2,20.0,34.0,None,0),
  ('swap-x',P2,38.0,48.0,'swap-done',0.3),('swap-home',P2,74.0,82.0,None,0),
  ('br-pick',P3a,6.0,11.0,'out',0.3),('br-base',P3a,12.0,14.5,None,0),('br-sheet',P3a,18.5,23.0,None,0),('br-run',P3a,24.0,38.4,None,0),

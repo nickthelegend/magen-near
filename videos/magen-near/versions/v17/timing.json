@@ -1,5 +1,5 @@
 {
- "total": 429.43,
+ "total": 469.53,
  "segments": [
   {
    "id": "landing",
@@ -18,52 +18,140 @@
    "start": 22.0
   },
   {
-   "id": "name",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 17.0,
-   "b": 23.0,
+   "id": "tour",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 0.0,
+   "b": 12.0,
    "kind": "phone",
    "start": 29.0
   },
   {
-   "id": "words",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 24.0,
-   "b": 28.0,
+   "id": "menu",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 14.0,
+   "b": 17.5,
    "kind": "phone",
-   "start": 35.0
+   "start": 41.0
+  },
+  {
+   "id": "switch1",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 18.0,
+   "b": 23.5,
+   "kind": "phone",
+   "start": 44.5
+  },
+  {
+   "id": "intro",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 25.0,
+   "b": 29.5,
+   "kind": "phone",
+   "start": 50.0
+  },
+  {
+   "id": "name",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 40.0,
+   "b": 48.5,
+   "kind": "phone",
+   "start": 54.5
+  },
+  {
+   "id": "words",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 51.0,
+   "b": 55.5,
+   "kind": "phone",
+   "start": 63.0
+  },
+  {
+   "id": "tick",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 58.0,
+   "b": 60.6,
+   "kind": "phone",
+   "start": 67.5
   },
   {
    "id": "chains",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 30.0,
-   "b": 40.0,
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 62.6,
+   "b": 72.0,
    "kind": "phone",
-   "start": 39.0
+   "start": 70.1
   },
   {
-   "id": "create",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 40.5,
-   "b": 56.0,
+   "id": "createstep",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 74.0,
+   "b": 80.0,
    "kind": "phone",
-   "start": 49.0
+   "start": 79.5
+  },
+  {
+   "id": "approve",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 83.0,
+   "b": 91.0,
+   "kind": "phone",
+   "start": 85.5
   },
   {
    "id": "ready",
-   "src": "raw/cfr/P0-install.mp4",
-   "a": 57.0,
-   "b": 62.0,
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 92.0,
+   "b": 99.0,
    "kind": "phone",
-   "start": 64.5
+   "start": 93.5
   },
   {
-   "id": "home",
-   "src": "raw/cfr/P3a-home-base.mp4",
-   "a": 0.0,
-   "b": 3.6,
+   "id": "home2",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 101.8,
+   "b": 106.0,
    "kind": "phone",
-   "start": 69.5
+   "start": 100.5
+  },
+  {
+   "id": "switch2",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 106.0,
+   "b": 112.5,
+   "kind": "phone",
+   "start": 104.7
+  },
+  {
+   "id": "send2",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 142.0,
+   "b": 158.0,
+   "kind": "phone",
+   "start": 111.2
+  },
+  {
+   "id": "tov-after",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 158.0,
+   "b": 160.0,
+   "kind": "phone",
+   "start": 127.2
+  },
+  {
+   "id": "rcv-home",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 160.5,
+   "b": 170.0,
+   "kind": "phone",
+   "start": 129.2
+  },
+  {
+   "id": "rcv-x",
+   "src": "raw/cfr/Q0-tour.mp4",
+   "a": 226.5,
+   "b": 237.0,
+   "kind": "phone",
+   "start": 138.7
   },
   {
    "id": "recv",
@@ -71,31 +159,7 @@
    "a": 2.2,
    "b": 9.8,
    "kind": "phone",
-   "start": 73.1
-  },
-  {
-   "id": "send-sheet",
-   "src": "raw/cfr/P1-recv-send.mp4",
-   "a": 38.0,
-   "b": 56.0,
-   "kind": "phone",
-   "start": 80.7
-  },
-  {
-   "id": "send-x",
-   "src": "raw/cfr/P1-recv-send.mp4",
-   "a": 58.0,
-   "b": 66.0,
-   "kind": "phone",
-   "start": 98.7
-  },
-  {
-   "id": "send-rcv",
-   "src": "raw/cfr/P1-recv-send.mp4",
-   "a": 78.0,
-   "b": 88.0,
-   "kind": "phone",
-   "start": 106.7
+   "start": 149.2
   },
   {
    "id": "swap-0",
@@ -103,7 +167,7 @@
    "a": 4.2,
    "b": 15.0,
    "kind": "phone",
-   "start": 116.7
+   "start": 156.8
   },
   {
    "id": "swap-sheet",
@@ -111,7 +175,7 @@
    "a": 16.0,
    "b": 19.5,
    "kind": "phone",
-   "start": 127.5
+   "start": 167.6
   },
   {
    "id": "swap-run",
@@ -119,7 +183,7 @@
    "a": 20.0,
    "b": 34.0,
    "kind": "phone",
-   "start": 131.0
+   "start": 171.1
   },
   {
    "id": "swap-x",
@@ -127,7 +191,7 @@
    "a": 38.0,
    "b": 48.0,
    "kind": "phone",
-   "start": 145.0
+   "start": 185.1
   },
   {
    "id": "swap-home",
@@ -135,7 +199,7 @@
    "a": 74.0,
    "b": 82.0,
    "kind": "phone",
-   "start": 155.0
+   "start": 195.1
   },
   {
    "id": "br-pick",
@@ -143,7 +207,7 @@
    "a": 6.0,
    "b": 11.0,
    "kind": "phone",
-   "start": 163.0
+   "start": 203.1
   },
   {
    "id": "br-base",
@@ -151,7 +215,7 @@
    "a": 12.0,
    "b": 14.5,
    "kind": "phone",
-   "start": 168.0
+   "start": 208.1
   },
   {
    "id": "br-sheet",
@@ -159,7 +223,7 @@
    "a": 18.5,
    "b": 23.0,
    "kind": "phone",
-   "start": 170.5
+   "start": 210.6
   },
   {
    "id": "br-run",
@@ -167,7 +231,7 @@
    "a": 24.0,
    "b": 38.4,
    "kind": "phone",
-   "start": 175.0
+   "start": 215.1
   },
   {
    "id": "base-done",
@@ -175,7 +239,7 @@
    "a": 0.0,
    "b": 4.0,
    "kind": "phone",
-   "start": 189.4
+   "start": 229.5
   },
   {
    "id": "base-x",
@@ -183,7 +247,7 @@
    "a": 22.0,
    "b": 34.0,
    "kind": "phone",
-   "start": 193.4
+   "start": 233.5
   },
   {
    "id": "sol-pick",
@@ -191,7 +255,7 @@
    "a": 40.0,
    "b": 46.0,
    "kind": "phone",
-   "start": 205.4
+   "start": 245.5
   },
   {
    "id": "sol-form",
@@ -199,7 +263,7 @@
    "a": 53.0,
    "b": 59.0,
    "kind": "phone",
-   "start": 211.4
+   "start": 251.5
   },
   {
    "id": "sol-run",
@@ -207,7 +271,7 @@
    "a": 60.0,
    "b": 66.0,
    "kind": "phone",
-   "start": 217.4
+   "start": 257.5
   },
   {
    "id": "sol-done",
@@ -215,7 +279,7 @@
    "a": 80.0,
    "b": 86.0,
    "kind": "phone",
-   "start": 223.4
+   "start": 263.5
   },
   {
    "id": "sol-x",
@@ -223,7 +287,7 @@
    "a": 238.4,
    "b": 241.6,
    "kind": "phone",
-   "start": 229.4
+   "start": 269.5
   },
   {
    "id": "eth-to",
@@ -231,7 +295,7 @@
    "a": 21.0,
    "b": 27.0,
    "kind": "phone",
-   "start": 232.6
+   "start": 272.7
   },
   {
    "id": "eth-sheet",
@@ -239,7 +303,7 @@
    "a": 28.0,
    "b": 33.0,
    "kind": "phone",
-   "start": 238.6
+   "start": 278.7
   },
   {
    "id": "eth-run",
@@ -247,7 +311,7 @@
    "a": 38.0,
    "b": 52.0,
    "kind": "phone",
-   "start": 243.6
+   "start": 283.7
   },
   {
    "id": "eth-done",
@@ -255,7 +319,7 @@
    "a": 56.0,
    "b": 60.0,
    "kind": "phone",
-   "start": 257.6
+   "start": 297.7
   },
   {
    "id": "eth-x",
@@ -263,7 +327,7 @@
    "a": 72.0,
    "b": 82.0,
    "kind": "phone",
-   "start": 261.6
+   "start": 301.7
   },
   {
    "id": "eth-rcv",
@@ -271,7 +335,7 @@
    "a": 84.0,
    "b": 96.0,
    "kind": "phone",
-   "start": 271.6
+   "start": 311.7
   },
   {
    "id": "atk-0",
@@ -279,7 +343,7 @@
    "a": 4.0,
    "b": 9.0,
    "kind": "phone",
-   "start": 283.6
+   "start": 323.7
   },
   {
    "id": "atk-sheet",
@@ -287,7 +351,7 @@
    "a": 10.0,
    "b": 13.0,
    "kind": "phone",
-   "start": 288.6
+   "start": 328.7
   },
   {
    "id": "atk-run",
@@ -295,7 +359,7 @@
    "a": 24.0,
    "b": 37.0,
    "kind": "phone",
-   "start": 291.6
+   "start": 331.7
   },
   {
    "id": "atk-x",
@@ -303,7 +367,7 @@
    "a": 38.0,
    "b": 47.0,
    "kind": "phone",
-   "start": 304.6
+   "start": 344.7
   },
   {
    "id": "atk-err",
@@ -311,7 +375,7 @@
    "a": 50.0,
    "b": 57.0,
    "kind": "phone",
-   "start": 313.6
+   "start": 353.7
   },
   {
    "id": "priv-0",
@@ -319,7 +383,7 @@
    "a": 31.6,
    "b": 33.4,
    "kind": "phone",
-   "start": 320.6
+   "start": 360.7
   },
   {
    "id": "priv-sheet",
@@ -327,7 +391,7 @@
    "a": 34.0,
    "b": 38.5,
    "kind": "phone",
-   "start": 322.4
+   "start": 362.5
   },
   {
    "id": "priv-run",
@@ -335,7 +399,7 @@
    "a": 40.0,
    "b": 48.0,
    "kind": "phone",
-   "start": 326.9
+   "start": 367.0
   },
   {
    "id": "priv-x",
@@ -343,7 +407,7 @@
    "a": 50.0,
    "b": 60.0,
    "kind": "phone",
-   "start": 334.9
+   "start": 375.0
   },
   {
    "id": "guard-0",
@@ -351,7 +415,7 @@
    "a": 62.0,
    "b": 66.0,
    "kind": "phone",
-   "start": 344.9
+   "start": 385.0
   },
   {
    "id": "guard-sheet",
@@ -359,7 +423,7 @@
    "a": 70.0,
    "b": 73.5,
    "kind": "phone",
-   "start": 348.9
+   "start": 389.0
   },
   {
    "id": "guard-done",
@@ -367,7 +431,7 @@
    "a": 80.0,
    "b": 89.0,
    "kind": "phone",
-   "start": 352.4
+   "start": 392.5
   },
   {
    "id": "qday-0",
@@ -375,7 +439,7 @@
    "a": 90.0,
    "b": 96.0,
    "kind": "phone",
-   "start": 361.4
+   "start": 401.5
   },
   {
    "id": "qday-c",
@@ -383,7 +447,7 @@
    "a": 98.0,
    "b": 101.5,
    "kind": "phone",
-   "start": 367.4
+   "start": 407.5
   },
   {
    "id": "qday-sheet",
@@ -391,7 +455,7 @@
    "a": 104.0,
    "b": 106.0,
    "kind": "phone",
-   "start": 370.9
+   "start": 411.0
   },
   {
    "id": "qday-run",
@@ -399,7 +463,7 @@
    "a": 106.0,
    "b": 120.0,
    "kind": "phone",
-   "start": 372.9
+   "start": 413.0
   },
   {
    "id": "qday-keys",
@@ -407,7 +471,7 @@
    "a": 124.0,
    "b": 136.0,
    "kind": "phone",
-   "start": 386.9
+   "start": 427.0
   },
   {
    "id": "activity",
@@ -415,7 +479,7 @@
    "a": 142.0,
    "b": 151.0,
    "kind": "phone",
-   "start": 398.9
+   "start": 439.0
   },
   {
    "id": "lock",
@@ -423,7 +487,7 @@
    "a": 64.0,
    "b": 79.0,
    "kind": "phone",
-   "start": 407.9
+   "start": 448.0
   },
   {
    "id": "card",
@@ -431,7 +495,7 @@
    "a": 0,
    "b": 6.5,
    "kind": "card",
-   "start": 422.9
+   "start": 463.0
   }
  ],
  "voice": [
@@ -450,143 +514,157 @@
    "speech": 2.027
   },
   {
+   "id": "home",
+   "anchor": 29.4,
+   "seg": "tour",
+   "start": 29.4,
+   "speech": 6.101
+  },
+  {
+   "id": "add",
+   "anchor": 44.7,
+   "seg": "switch1",
+   "start": 44.7,
+   "speech": 3.904
+  },
+  {
    "id": "create",
-   "anchor": 29.3,
+   "anchor": 54.8,
    "seg": "name",
-   "start": 29.3,
-   "speech": 4.608
+   "start": 54.8,
+   "speech": 5.525
   },
   {
    "id": "chains",
-   "anchor": 39.3,
+   "anchor": 70.39999999999999,
    "seg": "chains",
-   "start": 39.3,
+   "start": 70.4,
    "speech": 8.448
   },
   {
    "id": "create-sign",
-   "anchor": 51.0,
-   "seg": "create",
-   "start": 51.0,
-   "speech": 3.52
+   "anchor": 79.8,
+   "seg": "createstep",
+   "start": 79.8,
+   "speech": 4.693
   },
   {
-   "id": "home",
-   "anchor": 69.7,
-   "seg": "home",
-   "start": 69.7,
-   "speech": 4.053
-  },
-  {
-   "id": "receive",
-   "anchor": 73.39999999999999,
-   "seg": "recv",
-   "start": 74.1,
-   "speech": 3.755
+   "id": "two",
+   "anchor": 100.8,
+   "seg": "home2",
+   "start": 100.8,
+   "speech": 4.181
   },
   {
    "id": "send",
-   "anchor": 80.89999999999999,
-   "seg": "send-sheet",
-   "start": 80.9,
+   "anchor": 111.5,
+   "seg": "send2",
+   "start": 111.5,
    "speech": 6.016
   },
   {
-   "id": "send-explorer",
-   "anchor": 98.99999999999999,
-   "seg": "send-x",
-   "start": 99.0,
-   "speech": 6.869
+   "id": "recv2",
+   "anchor": 130.0,
+   "seg": "rcv-home",
+   "start": 130.0,
+   "speech": 5.525
+  },
+  {
+   "id": "receive",
+   "anchor": 149.5,
+   "seg": "recv",
+   "start": 149.5,
+   "speech": 3.755
   },
   {
    "id": "swap",
-   "anchor": 116.99999999999999,
+   "anchor": 157.1,
    "seg": "swap-0",
-   "start": 117.0,
+   "start": 157.1,
    "speech": 6.144
   },
   {
    "id": "swap-done",
-   "anchor": 145.3,
+   "anchor": 185.4,
    "seg": "swap-x",
-   "start": 145.3,
+   "start": 185.4,
    "speech": 5.781
   },
   {
    "id": "out",
-   "anchor": 163.3,
+   "anchor": 203.4,
    "seg": "br-pick",
-   "start": 163.3,
+   "start": 203.4,
    "speech": 8.491
   },
   {
    "id": "out-done",
-   "anchor": 189.70000000000002,
+   "anchor": 229.8,
    "seg": "base-done",
-   "start": 189.7,
+   "start": 229.8,
    "speech": 7.083
   },
   {
    "id": "eth",
-   "anchor": 232.79999999999998,
+   "anchor": 272.9,
    "seg": "eth-to",
-   "start": 232.8,
+   "start": 272.9,
    "speech": 7.915
   },
   {
    "id": "eth-done",
-   "anchor": 257.90000000000003,
+   "anchor": 298.0,
    "seg": "eth-done",
-   "start": 257.9,
+   "start": 298.0,
    "speech": 7.424
   },
   {
    "id": "attack",
-   "anchor": 283.90000000000003,
+   "anchor": 324.0,
    "seg": "atk-0",
-   "start": 283.9,
+   "start": 324.0,
    "speech": 7.061
   },
   {
    "id": "private",
-   "anchor": 320.8,
+   "anchor": 360.9,
    "seg": "priv-0",
-   "start": 320.8,
+   "start": 360.9,
    "speech": 6.891
   },
   {
    "id": "guardians",
-   "anchor": 345.20000000000005,
+   "anchor": 385.3,
    "seg": "guard-0",
-   "start": 345.2,
+   "start": 385.3,
    "speech": 4.672
   },
   {
    "id": "qday",
-   "anchor": 361.70000000000005,
+   "anchor": 401.8,
    "seg": "qday-0",
-   "start": 361.7,
+   "start": 401.8,
    "speech": 9.152
   },
   {
    "id": "activity",
-   "anchor": 399.20000000000005,
+   "anchor": 439.3,
    "seg": "activity",
-   "start": 399.2,
+   "start": 439.3,
    "speech": 4.032
   },
   {
    "id": "lock",
-   "anchor": 410.90000000000003,
+   "anchor": 451.0,
    "seg": "lock",
-   "start": 410.9,
+   "start": 451.0,
    "speech": 3.435
   },
   {
    "id": "close",
-   "anchor": 423.50000000000006,
+   "anchor": 463.6,
    "seg": "card",
-   "start": 423.5,
+   "start": 463.6,
    "speech": 3.733
   }
  ],
