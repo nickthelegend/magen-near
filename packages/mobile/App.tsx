@@ -201,6 +201,27 @@ function SettingsTab({ vault, live, go }: P) {
   </Screen>;
 }
 
+/** A real attack on the wallet: ask NEAR's MPC to sign for Ethereum with only the classical signature. NEAR refuses on chain. */
+function LockTest({ vault, live }: { vault: Vault; live: Live | null }) {
+  const [r, setR] = useState<any>(null); const [busy, setBusy] = useState(false); const [err, setErr] = useState('');
+  const run = async () => {
+    setBusy(true); setR(null); setErr('');
+    try {
+      const addrs: any[] = await chainAddresses(vault.wallet); const eth = addrs.find(a => a.id === 'ethereum');
+      const tx: EthTx = { chainId: 11155111n, nonce: 0n, maxPriorityFeePerGas: 1n, maxFeePerGas: 1n, gas: 21000n, to: eth.address, value: 1n };
+      const x = await signCrossChain(feeOf(vault, live), vault.wallet, vault.keys, { chain: 'ethereum', tx, from: eth.address }, { dropPq: true }); setR(x);
+      Haptics.notificationAsync(x.success ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Error);
+    } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(false); }
+  };
+  return <Card style={{ padding: 18, gap: 12 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><ShieldAlert color={C.accent} size={20} /><T style={{ fontWeight: '700', fontSize: 17 }}>Test my quantum lock</T></View>
+    <T style={{ color: C.text2, fontSize: 14, lineHeight: 20 }}>Sends a real request to NEAR's MPC for an Ethereum signature with the quantum-safe half left out, the way an attacker with only your classical key would.</T>
+    <Btn title={busy ? 'Sending the attack to NEAR…' : 'Try it with one signature'} kind="dark" busy={busy} onPress={run} icon={<ShieldAlert color="#fff" size={17} />} />
+    {r && <TxBanner state={r.success ? 'ok' : 'bad'} title={r.success ? 'Unexpected: it was signed' : 'Refused on NEAR: quantum half missing'} sub={r.success ? undefined : 'Your wallet contract stopped it. The MPC never signed anything.'} links={[['View the refusal', txUrl(r.hash)]]} />}
+    {!!err && <Err text={err} />}
+  </Card>;
+}
+
 const PUSHED: string[] = ['swap', 'send', 'chains', 'settings', 'receive', 'private'];
 type Prefill = { to: string; amount?: string; memo?: string; request?: boolean; key: number };
 
@@ -439,6 +460,7 @@ function SecurityTab({ vault, live, refresh, onReset, lock, addLocal }: P & { on
       {on && live && !edKey && <T style={{ color: C.accentText, fontSize: 13.5 }}>Only post-quantum keys remain on this account.</T>}
     </Card>
     <Guardians vault={vault} live={live} refresh={refresh} addLocal={addLocal} />
+    <LockTest vault={vault} live={live} />
     <Card>
       <View style={styles.cardHead}><T style={styles.h2}>What NEAR sees</T><Pressable onPress={() => Linking.openURL(`https://testnet.near.rocks/account/${vault.wallet}`)} hitSlop={8}><ExternalLink color={C.accent} size={18} /></Pressable></View>
       {(live?.keys ?? []).map((k, i, a) => <View key={k.publicKey} style={[styles.row, i === a.length - 1 && { borderBottomWidth: 0 }]}>
