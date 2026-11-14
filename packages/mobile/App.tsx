@@ -1,3 +1,4 @@
+import { ApprovalSheet } from './src/ApprovalSheet';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Animated, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,7 +30,7 @@ export default function App() {
   const [vault, setVault] = useState<Vault | null | undefined>(undefined);
   useEffect(() => { SecureStore.getItemAsync(VAULT).then(v => setVault(v ? JSON.parse(v) : null)).catch(() => setVault(null)); }, []);
   if (!fonts || vault === undefined) return <View style={{ flex: 1, backgroundColor: C.ink }} />;
-  return <SafeAreaProvider><StatusBar style={vault ? 'dark' : 'light'} />
+  return <SafeAreaProvider><ApprovalSheet/><StatusBar style={vault ? 'dark' : 'light'} />
     {vault ? <Wallet vault={vault} onReset={async () => { await SecureStore.deleteItemAsync(VAULT); setVault(null); }} />
       : <Onboarding onDone={async v => { await SecureStore.setItemAsync(VAULT, JSON.stringify(v)); setVault(v); }} />}
   </SafeAreaProvider>;

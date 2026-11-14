@@ -1,3 +1,4 @@
+import { TransactionApproval } from '../ui/Approval.tsx';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { openVault, sealVault, type Vault } from '../../../sdk/index.ts';
 import { readAccount, readKeys, readStatus, type AccountView, type KeyInfo } from './chain.ts';
@@ -48,7 +49,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       await setBackup(sealed); setBackupData(sealed); await setSession(v); setVault(v); return sealed;
     },
   }), [vault, account, live, refresh, toast, notify, backupData, ready]);
-  return <C.Provider value={value}>{children}</C.Provider>;
+  return <C.Provider value={value}>{children}{!location.pathname.endsWith('/approve.html')&&<TransactionApproval/>}</C.Provider>;
 }
 
 export function downloadJson(data: any, name: string) {

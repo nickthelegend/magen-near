@@ -1,3 +1,4 @@
+import { approveTransaction, previewTransaction } from './approval.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js';
 import { sha256 } from '@noble/hashes/sha2.js';
@@ -49,7 +50,7 @@ export type Signer={account:string;seed:string;pq?:boolean};
 export function signerPublic(s:Signer){return s.pq?ml_dsa65.keygen(base64.decode(s.seed)).publicKey:ed25519.getPublicKey(base64.decode(s.seed));}
 export const keyString=(s:Signer)=>(s.pq?'ml-dsa-65:':'ed25519:')+base58.encode(signerPublic(s));
 export function encodeTransaction(s:Signer,receiver:string,nonce:bigint,blockHash:string,ops:Uint8Array[]){const tag=s.pq?2:0;const tx=concat(str(s.account),new Uint8Array([tag]),signerPublic(s),le(nonce,8),str(receiver),base58.decode(blockHash),le(ops.length,4),...ops);const h=sha256(tx);const sig=s.pq?ml_dsa65.sign(h,ml_dsa65.keygen(base64.decode(s.seed)).secretKey):ed25519.sign(h,base64.decode(s.seed));return {hash:base58.encode(h),bytes:concat(tx,new Uint8Array([tag]),sig)};}
-export async function submit(s:Signer,receiver:string,ops:Uint8Array[],onSigned?:(hash:string)=>void){const ak=await query('view_access_key',s.account,{public_key:keyString(s),finality:'optimistic'});const tx=encodeTransaction(s,receiver,BigInt(ak.nonce)+1n,ak.block_hash,ops);onSigned?.(tx.hash);return rpc('broadcast_tx_commit',[base64.encode(tx.bytes)]);}
+export async function submit(s:Signer,receiver:string,ops:Uint8Array[],onSigned?:(hash:string)=>void){await approveTransaction(previewTransaction(s.account,receiver,ops));const ak=await query('view_access_key',s.account,{public_key:keyString(s),finality:'optimistic'});const tx=encodeTransaction(s,receiver,BigInt(ak.nonce)+1n,ak.block_hash,ops);onSigned?.(tx.hash);return rpc('broadcast_tx_commit',[base64.encode(tx.bytes)]);}
 export function outcome(r:any){const failures=[r.transaction_outcome,...(r.receipts_outcome||[])].filter(Boolean).filter(o=>o.outcome?.status?.Failure).map(o=>JSON.stringify(o.outcome.status.Failure));const value=r.status?.SuccessValue;const settled=value!==undefined?decode(base64.decode(value)):'';return {hash:r.transaction.hash,success:!failures.length&&settled!=='false',error:failures.join('; ')||(settled==='false'?'Action failed on the receiving account.':''),logs:(r.receipts_outcome||[]).flatMap(o=>o.outcome.logs||[])};}
 export async function execute(s:Signer,wallet:string,signed:ReturnType<typeof signIntent>,onSigned?:(h:string)=>void){return outcome(await submit(s,wallet,[actions.call('execute',signed)],onSigned));}
 export type Vault={wallet:string;keys:Keys;relay:Signer};
