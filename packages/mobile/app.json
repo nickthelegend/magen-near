@@ -38,6 +38,12 @@
           "cameraPermission": false,
           "microphonePermission": false
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Magen uses Face ID to unlock your wallet."
+        }
       ]
     ],
     "runtimeVersion": {
