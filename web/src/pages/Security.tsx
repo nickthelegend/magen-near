@@ -78,7 +78,7 @@ function Guardians() {
   const [busy, setBusy] = useState(''); const [err, setErr] = useState(''); const [hash, setHash] = useState('');
   const st = live?.status;
   if (!st) return null;
-  const v2 = st.version === 'magen-2';
+  const v2 = st.version === 'magen-2' || st.version === 'magen-3';
   const setup = async () => {
     if (!vault) return; setErr('');
     try {
@@ -99,7 +99,7 @@ function Guardians() {
       <p className="hint" style={{ fontSize: 14 }}>Lose this device and guardians can move both locks to a new one. Each guardian holds an ML-DSA-65 key; the contract needs two of three valid signatures, checked on chain. Guardians can never spend.</p>
       {st.threshold ? <div className="keylist">{st.guardians!.map((g, i) => <div className="keyrow" key={g} style={{ padding: '10px 0' }}>
         <span className="lock-ico pq"><Atom size={18} /></span><span style={{ minWidth: 0 }}><b>Guardian {i + 1}</b><span className="mono">ML-DSA-65 · {fp(g)}…</span></span><span className="pill pill-gray">can restore, can’t spend</span></div>)}</div>
-        : !v2 ? <div className="banner banner-gray"><Users size={18} /><div>This account runs wallet contract {st.version ?? 'magen-1'}. Guardians come with magen-2, used by accounts upgraded from Nov 14.</div></div>
+        : !v2 ? <div className="banner banner-gray"><Users size={18} /><div>This account runs wallet contract {st.version ?? 'magen-1'}. Guardians come with magen-2 and later.</div></div>
         : vault ? <button className="btn btn-dark" onClick={setup} disabled={!!busy} style={{ justifySelf: 'start' }}>{busy ? <><Spinner />{busy}</> : <><Users size={17} />Set up 2-of-3 guardians</>}</button>
         : <p className="hint">Unlock the wallet to add guardians.</p>}
       {hash && <TxLink hash={hash} label="View the guardian transaction" />}
