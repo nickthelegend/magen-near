@@ -1,6 +1,6 @@
 // One scrolling screen above the floating tab bar, with an optional sticky action area that always sits ABOVE the
 // bar and its raised Scan button, so a primary button is never covered (first open, after a banner, any length).
-import { useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,9 +14,11 @@ export const ACTION_H = 54;
 /** Amount fields: digits and one dot; a leading dot becomes "0." so ".2" reads as 0.2 NEAR. */
 export const decimal = (t: string) => { const c = t.replace(/[^\d.]/g, '').replace(/^\./, '0.'); const i = c.indexOf('.'); return i < 0 ? c : c.slice(0, i + 1) + c.slice(i + 1).replace(/\./g, ''); };
 
+/** False on pushed screens (Swap, Bridge, Send, Every chain), where the tab bar is hidden. */
+export const BarCtx = createContext(true);
 export function Screen({ children, action, notice }: { children: ReactNode; action?: ReactNode; notice?: ReactNode; tall?: boolean }) {
-  const insets = useSafeAreaInsets();
-  const bottom = insets.bottom + BAR_SPACE;
+  const insets = useSafeAreaInsets(); const bar = useContext(BarCtx);
+  const bottom = insets.bottom + (bar ? BAR_SPACE : 12);
   // The sticky area's real height (buttons + any status banner) pads the scroll so nothing hides under it.
   const [actH, setActH] = useState(ACTION_H + 24 + bottom);
   return <View style={{ flex: 1 }}>

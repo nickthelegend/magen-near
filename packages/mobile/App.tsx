@@ -20,7 +20,7 @@ import { parseScan } from './src/scan';
 import { Back, Btn, Card, Err, Logo, Ok, Pill, T, Tile, feeOf, feeSigner, open, styles, type Live, type P } from './src/ui';
 import { C, FONT, LOGO, MONO, TopGlow, fontAssets } from './src/theme';
 import { Onboarding } from './src/Onboarding';
-import { Screen, decimal } from './src/Screen';
+import { BarCtx, Screen, decimal } from './src/Screen';
 import { BridgeTab, ReceiveTab, SwapTab, TxBanner, nice, retrying } from './src/Flows';
 import { ChainAvatars, PortfolioBar, StripeBar, shares, units, useAssets } from './src/Assets';
 
@@ -140,7 +140,7 @@ function Wallet({ vault, onReset, lock }: { vault: Vault; onReset: () => void; l
         <Pressable onPress={lock} hitSlop={10} accessibilityRole="button" accessibilityLabel="Lock Magen" style={{ width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: C.line2, alignItems: 'center', justifyContent: 'center' }}><Lock color={C.text2} size={16} /></Pressable>
       </View>}
     </View>
-    {tab !== 'scan' && <Animated.View style={{ flex: 1, opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }}>
+    {tab !== 'scan' && <BarCtx.Provider value={!PUSHED.includes(tab)}><Animated.View style={{ flex: 1, opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }}>
       {tab === 'home' && <HomeTab {...props} />}
       {tab === 'send' && <SendTab {...props} prefill={prefill} />}
       {tab === 'activity' && <ActivityTab {...props} />}
@@ -150,14 +150,15 @@ function Wallet({ vault, onReset, lock }: { vault: Vault; onReset: () => void; l
       {tab === 'swap' && <SwapTab {...props} />}
       {tab === 'receive' && <ReceiveTab {...props} />}
       {tab === 'bridge' && <BridgeTab {...props} />}
-    </Animated.View>}
+    </Animated.View></BarCtx.Provider>}
     {tab === 'scan' && <Animated.View style={[StyleSheet.absoluteFill, { opacity: fade }]}>
       <ScanScreen wallet={vault.wallet} mode={scanMode} setMode={m => { setSheet(null); setScanMode(m); }} sheet={sheet} onCode={route}
         onConfirm={p => send({ to: p.to, amount: p.amount, memo: p.memo, request: true })} onDismiss={() => setSheet(null)} top={insets.top} bottom={insets.bottom} />
     </Animated.View>}
-    <TabBar tab={tab} onChange={t => (t === 'scan' && tab === 'scan' ? setSheet(null) : goTab(t))} bottom={insets.bottom} />
+    {!PUSHED.includes(tab) && <TabBar tab={tab} onChange={t => (t === 'scan' && tab === 'scan' ? setSheet(null) : goTab(t))} bottom={insets.bottom} />}
   </View>;
 }
+const PUSHED: string[] = ['swap', 'bridge', 'send', 'chains'];
 type Prefill = { to: string; amount?: string; memo?: string; request?: boolean; key: number };
 
 /** "8.48" with the decimals smaller and dimmer, as on the reference's balance. */
@@ -285,9 +286,8 @@ function SendTab({ vault, live, refresh, go, prefill, addLocal }: P & { prefill:
       {!!err && <Err text={err} />}</>}
     action={stage === 'done' ? <Btn title="New payment" kind="ghost" onPress={() => { setStage('form'); setRes(null); setAmt(''); }} />
       : <Btn title={stage === 'signing' ? 'Signing with both keys…' : stage === 'sending' ? 'NEAR is checking both…' : 'Sign twice and send'} icon={<ShieldSend size={22} />} busy={stage !== 'form'} disabled={!to || !amt} onPress={send} />}>
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <T s="h1">Send</T>
-      {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" style={styles.scanChip} hitSlop={6}><ScanLine color={C.accent} size={17} /><T style={{ color: C.accentText, fontWeight: '600', fontSize: 13.5 }}>Scan</T></Pressable>}
+    <View><Back go={go} title="Send" />
+      {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" hitSlop={8} style={{ position: 'absolute', right: 0, top: -6, height: 44, justifyContent: 'center' }}><ScanLine color={C.text} size={21} /></Pressable>}
     </View>
     {scanned && <View style={[styles.banner, { backgroundColor: C.accentSoft, borderColor: C.accentLine, alignItems: 'center' }]}><ScanLine color={C.accent} size={18} />
       <View style={{ flex: 1 }}><T style={{ fontWeight: '600' }}>{from!.request ? 'From a Magen pay request' : 'From a scanned code'}</T>

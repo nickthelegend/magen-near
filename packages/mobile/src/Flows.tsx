@@ -120,7 +120,7 @@ function Steps({ at, items, logo, failed }: { at: number; items: [string, string
 function Route({ from, to, fromNet, toNet, via }: { from: [string, string]; to: [string, string]; fromNet: string; toNet: string; via: string }) {
   const x = useRef(new Animated.Value(0)).current;
   useEffect(() => { let loop: any; AccessibilityInfo.isReduceMotionEnabled().then(r => { if (r) return; loop = Animated.loop(Animated.timing(x, { toValue: 1, duration: 900, easing: Easing.linear, useNativeDriver: true })); loop.start(); }); return () => loop?.stop(); }, []);
-  const End = ({ c, net }: { c: [string, string]; net: string }) => <View style={{ alignItems: 'center', gap: 6, width: 86 }}><ChainLogo id={c[0]} size={26} /><T style={{ fontWeight: '600', fontSize: 15 }}>{c[1]}</T><T style={{ color: 'rgba(255,255,255,0.62)', fontSize: 13 }}>{net}</T></View>;
+  const End = ({ c, net }: { c: [string, string]; net: string }) => <View style={{ alignItems: 'center', gap: 4, width: 92 }}><ChainLogo id={c[0]} size={26} /><T style={{ fontWeight: '600', fontSize: 15 }}>{c[1]}</T><T style={{ color: 'rgba(255,255,255,0.62)', fontSize: 13 }}>{net}</T></View>;
   return <Card style={{ padding: 18 }}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <End c={from} net={fromNet} />
@@ -261,8 +261,7 @@ function BridgeIn(p: P & { seg: any }) {
     load(); const i = setInterval(load, 25000); return () => { on = false; clearInterval(i); };
   }, [chain, d]);
   const conf = d ? String(Object.values(d.confirmations ?? {})[0] ?? '') || null : null;
-  return <Screen action={!mine ? <Btn title="Back to my deposit address" kind="ghost" onPress={() => setWho(p.vault.wallet)} />
-    : d ? <Btn title={`Copy ${c.name} deposit address`} onPress={() => { Clipboard.setStringAsync(d.address); Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); }} icon={<Copy color="#fff" size={18} />} /> : undefined}>
+  return <Screen>
     <Back go={p.go} title="Bridge" sub="Bring Bitcoin or Zcash onto NEAR, or send NEAR out to Solana. Omni Bridge does the moving; your two locks guard it on NEAR." />
     {p.seg}
     <Route from={chain === 'btc' ? ['bitcoin', 'Bitcoin'] : ['zcash', 'Zcash']} fromNet="testnet" to={['near', chain === 'btc' ? 'nBTC' : 'nZEC']} toNet="on NEAR" via="Omni Bridge" />
@@ -270,10 +269,11 @@ function BridgeIn(p: P & { seg: any }) {
       <View style={styles.chipLogo}><Image source={LOGO[k === 'btc' ? 'bitcoin' : 'zcash']} style={{ width: 14, height: 14 }} resizeMode="contain" /></View><T style={{ fontWeight: '600', color: chain === k ? '#fff' : C.text2 }}>{UTXO[k].name}</T></Pressable>)}</View>
     {!mine && <View style={[styles.banner, { backgroundColor: C.s1, borderColor: C.line, alignItems: 'center' }]}><Info color={C.text2} size={18} />
       <T style={{ flex: 1, color: C.text2, fontSize: 13.5 }}>Showing the demo wallet {DEMO} (read only).</T><Pressable onPress={() => setWho(p.vault.wallet)} hitSlop={8}><T style={{ color: C.accentText, fontWeight: '600' }}>Mine</T></Pressable></View>}
-    <Card style={{ padding: 20, gap: 12, alignItems: 'center' }}>
+    <Card style={{ padding: 16, gap: 10, alignItems: 'center' }}>
       <T style={{ fontWeight: '600', fontSize: 16, textAlign: 'center' }}>{mine ? 'Your' : `${DEMO}'s`} {c.name} {c.network} deposit address</T>
       {err ? <Err text={`Address not shown: ${err}`} /> : !d ? <View style={{ height: 240, justifyContent: 'center' }}><ActivityIndicator color={C.accent} /><T style={{ color: C.text3, marginTop: 10, textAlign: 'center' }}>{wait ? 'The testnet server is busy. Retrying by itself…' : `Asking the ${c.name} connector on NEAR…`}</T></View>
-        : <><Qr value={d.address} size={170} /><T selectable style={{ fontFamily: MONO, fontSize: 12.5, textAlign: 'center' }}>{d.address}</T>
+        : <><Qr value={d.address} size={150} /><T selectable style={{ fontFamily: MONO, fontSize: 13, textAlign: 'center' }}>{d.address}</T>
+          {mine ? <CopyBtn text={d.address} label={`Copy ${c.name} address`} /> : <Pressable onPress={() => setWho(p.vault.wallet)} hitSlop={8}><T style={{ color: C.accentText, fontWeight: '600' }}>Back to my deposit address</T></Pressable>}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Check color={C.accent} size={14} /><T style={{ color: C.accentText, fontSize: 12.5 }}>Made on chain by {c.connector}; the bridge API agrees</T></View></>}
     </Card>
     {d && <KV rows={[['Minimum', `${d.minDeposit.toLocaleString('en-US')} ${c.unit}`], ['Confirmations', conf ?? '…'], ['Bridge fee', `from ${d.feeMin.toLocaleString('en-US')} ${c.unit}`],

@@ -40,10 +40,10 @@ export const Logo = ({ size = 30 }: { size?: number }) => <Image source={require
 
 export const Tile = ({ icon, title, onPress }: any) => <Pressable onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); onPress(); }} style={({ pressed }) => [styles.tile, { transform: [{ scale: pressed ? 0.96 : 1 }] }]} accessibilityRole="button" accessibilityLabel={title}>
   <View style={[styles.ico, { backgroundColor: C.accentSoft }]}>{icon}</View><T style={{ fontWeight: '600', fontSize: 14 }}>{title}</T></Pressable>;
-/** iOS-style nav: a round back chevron, then the large title. No explainer paragraph (footnotes live by the CTA). */
-export const Back = ({ go, title }: any) => <View style={{ gap: 10, paddingTop: 2 }}>
-  <Pressable onPress={() => go('home')} hitSlop={10} accessibilityRole="button" accessibilityLabel="Back" style={({ pressed }) => ({ width: 38, height: 38, borderRadius: 19, backgroundColor: C.s2, borderWidth: 1, borderColor: C.line, alignItems: 'center', justifyContent: 'center', transform: [{ scale: pressed ? 0.94 : 1 }] })}><ChevronLeft color={C.text} size={20} /></Pressable>
-  <T s="h1">{title}</T></View>;
+/** iOS nav bar: one 44 pt row, a plain chevron (44x44 hit area) on the left, the title centred at 17/600. */
+export const Back = ({ go, title }: any) => <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginHorizontal: -4, marginTop: -6 }}>
+  <Pressable onPress={() => go('home')} hitSlop={6} accessibilityRole="button" accessibilityLabel="Back" style={{ position: 'absolute', left: 0, width: 44, height: 44, alignItems: 'flex-start', justifyContent: 'center', paddingLeft: 4 }}><ChevronLeft color={C.text} size={26} strokeWidth={2.2} /></Pressable>
+  <T style={{ fontSize: 17, fontWeight: '600' }} numberOfLines={1}>{title}</T></View>;
 export const feeOf = (vault: Vault, live: Live | null) => live?.keys.some(k => k.scheme === 'ed25519') === false && live?.status?.migrated ? { account: vault.wallet, seed: vault.keys.pq, pq: true } : vault.relay;
 
 export const styles = StyleSheet.create({
