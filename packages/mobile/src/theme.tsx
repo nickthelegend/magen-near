@@ -7,7 +7,7 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 export const C = {
   bg: '#0B0C0F', s1: '#15171C', s2: '#1D2027', s3: '#262A33',
   line: 'rgba(255,255,255,0.08)', line2: 'rgba(255,255,255,0.14)',
-  text: '#FFFFFF', text2: 'rgba(255,255,255,0.6)', text3: 'rgba(255,255,255,0.4)',
+  text: '#FFFFFF', text2: 'rgba(255,255,255,0.72)', text3: 'rgba(255,255,255,0.56)',
   accent: '#E040C8', accent2: '#C930B1', accentSoft: 'rgba(224,64,200,0.14)', accentLine: 'rgba(224,64,200,0.32)', accentText: '#F28BE0',
   red: '#FF5A6A', redSoft: 'rgba(255,90,106,0.12)', redText: '#FFB3BA',
 };

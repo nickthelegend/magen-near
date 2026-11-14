@@ -1,8 +1,8 @@
 // Home's W2 pieces: the chain avatar row, the striped share bars, and the live asset reader behind them.
 // Amounts are real NEAR testnet reads (account balance + ft_balance_of). The bar fill is each asset's share of the
 // wallet's value at 1Click's live token prices; if a price or an amount is missing the bar says so instead of guessing.
-import { useEffect, useState } from 'react';
-import { Image, Pressable, View, type LayoutChangeEvent } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AccessibilityInfo, Animated, Easing, Image, Pressable, View, type LayoutChangeEvent } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
 import { ChevronsLeftRight, Plus } from 'lucide-react-native';
@@ -60,14 +60,41 @@ export function shares(list: Asset[]) {
 
 /* ---------- avatar row ---------- */
 export function ChainAvatars({ ids, onPlus }: { ids: string[]; onPlus: () => void }) {
+  const D = 30;
   return <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} accessibilityLabel={`Chains in this wallet: ${ids.join(', ')}`}>
-    {ids.map((id, i) => <View key={id} style={{ marginLeft: i ? -10 : 0, width: 50, height: 50, borderRadius: 25, backgroundColor: '#fff', borderWidth: 3, borderColor: C.bg, alignItems: 'center', justifyContent: 'center', zIndex: 10 - i }}>
-      <Image source={LOGO[id]} style={{ width: 24, height: 24 }} resizeMode="contain" />
+    {ids.map((id, i) => <View key={id} style={{ marginLeft: i ? -7 : 0, width: D, height: D, borderRadius: D / 2, backgroundColor: '#fff', borderWidth: 2, borderColor: C.bg, alignItems: 'center', justifyContent: 'center', zIndex: 10 - i }}>
+      <Image source={LOGO[id]} style={{ width: 15, height: 15 }} resizeMode="contain" />
     </View>)}
-    <Pressable onPress={() => { Haptics.selectionAsync(); onPlus(); }} accessibilityRole="button" accessibilityLabel="Every chain" hitSlop={6}
-      style={({ pressed }) => ({ marginLeft: -10, width: 50, height: 50, borderRadius: 25, backgroundColor: C.s2, borderWidth: 3, borderColor: C.bg, alignItems: 'center', justifyContent: 'center', transform: [{ scale: pressed ? 0.94 : 1 }] })}>
-      <Plus color={C.accent} size={20} strokeWidth={2} />
+    <Pressable onPress={() => { Haptics.selectionAsync(); onPlus(); }} accessibilityRole="button" accessibilityLabel="Every chain" hitSlop={10}
+      style={({ pressed }) => ({ marginLeft: 6, height: D, paddingHorizontal: 10, borderRadius: D / 2, borderWidth: 1, borderColor: C.line2, flexDirection: 'row', alignItems: 'center', gap: 4, transform: [{ scale: pressed ? 0.95 : 1 }] })}>
+      <Plus color={C.accentText} size={14} strokeWidth={2.4} /><T style={{ color: C.text2, fontSize: 13, fontWeight: '600' }}>Every chain</T>
     </Pressable>
+  </View>;
+}
+
+/* ---------- one portfolio bar ---------- */
+const TINT: Record<string, string> = { near: '', nbtc: 'rgba(224,64,200,0.62)', nzec: 'rgba(224,64,200,0.40)', usdt: 'rgba(242,139,224,0.85)' };
+/** A thin bar split by each asset's share of value (NEAR striped magenta, others solid tints) with a legend. Segments grow in once. */
+export function PortfolioBar({ assets, shares: sh }: { assets: Asset[]; shares: (number | null)[] }) {
+  const [w, setW] = useState(0); const grow = useRef(new Animated.Value(0)).current;
+  useEffect(() => { if (!w) return; AccessibilityInfo.isReduceMotionEnabled().then(r => { if (r) grow.setValue(1); else Animated.timing(grow, { toValue: 1, duration: 420, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start(); }); }, [w]);
+  const held = assets.map((a, i) => ({ a, s: sh[i] })).filter(x => x.a.amount !== null && x.a.amount > 0n);
+  const priced = held.filter(x => x.s !== null && x.s > 0);
+  const segs = priced.length ? priced.map(x => ({ id: x.a.id, name: x.a.name, s: Math.max(x.s!, 0.02) })) : held.filter(x => x.a.id === 'near').map(x => ({ id: 'near', name: 'NEAR', s: 1 }));
+  const tot = segs.reduce((t, x) => t + x.s, 0) || 1; const H = 10;
+  return <View style={{ width: '100%', gap: 10 }}>
+    <View onLayout={(e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width)} style={{ height: H, borderRadius: H / 2, backgroundColor: C.s2, overflow: 'hidden', flexDirection: 'row' }}>
+      {w > 0 && segs.map((x, i) => { const sw = w * x.s / tot - (i < segs.length - 1 ? 2 : 0);
+        return <Animated.View key={x.id} style={{ width: grow.interpolate({ inputRange: [0, 1], outputRange: [0, Math.max(sw, 2)] }), height: H, marginRight: i < segs.length - 1 ? 2 : 0, overflow: 'hidden', backgroundColor: x.id === 'near' ? C.accent : TINT[x.id] ?? C.accentSoft }}>
+          {x.id === 'near' && <Svg width={Math.max(sw, 2)} height={H}><Path d={stripes(Math.max(sw, 2), H)} fill={C.accent2} /></Svg>}
+        </Animated.View>; })}
+    </View>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 16, rowGap: 4 }}>
+      {segs.length === 0 ? <T style={{ color: C.text2, fontSize: 13 }}>Nothing held yet</T> : segs.map(x => <View key={x.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: x.id === 'near' ? C.accent : TINT[x.id] }} />
+        <T style={{ color: C.text2, fontSize: 13, fontWeight: '600' }}>{Math.round(x.s / tot * 100)}% {x.name}</T>
+      </View>)}
+    </View>
   </View>;
 }
 
