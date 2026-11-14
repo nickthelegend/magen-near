@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Animated, AppState, Image, Linking, Modal, Pressable, Share, StyleSheet, Switch, TextInput, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
 import * as SecureStore from 'expo-secure-store';
 import * as Clipboard from 'expo-clipboard';
@@ -243,7 +244,8 @@ function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
   useEffect(() => { prices().then(setPx).catch(() => {}); }, []);
   useEffect(() => { let on = true; chainAddresses(vault.wallet).then(async (a: any[]) => { const e = a.find(x => x.id === 'ethereum'); if (!e || !on) return; setEth({ address: e.address, wei: null });
     const w = await evm('https://ethereum-sepolia-rpc.publicnode.com', 'eth_getBalance', [e.address, 'latest']).catch(() => null); on && setEth({ address: e.address, wei: w === null ? null : BigInt(w) }); }).catch(() => {}); return () => { on = false; }; }, [vault.wallet]);
-  const nearPx = px.near; const usdNear = live?.amount != null && nearPx ? Number(live.amount) / 1e24 * nearPx : null;
+  const valOf = (a: any) => a.amount !== null && px[a.id] ? Number(a.amount) / 10 ** a.decimals * px[a.id] : 0;
+  const total = live?.amount != null && px.near ? assets.reduce((t, a) => t + valOf(a), 0) + (eth?.wei && px.eth ? Number(eth.wei) / 1e18 * px.eth : 0) : null;
   const SUB: Record<string, string> = { near: 'NEAR', nbtc: 'nBTC', nzec: 'nZEC', usdt: 'USDT' };
   const NAMES: Record<string, string> = { near: 'NEAR', nbtc: 'Bitcoin (nBTC)', nzec: 'Zcash (nZEC)', usdt: 'Tether USD (Ref)' };
   const order = ['near', 'usdt', 'nbtc', 'nzec'];
@@ -251,11 +253,11 @@ function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
   const usd = (n: number | null) => n === null ? null : `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return <Screen>
     <View style={{ alignItems: 'center', gap: 6, marginTop: -6 }}>
-      <View style={{ width: 84, height: 84, borderRadius: 42, backgroundColor: '#3A1033', borderWidth: 2, borderColor: C.accentLine, alignItems: 'center', justifyContent: 'center', shadowColor: C.accent, shadowOpacity: 0.5, shadowRadius: 20, shadowOffset: { width: 0, height: 0 } }}><Logo size={44} /></View>
+      <View style={{ shadowColor: C.accent, shadowOpacity: 0.5, shadowRadius: 20 }}><Avatar name={vault.wallet} /></View>
       <Pressable onPress={() => { Haptics.selectionAsync(); setWallets(true); }} accessibilityRole="button" accessibilityLabel="Switch wallet" hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 }}>
         <T style={{ fontSize: 18, fontWeight: '700' }} numberOfLines={1}>{vault.wallet}</T><ChevronDown color={C.text2} size={20} /></Pressable>
-      {live ? <T display style={{ fontSize: 40, letterSpacing: -1.2 }}>{near(live.amount ?? null, 2)} <T display style={{ fontSize: 22, color: C.text2 }}>NEAR</T></T> : <ActivityIndicator color={C.accent} style={{ height: 48 }} />}
-      {usdNear !== null && <T style={{ color: C.text2, fontSize: 13 }}>≈ {usd(usdNear)} at mainnet price</T>}
+      {total !== null ? <T display style={{ fontSize: 42, letterSpacing: -1.2 }}>{usd(total)}</T> : <ActivityIndicator color={C.accent} style={{ height: 48 }} />}
+      <T style={{ color: C.text2, fontSize: 13 }}>at mainnet prices · testnet tokens</T>
     </View>
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginTop: 4 }}>
       <Action label="Receive" icon={<ArrowDownLeft color="#fff" size={22} />} onPress={receive} />
@@ -268,11 +270,11 @@ function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
       {rows.map(a => { const zero = a.amount !== null && a.amount === 0n; const amt = a.amount === null ? '…' : units(a.amount, a.decimals, a.id === 'near' ? 4 : 6);
         const v = a.amount !== null && px[a.id] && !zero ? Number(a.amount) / 10 ** a.decimals * px[a.id] : null;
         return <TokenRow key={a.id} logo={a.logo} badge={a.id === 'near' ? null : LOGO.near} name={NAMES[a.id]} sub={`${amt} ${SUB[a.id]}`} zero={zero}
-          right={zero ? <View style={{ paddingHorizontal: 12, height: 30, borderRadius: 15, borderWidth: 1, borderColor: C.accentLine, justifyContent: 'center' }}><T style={{ color: C.accentText, fontWeight: '600', fontSize: 13 }}>{a.id === 'usdt' ? 'Swap in' : 'Bridge in'}</T></View> : v !== null ? <T style={{ fontWeight: '600', fontSize: 16 }}>{usd(v)}</T> : null}
+          right={zero ? <View style={{ paddingHorizontal: 12, height: 30, borderRadius: 15, borderWidth: 1, borderColor: C.accentLine, justifyContent: 'center' }}><T style={{ color: C.accentText, fontWeight: '600', fontSize: 13 }}>{a.id === 'usdt' ? 'Swap in' : 'Bridge in'}</T></View> : v !== null ? <T style={{ fontWeight: '500', fontSize: 15, color: C.text2 }}>{usd(v)}</T> : null}
           onPress={() => go(zero ? (a.id === 'usdt' ? 'swap' : 'bridge') : 'activity')} />; })}
       <TokenRow logo={LOGO.ethereum} badge={LOGO.ethereum} name="Ether (Sepolia)" sub={eth === null || eth.wei === null ? '… ETH · NEAR MPC address' : `${units(eth.wei, 18, 5)} ETH · NEAR MPC address`} zero={eth?.wei === 0n}
-        right={eth?.wei && px.eth ? <T style={{ fontWeight: '600', fontSize: 16 }}>{usd(Number(eth.wei) / 1e18 * px.eth)}</T> : null} onPress={() => go('chains')} />
-      <T style={{ color: C.text3, fontSize: 13, marginTop: 6 }}>$ values use 1Click’s live mainnet prices. Testnet tokens have no market value.</T>
+        right={eth?.wei && px.eth ? <T style={{ fontWeight: '500', fontSize: 15, color: C.text2 }}>{usd(Number(eth.wei) / 1e18 * px.eth)}</T> : null} onPress={() => go('chains')} />
+      <T style={{ color: C.text3, fontSize: 13, marginTop: 6 }}>$ values use 1Click’s live mainnet prices for reference. These are testnet tokens with no market value.</T>
     </View>
     <View style={{ gap: 2 }}>
       <LinkRow icon={<Atom color={C.accent} size={18} />} title="Quantum lock" value={migrated ? 'Native ML-DSA key on' : '2 locks · ed25519 + ML-DSA-65'} onPress={() => go('security')} />
@@ -285,6 +287,13 @@ function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
     </View>
     <WalletsSheet open={wallets} close={() => setWallets(false)} wallet={vault.wallet} balance={live?.amount ?? null} />
   </Screen>;
+}
+/** Deterministic magenta/violet/indigo gradient avatar seeded from the account name (no people). */
+const AV = [['#E040C8', '#7A1F6C'], ['#A855F7', '#4C1D95'], ['#6366F1', '#312E81'], ['#D946EF', '#4338CA'], ['#C026D3', '#1E1B4B'], ['#8B5CF6', '#BE185D']];
+function Avatar({ name, size = 84, ring }: { name: string; size?: number; ring?: boolean }) {
+  let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0; const [a, b] = AV[h % AV.length];
+  return <LinearGradient colors={[a, b]} start={{ x: (h % 7) / 7, y: 0 }} end={{ x: 1 - (h % 5) / 5, y: 1 }} style={{ width: size, height: size, borderRadius: size / 2, alignItems: 'center', justifyContent: 'center', borderWidth: ring ? 3 : 0, borderColor: '#fff' }}>
+    <T style={{ fontSize: size * 0.42, fontWeight: '800', color: '#fff' }}>{name[0]?.toUpperCase()}</T></LinearGradient>;
 }
 const TokenRow = ({ logo, badge, name, sub, right, zero, onPress }: any) => <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} accessibilityRole="button" accessibilityLabel={`${name}, ${sub}`}
   style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 64, opacity: pressed ? 0.7 : 1 })}>
@@ -302,7 +311,7 @@ function WalletsSheet({ open: on, close, wallet, balance }: { open: boolean; clo
   const DEMO = 'magen-noam.testnet'; const [demo, setDemo] = useState<bigint | null>(null);
   useEffect(() => { if (on) readAccount(DEMO).then((a: any) => setDemo(a ? BigInt(a.amount) : null)).catch(() => {}); }, [on]);
   const W = ({ name, bal, me, note }: any) => <View style={{ width: '33%', alignItems: 'center', gap: 6, paddingVertical: 8 }}>
-    <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: me ? '#3A1033' : C.s2, borderWidth: me ? 3 : 1, borderColor: me ? C.accent : C.line2, alignItems: 'center', justifyContent: 'center' }}><Logo size={34} /></View>
+    <Avatar name={name} size={72} ring={me} />
     <T style={{ fontWeight: '600', fontSize: 13.5 }} numberOfLines={1}>{name.replace('.testnet', '')}</T><T style={{ color: C.text2, fontSize: 13 }}>{bal === null ? '…' : `${near(bal, 2)} NEAR`}{note ? ` · ${note}` : ''}</T></View>;
   return <Modal transparent visible={on} animationType="slide" onRequestClose={close}>
     <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,6,8,0.6)' }} onPress={close} accessibilityLabel="Close" />
@@ -372,14 +381,14 @@ function SendTab({ vault, live, refresh, go, prefill, addLocal, acts }: P & { pr
     action={stage === 'done' ? <Btn title="New payment" kind="ghost" onPress={() => { setStage('form'); setRes(null); setAmt(''); }} />
       : <Btn title={stage === 'signing' ? 'Signing with both keys…' : stage === 'sending' ? 'NEAR is checking both…' : 'Review send'} icon={<ShieldSend size={22} />} busy={stage !== 'form'} disabled={!to || !amt} onPress={send} />}>
     <View><Back sheet go={go} title="Send" />
-      {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" hitSlop={8} style={{ position: 'absolute', left: 0, top: 10, height: 40, justifyContent: 'center' }}><ScanLine color={C.text} size={21} /></Pressable>}
     </View>
     {scanned && <View style={[styles.banner, { backgroundColor: C.accentSoft, borderColor: C.accentLine, alignItems: 'center' }]}><ScanLine color={C.accent} size={18} />
       <View style={{ flex: 1 }}><T style={{ fontWeight: '600' }}>{from!.request ? 'From a Magen pay request' : 'From a scanned code'}</T>
         {!!from!.memo && <T style={{ color: C.text2, fontSize: 13, marginTop: 2 }} numberOfLines={2}>Memo: {from!.memo} (not sent on chain)</T>}</View></View>}
     <Card style={{ padding: 18, gap: 12 }}>
       <T s="label">To</T>
-      <TextInput selectionColor="#E040C8" style={styles.input} placeholder="bob.testnet" placeholderTextColor={C.text3} value={to} onChangeText={t => { setTo(t); setErr(''); }} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} accessibilityLabel="Send to" />
+      <View><TextInput selectionColor="#E040C8" style={[styles.input, { paddingRight: 50 }]} placeholder="name.testnet" placeholderTextColor="rgba(255,255,255,0.32)" value={to} onChangeText={t => { setTo(t); setErr(''); }} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} accessibilityLabel="Send to" />
+        {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" hitSlop={8} style={{ position: 'absolute', right: 16, top: 0, bottom: 0, justifyContent: 'center' }}><ScanLine color={C.accentText} size={20} /></Pressable>}</View>
       {stage === 'form' && recent.length > 0 && <View style={{ gap: 2 }}><T style={{ color: C.text2, fontSize: 13 }}>Recent</T>
         {recent.map(r => <Pressable key={r} onPress={() => { Haptics.selectionAsync(); setTo(r); setErr(''); }} accessibilityRole="button" style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 10, height: 44, opacity: pressed ? 0.7 : 1 })}>
           <View style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: C.accentSoft, alignItems: 'center', justifyContent: 'center' }}><T style={{ color: C.accentText, fontWeight: '700' }}>{r[0].toUpperCase()}</T></View>
