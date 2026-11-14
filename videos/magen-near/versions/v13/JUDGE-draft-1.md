@@ -1,0 +1,2 @@
+# Draft 1: 8.1/10 — do not publish
+Reviewed every second (104 frames) in five 960px contact sheets. All six real approvals and matching successful NearValidate receipts are present, with landing first and no overlays/captions. Two defects: Q-Day narration overlaps the closing voice because the intended 5s key-proof insert was unavailable; the short post-receipt Q-Day shot is still waiting for the chain-view refresh. Replace that insert with the later confirmed app state and extend the chapter. Mobile-web background overflow also needs correction before shipping.

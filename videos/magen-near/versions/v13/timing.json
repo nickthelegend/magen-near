@@ -1,0 +1,42 @@
+[
+  {
+    "id": "landing",
+    "text": "Your NEAR account. A second lock for what comes next.",
+    "speech": 3.4346666666666668
+  },
+  {
+    "id": "upgrade",
+    "text": "Keep your account name. Keep your balance. Magen adds a classical and a post quantum lock. Before broadcast, review the network, account, method and fees, then approve. The explorer records the upgrade: contract deployed, old access replaced. One account, two checks on every payment.",
+    "speech": 15.573333333333334
+  },
+  {
+    "id": "send",
+    "text": "Send a small payment. The approval window shows exactly what you authorize. Magen signs the same payment with both keys, and the wallet contract checks both. Here is that transaction on the explorer. A confirmed transfer, with a receipt you can inspect.",
+    "speech": 14.272
+  },
+  {
+    "id": "chains",
+    "text": "Your account can also request NEAR Chain Signatures for Ethereum, Bitcoin, Solana and Cosmos. Both Magen signatures must pass first. Approve this cross chain request, then inspect its NEAR receipt. This is a signature request, not a funded transfer on another chain. Those chains and the MPC network remain classical.",
+    "speech": 18.538666666666668
+  },
+  {
+    "id": "private",
+    "text": "Private send pays a fresh one time address belonging to the recipient. Review the amount, destination and gas, then approve. The explorer confirms the payment. It conceals the link to the recipient's main account. The sender, amount and timing are still public.",
+    "speech": 14.506666666666666
+  },
+  {
+    "id": "recovery",
+    "text": "Lose the device, and two of three guardians can restore the wallet's locks. Two guardian kits authorize fresh keys. Review the recovery, approve it, and inspect the recover method on the explorer. Funds stay in the account. The old device no longer controls these contract locks.",
+    "speech": 15.488
+  },
+  {
+    "id": "qday",
+    "text": "Finally, the Q Day switch. Approve adding a native post quantum full access key. This changes the control model: the quantum key can now act alone, including changing the contract. The explorer shows the successful execute call. The account now lists its native quantum key.",
+    "speech": 15.829333333333333
+  },
+  {
+    "id": "close",
+    "text": "A familiar wallet, with a second lock. Built on near testnet. Preview software, not audited.",
+    "speech": 5.866666666666666
+  }
+]

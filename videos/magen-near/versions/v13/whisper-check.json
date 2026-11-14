@@ -1,0 +1,50 @@
+[
+  {
+    "id": "landing",
+    "expected": "Your NEAR account. A second lock for what comes next.",
+    "transcript": "Your near account, a second lock for what comes next.",
+    "similarity": 1.0
+  },
+  {
+    "id": "upgrade",
+    "expected": "Keep your account name. Keep your balance. Magen adds a classical and a post quantum lock. Before broadcast, review the network, account, method and fees, then approve. The explorer records the upgrade: contract deployed, old access replaced. One account, two checks on every payment.",
+    "transcript": "Keep your account name, keep your balance. MayGen adds a classical and a post-quantum lock. Before broadcast, review the network, account, method, and fees then approve. The Explorer records the upgrade. Contract deployed, old access replaced. One account, two checks on every payment.",
+    "similarity": 0.943
+  },
+  {
+    "id": "send",
+    "expected": "Send a small payment. The approval window shows exactly what you authorize. Magen signs the same payment with both keys, and the wallet contract checks both. Here is that transaction on the explorer. A confirmed transfer, with a receipt you can inspect.",
+    "transcript": "Send a small payment. The approval window shows exactly what you authorize. Magen signs the same payment with both keys and the wallet contract checks both. Here is that transaction on the Explorer. A confirmed transfer with a receipt you can inspect.",
+    "similarity": 1.0
+  },
+  {
+    "id": "chains",
+    "expected": "Your account can also request NEAR Chain Signatures for Ethereum, Bitcoin, Solana and Cosmos. Both Magen signatures must pass first. Approve this cross chain request, then inspect its NEAR receipt. This is a signature request, not a funded transfer on another chain. Those chains and the MPC network remain classical.",
+    "transcript": "Your account can also request near-chain signatures for Ethereum, Bitcoin, Solana, and Cosmos. Both Magen signatures must pass first. Approve this cross-chain request, then inspect its near-receipt. This is a signature request, not a funded transfer on another chain. Those chains and the MPC network remain classical.",
+    "similarity": 0.907
+  },
+  {
+    "id": "private",
+    "expected": "Private send pays a fresh one time address belonging to the recipient. Review the amount, destination and gas, then approve. The explorer confirms the payment. It conceals the link to the recipient's main account. The sender, amount and timing are still public.",
+    "transcript": "Private Send pays a fresh one-time address belonging to the recipient. Review the amount, destination, and gas then approve. The Explorer confirms the payment. It conceals the link to the recipient's main account. The sender, amount, and timing are still public.",
+    "similarity": 0.964
+  },
+  {
+    "id": "recovery",
+    "expected": "Lose the device, and two of three guardians can restore the wallet's locks. Two guardian kits authorize fresh keys. Review the recovery, approve it, and inspect the recover method on the explorer. Funds stay in the account. The old device no longer controls these contract locks.",
+    "transcript": "Lose the device and two of three guardians can restore the wallet's locks. Two guardian kits authorize fresh keys, review the recovery, approve it, and inspect the recover method on the Explorer. Funds stay in the account. The old device no longer controls these contract locks.",
+    "similarity": 1.0
+  },
+  {
+    "id": "qday",
+    "expected": "Finally, the Q Day switch. Approve adding a native post quantum full access key. This changes the control model: the quantum key can now act alone, including changing the contract. The explorer shows the successful execute call. The account now lists its native quantum key.",
+    "transcript": "Finally, the Q-Day switch. Approve adding a native post quantum full access key. This changes the control model. The quantum key can now act alone, including changing the contract. The Explorer shows the successful execute call. The account now lists its native quantum key.",
+    "similarity": 0.966
+  },
+  {
+    "id": "close",
+    "expected": "A familiar wallet, with a second lock. Built on near testnet. Preview software, not audited.",
+    "transcript": "A familiar wallet with a second lock, built on near testnet, preview software not audited.",
+    "similarity": 1.0
+  }
+]

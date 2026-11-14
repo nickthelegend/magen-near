@@ -1,0 +1,77 @@
+[
+  {
+    "id": "landing",
+    "start": 0,
+    "duration": 3.6,
+    "clips": [
+      "landing.mp4"
+    ]
+  },
+  {
+    "id": "upgrade",
+    "start": 3.6,
+    "duration": 16.0,
+    "clips": [
+      "upgrade-approve.mp4",
+      "upgrade-receipt.mp4"
+    ]
+  },
+  {
+    "id": "send",
+    "start": 19.6,
+    "duration": 14.8,
+    "clips": [
+      "send-approve.mp4",
+      "send-receipt.mp4",
+      "send-result.mp4"
+    ]
+  },
+  {
+    "id": "chains",
+    "start": 34.4,
+    "duration": 19.1,
+    "clips": [
+      "chains-approve.mp4",
+      "chains-receipt.mp4",
+      "chains-result.mp4"
+    ]
+  },
+  {
+    "id": "private",
+    "start": 53.5,
+    "duration": 15.0,
+    "clips": [
+      "private-approve.mp4",
+      "private-receipt.mp4",
+      "private-result.mp4"
+    ]
+  },
+  {
+    "id": "recovery",
+    "start": 68.5,
+    "duration": 16.1,
+    "clips": [
+      "recovery-approve.mp4",
+      "recovery-receipt.mp4",
+      "recovery-result.mp4"
+    ]
+  },
+  {
+    "id": "qday",
+    "start": 84.6,
+    "duration": 13.0,
+    "clips": [
+      "qday-approve.mp4",
+      "qday-receipt.mp4",
+      "qday-result.mp4"
+    ]
+  },
+  {
+    "id": "close",
+    "start": 102.6,
+    "duration": 6.4,
+    "clips": [
+      "close.mp4"
+    ]
+  }
+]
