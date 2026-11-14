@@ -12,7 +12,7 @@ function Popup() {
   const [hash, setHash] = useState(location.hash);
   const { ready, vault, hasBackup, toast } = useWallet();
   useEffect(() => { const f = () => { setHash(location.hash); scrollTo(0, 0); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
-  useEffect(() => { if (ready && !location.hash) location.hash = vault ? '#/app' : hasBackup ? '#/start/unlock' : '#/start'; }, [ready]);
+  useEffect(() => { if (ready && !location.hash) location.hash = hasBackup && !vault ? '#/start/unlock' : '#/app'; }, [ready]);
   if (!ready) return null;
   const path = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   if (path[0] === 'start') return <Start key={hash} mode={(path[1] as any) ?? 'choose'} account={path[2] ?? ''} />;

@@ -1,8 +1,15 @@
 body.ext { width: 380px; min-height: 600px; }
 body.ext-approve { width: 100%; min-height: 100vh; }
-.ext .page { padding-bottom: 96px; }
-.ext .tabbar { position: fixed; }
+.ext .page { padding: 12px 14px 84px; gap: 14px; }
+.ext .mtop { padding: 10px 14px; }
 .ext .mtop .brand { font-size: 17px; }
+/* Popup: the tab bar docks flush to the bottom edge like a native popup, instead of floating over the balance card. */
+.ext .tabbar { position: fixed; left: 0; right: 0; bottom: 0; height: 62px; border-radius: 0; border: 0; border-top: 1px solid var(--line-2); background: rgba(10,11,14,.97); }
+.ext .tabbar a { width: 48px; height: 48px; }
+.ext .tabbar .fab { width: 44px; height: 44px; }
+/* Popup: the header already has Start, so the demo bar is one quiet line. */
+.ext .readonly-bar { padding: 8px 12px; font-size: 12.5px; gap: 10px; }
+.ext .readonly-bar .btn { display: none; }
 .approve { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
 .approve-top { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: var(--ink); color: var(--on-ink); }
 .approve-top .brand { color: #fff; font-size: 17px; } .approve-top .brand img { width: 26px; height: 26px; border-radius: 7px; }
@@ -21,3 +28,13 @@ body.ext-approve { width: 100%; min-height: 100vh; }
 .twice .lock-ico { background: rgba(255,255,255,.08); color: var(--on-ink); }
 .twice .lock-ico.pq { background: rgba(51,102,255,.22); color: #b9c8ff; }
 .approve-foot { position: sticky; bottom: 0; display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; padding: 14px 18px 18px; background: linear-gradient(transparent, var(--bg) 30%); }
+.ext .mtop .pill-gray { display: none; }
+/* Popup: a tighter balance card so the first 600 px shows the balance, the chains and whole asset bars. */
+.ext .w2h { gap: 14px; }
+.ext .w2h-card { padding: 18px 16px 16px; border-radius: 26px; }
+.ext .w2h-card .w2-bal b { font-size: 46px; } .ext .w2h-card .w2-bal b span { font-size: 24px; }
+.ext .w2h-card .w2-bal small { font-size: 13px; }
+.ext .w2h-card .w2-avs { margin: 10px 0 2px; gap: 6px; }
+.ext .w2h-card .w2-avs .clogo, .ext .w2h-card .w2-plus { width: 40px; height: 40px; }
+.ext .w2h-card .w2-row { margin-top: 9px; } .ext .w2h-card .w2-row-h { margin-bottom: 5px; }
+.ext .w2h-card .w2-bar { height: 42px; } .ext .w2h-card .w2-fill .clogo { width: 34px; height: 34px; }
