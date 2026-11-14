@@ -131,7 +131,7 @@ function Unlock({ back }: { back: () => void }) {
   return <>
     <button className="backstep" onClick={back}><ArrowLeft size={16} />Back</button>
     <div><h1>Welcome back.</h1><p className="lede" style={{ fontSize: 15.5 }}>Your keys are decrypted on this device only.</p></div>
-    {(!hasBackup || file) && <label className="choice" style={{ cursor: 'pointer' }}><span className="ci"><FileUp size={22} /></span><span><b>{file ? 'Backup file chosen' : 'Choose your backup file'}</b><small>magen-…-backup.json</small></span>
+    {<label className="choice" style={{ cursor: 'pointer' }}><span className="ci"><FileUp size={22} /></span><span><b>{file ? 'Backup file chosen' : 'Choose your backup file'}</b><small>magen-…-backup.json</small></span>
       <input type="file" accept="application/json,.json" className="sr" onChange={async e => { const f = e.target.files?.[0]; if (f) { try { setFile(JSON.parse(await f.text())); } catch { setErr('That file is not a Magen backup.'); } } }} /><span /></label>}
     <label className="field"><span>Password</span><input className="input" type="password" value={pw} onChange={e => setPw(e.target.value)} autoComplete="current-password" onKeyDown={e => e.key === 'Enter' && go()} /></label>
     {err && <p className="err" role="alert">{err}</p>}
