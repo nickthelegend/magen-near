@@ -20,3 +20,5 @@ videos/**/*.webm
 videos/**/*.wav
 videos/**/*.mov
 videos/**/frames/
+
+videos/magen-near/versions/*/work/

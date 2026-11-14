@@ -1,0 +1,24 @@
+[
+  {
+    "purpose": "Helper-funded recovery gas payer",
+    "hash": "357fSrYMCaouksTTufp5rQ5UcnHW2VJu1EkSNbb3ZspG",
+    "signer": "testnet",
+    "receiver": "magen-fee-mwfrh6b8.testnet",
+    "status": {
+      "SuccessValue": ""
+    },
+    "final": "FINAL",
+    "createdAccount": "magen-fee-mwfrh6b8.testnet"
+  },
+  {
+    "purpose": "Helper-funded disposable upgrade account",
+    "hash": "HTbdw3p4fAYNAediTwsWaW8DuaEnL5dPoJD4svLJvCT9",
+    "signer": "testnet",
+    "receiver": "magen-sign-mwfqr4m8.testnet",
+    "status": {
+      "SuccessValue": ""
+    },
+    "final": "FINAL",
+    "createdAccount": "magen-sign-mwfqr4m8.testnet"
+  }
+]
