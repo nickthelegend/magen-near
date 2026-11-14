@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowDownToLine, ArrowUpFromLine, ShieldAlert, ShieldCheck, Info, ExternalLink, Check, Loader2, KeyRound, Atom } from 'lucide-react';
 import { useWallet, feeSigner } from '../lib/store.tsx';
-import { friendlyError, near } from '../lib/chain.ts';
+import { friendlyError, near, txUrl } from '../lib/chain.ts';
 import { nearAmount } from '../../../sdk/index.ts';
 import { UTXO, OUT_ROUTES, depositAddress, bridgedBalance, outFee, bridgeOut, outStatus, splBalance, type UtxoChain, type OutRoute } from '../../../sdk/omni.ts';
 import { ReadOnlyBar, Spinner, TxLink } from '../ui/bits.tsx';
@@ -66,7 +66,7 @@ function BridgeIn({ initial }: { initial: UtxoChain }) {
           </div>
         </div>}
       {chain === 'zcash' && <div className="banner"><Info size={18} /><div><strong>Send from a transparent output.</strong>This is a t-address, so the deposit is public: bridging removes Zcash’s shielding.</div></div>}
-      {seen && seen.length > 0 ? <div className="steps">{seen.map(s => <a key={s.txid} className={`step ${s.minted || s.confirmed ? 'done' : 'active'}`} href={s.minted ? `https://testnet.nearblocks.io/txns/${s.minted}` : c.explorerTx(s.txid)} target="_blank" rel="noreferrer">{s.minted || s.confirmed ? <Check size={16} /> : <Loader2 size={16} className="spin" />}{s.value.toLocaleString()} sats · {s.minted ? `minted as ${c.symbol} on NEAR` : s.confirmed ? 'confirmed, waiting for the relayer' : 'seen, confirming'}<ExternalLink size={14} style={{ marginLeft: 'auto' }} /></a>)}</div>
+      {seen && seen.length > 0 ? <div className="steps">{seen.map(s => <a key={s.txid} className={`step ${s.minted || s.confirmed ? 'done' : 'active'}`} href={s.minted ? txUrl(s.minted) : c.explorerTx(s.txid)} target="_blank" rel="noreferrer">{s.minted || s.confirmed ? <Check size={16} /> : <Loader2 size={16} className="spin" />}{s.value.toLocaleString()} sats · {s.minted ? `minted as ${c.symbol} on NEAR` : s.confirmed ? 'confirmed, waiting for the relayer' : 'seen, confirming'}<ExternalLink size={14} style={{ marginLeft: 'auto' }} /></a>)}</div>
         : <div className="banner banner-gray"><Info size={18} /><div><strong>Fund to try.</strong>Nothing has arrived yet. Send at least {d ? d.minDeposit.toLocaleString() : '…'} {c.unit} from any {c.name} testnet wallet.</div></div>}
     </section>
     <aside className="card">
