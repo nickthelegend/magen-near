@@ -94,6 +94,10 @@ export function Landing() {
         <Item className="q-arrow"><ArrowRight size={26} /></Item>
         <Item className="q-lock"><Mark size={46} /><b>Magen lock</b><small>ML-DSA-65 · NIST FIPS 204 (Aug 2024)</small><span className="q-ok">Verified on NEAR before any chain is signed</span></Item>
       </Stagger>
+      <div className="q-vs">
+        <div className="q-vs-col"><b>A typical wallet (MetaMask, Phantom)</b><span>One classical key per chain</span><span>No quantum-safe signature anywhere</span><span>Lose the key, lose the wallet</span></div>
+        <div className="q-vs-col on"><b>Magen</b><span>Two locks on every action: ed25519 + ML-DSA-65, both checked on NEAR</span><span>Bitcoin, Ethereum, Solana signatures come from NEAR Chain Signatures only after both pass</span><span>2-of-3 quantum-safe guardians and a Q-Day switch to a native ML-DSA-65 key</span></div>
+      </div>
       <p className="q-src">Sources: <a href="https://csrc.nist.gov/pubs/fips/204/final" target="_blank" rel="noreferrer">NIST FIPS 204, Module-Lattice-Based Digital Signature Standard (Aug 13, 2024)</a> · <a href="https://arxiv.org/abs/quant-ph/9508027" target="_blank" rel="noreferrer">P. Shor, polynomial-time algorithms for discrete logarithms (1994/1995)</a>. No date for a large quantum computer is claimed here.</p>
     </Reveal></section>
 
