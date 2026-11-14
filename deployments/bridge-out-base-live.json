@@ -1,0 +1,15 @@
+{
+  "network": "NEAR testnet -> Base Sepolia (Omni Bridge)",
+  "wallet": "tovmagen.testnet",
+  "at": "2026-11-14T20:04Z",
+  "amount_near": "0.5",
+  "omni_fee_wnear": "0.0032",
+  "recipient": "0x3d839b64cc5c1df42819dbce6cc28d5c93a23813 (the wallet's NEAR Chain Signatures EVM address)",
+  "near_tx_signed_by_omni": "3fh3nD9typSok2hA6K85CRzy3egjCe99VRd3c5SyVw5b",
+  "base_finalise_tx": "0x3aee1f45c264db39646cd24a4a7cf4c9d78c2ea731ac7a7fe59d26dd24b1cf19",
+  "base_status": "0x1, block 58824136",
+  "wnear_token_on_base": "0xb8cae3ea035ab123c1833258835ef270c9934162",
+  "recipient_wnear_balance_after": "0.496774 (18 decimals)",
+  "explorer": "https://sepolia.basescan.org/tx/0x3aee1f45c264db39646cd24a4a7cf4c9d78c2ea731ac7a7fe59d26dd24b1cf19",
+  "filmed": "v17 take P3a: approval on the iPhone, dual-signed batch on NEAR, Omni relayer finalised on Base within seconds"
+}
