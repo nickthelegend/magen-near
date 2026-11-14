@@ -30,6 +30,9 @@ const PROOFS = [
   { what: 'Bitcoin testnet deposit minted as nBTC by Omni Bridge', tx: '3ozwi6xYKwSXFWDhbQbANDNWg1YH2rt9XzGSLqbrrj66', expect: 'success' },
   { what: 'Swap NEAR -> USDT on Ref Finance (4 calls, one dual-signed approval)', tx: '244z9RSELiRdQmhvDmV7sxBS3vMw6zNGE8xavcfGQTVi', expect: 'success' },
   { what: 'Bridge out NEAR -> Solana devnet via Omni Bridge (dual-signed)', tx: '7zHBYKkdvHn5umWv3eAVZgiww3FN7NSRmoqaCx7U66at', expect: 'success' },
+  { what: 'Film v17 (tovmagen.testnet, created on camera): dual-signed Chain Signatures request for an Ethereum send', tx: 'DTF3hnGkvjp8VoRZRBNANjihByvVNwadigX24uBJm8Sz', expect: 'mpc' },
+  { what: 'Film v17 "Test my quantum lock": same request without the ML-DSA half, refused on chain', tx: 'EhaTuYufMuox5DSa8QmKNq5LRBZQ5qYcXcFeaWFoHufs', expect: 'refused', reason: 'quantum half missing' },
+  { what: 'Film v17: Q-Day switch on tovmagen.testnet (dual-signed)', tx: 'E8kQL4Yy6JyeXezxKaCqcEkwRgEgX31r25qtxYwksHWG', expect: 'success' },
 ];
 const SEPOLIA = { what: 'Ethereum Sepolia tx broadcast with that MPC signature, from the NEAR-derived address', hash: '0xd8cee16543ec97decb4370d601d3d7e01d0e74dbc11b1132139ec2980a1092c0', from: '0xf06d7f1851db534a680e6e856697cbbd4557a38b' };
 
@@ -65,6 +68,10 @@ for (const p of PROOFS) {
 const rc = await evm('eth_getTransactionReceipt', [SEPOLIA.hash]).catch(e => ({ error: e.message }));
 check(!!rc && rc.status === '0x1' && rc.from?.toLowerCase() === SEPOLIA.from, SEPOLIA.what,
   rc?.error ? rc.error : `status ${rc?.status}, from ${rc?.from}, block ${rc ? parseInt(rc.blockNumber, 16) : '?'} · https://sepolia.etherscan.io/tx/${SEPOLIA.hash}`);
+
+const rc2 = await evm('eth_getTransactionReceipt', ['0x0fcbf15d9e00a44ef61e66f0ff63bef01e797ee033c6c9081abdb168c600f1c1']).catch(e => ({ error: e.message }));
+check(rc2?.status === '0x1' && rc2.from?.toLowerCase() === '0x3d839b64cc5c1df42819dbce6cc28d5c93a23813', 'Film v17: that MPC signature broadcast on Ethereum Sepolia from tovmagen\'s NEAR-derived address',
+  rc2?.error ?? `status ${rc2?.status}, from ${rc2?.from} · https://sepolia.etherscan.io/tx/0x0fcbf15d9e00a44ef61e66f0ff63bef01e797ee033c6c9081abdb168c600f1c1`);
 
 // 3b. Omni Bridge NEAR -> Base Sepolia, paid to the wallet's Chain Signatures EVM address (deployments/bridge-out-base-live.json).
 const BASE_RPC = 'https://sepolia.base.org';
