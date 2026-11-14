@@ -46,8 +46,8 @@ export function ReadOnlyBar() {
   if (!readOnly) return null;
   return <div className="readonly-bar">
     <span className="pill pill-gray">View only</span>
-    <span className="grow">You’re looking at a live demo account on NEAR testnet. Signing needs your own keys.</span>
-    <a className="btn btn-dark btn-sm" href="#/start">{hasBackup ? 'Unlock my wallet' : 'Upgrade my account'}</a>
+    <span className="grow">Live demo account on NEAR testnet</span>
+    <a className="btn btn-primary btn-sm" href="#/start">{hasBackup ? 'Unlock' : 'Create wallet'}</a>
   </div>;
 }
 

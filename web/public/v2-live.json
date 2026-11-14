@@ -1,0 +1,59 @@
+{
+  "network": "testnet",
+  "runs": [
+    {
+      "at": "2026-11-14T09:49:39.782Z",
+      "what": "create+upgrade (magen-3)",
+      "account": "magen-noam.testnet",
+      "hash": "Ft5DmFH577e8LsuLk1EQ6CnsvRNFo4FosEJzeoqBBxhj",
+      "success": true,
+      "error": "",
+      "version": "magen-3"
+    },
+    {
+      "at": "2026-11-14T09:49:49.017Z",
+      "what": "swap 1.00 NEAR \u2192 USDT on Ref",
+      "account": "magen-noam.testnet",
+      "hash": "ELcKc37Hvi9sFm7UaU9kegDQwbSJGfL9zu7LmQ31ErB2",
+      "success": true,
+      "error": "",
+      "quote": "1240950393659597635279906",
+      "received": "1240950393659597635279906",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=0 dual_verified=true",
+        "Deposit 1000000000000000000000000 NEAR to magen-noam.testnet",
+        "Transfer 1000000000000000000000000 from magen-noam.testnet to ref-finance-101.testnet",
+        "Swapped 1000000000000000000000000 wrap.testnet for 1240950393659597635279906 usdt.itachicara.testnet",
+        "Exchange ref-finance-101.testnet got 872184227515972938 shares, No referral fee",
+        "EVENT_JSON:{\"standard\":\"nep141\",\"version\":\"1.0.0\",\"event\":\"ft_transfer\",\"data\":[{\"old_owner_id\":\"ref-finance-101.testnet\",\"new_owner_id\":\"magen-noam.testnet\",\"amount\":\"1240950393659597635279906\"}]}",
+        "MAGEN_SETTLED nonce=0 success=true migration=false"
+      ]
+    },
+    {
+      "at": "2026-11-14T09:51:21.761Z",
+      "what": "bridge out 0.50 NEAR \u2192 Solana devnet",
+      "account": "magen-noam.testnet",
+      "to": "FQKsk3pF97FEWwNvgQ9xzHPYPxvW2RsFJgfovHpdryoD",
+      "hash": "5dxk6cxTnad8Mfk73PsCZuJcQ2iZVCuaHzMZnLGpgqwD",
+      "success": true,
+      "error": "",
+      "fee": "60625170900900403740672",
+      "originNonce": "20249",
+      "logs": [
+        "MAGEN_AUTHORIZED nonce=1 dual_verified=true",
+        "The account is already registered, refunding the deposit",
+        "Deposit 500000000000000000000000 NEAR to magen-noam.testnet",
+        "Transfer 500000000000000000000000 from magen-noam.testnet to omni.n-bridge.testnet",
+        "{\"InitTransferEvent\":{\"transfer_message\":{\"origin_nonce\":20249,\"token\":\"near:wrap.testnet\",\"amount\":\"500000000000000000000000\",\"recipient\":\"sol:FQKsk3pF97FEWwNvgQ9xzHPYPxvW2RsFJgfovHpdryoD\",\"fee\":{\"fee\":\"60625170900900403740672\",\"native_fee\":\"0\"},\"sender\":\"near:magen-noam.testnet\",\"msg\":\"\",\"destination_nonce\":14120,\"origin_transfer_id\":null}}}",
+        "MAGEN_SETTLED nonce=1 success=true migration=false"
+      ],
+      "destination": {
+        "chain": "solana-devnet",
+        "status": "Finalised",
+        "tx": "36sFjHTNed9NuTtrgHNqUVQiNiCqDKnitcU8JUTaTR17GynqTPQZGgWfe4rGRZAf9crd8U7AR1mt5LTwCJoAeRyb",
+        "explorer": "https://explorer.solana.com/tx/36sFjHTNed9NuTtrgHNqUVQiNiCqDKnitcU8JUTaTR17GynqTPQZGgWfe4rGRZAf9crd8U7AR1mt5LTwCJoAeRyb?cluster=devnet",
+        "seconds_after_init": 13
+      }
+    }
+  ]
+}

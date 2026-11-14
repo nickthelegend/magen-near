@@ -1,0 +1,106 @@
+{
+  "account": "magen-noam.testnet",
+  "pqHandle": "ml-dsa-65-hash:93oHXGMxuLpkHDzkk7NMM1JZbZDZT24mH54xQRTNdnQ1",
+  "feePqHandle": "ml-dsa-65-hash:2WRh7cVdeCMSREmm7uF8tQjvsMkW6q2qNf9hnr4gL8Tx",
+  "chains": [
+    {
+      "id": "near",
+      "name": "NEAR",
+      "symbol": "NEAR",
+      "network": "testnet",
+      "path": "m/44'/397'/0'",
+      "scheme": "ed25519",
+      "address": "78f5232484abcd626be176246edf653fd5d7422dbb77a635f3c4a1eecc83669e"
+    },
+    {
+      "id": "bitcoin",
+      "name": "Bitcoin",
+      "symbol": "tBTC",
+      "network": "testnet3",
+      "path": "m/84'/1'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "tb1qvlzlv04v3jtspc3w92ejp0qzte39ax24tfyvk2"
+    },
+    {
+      "id": "ethereum",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "network": "sepolia",
+      "path": "m/44'/60'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "0x75a2Af49afa32c7046be5d09737892C006EBf232"
+    },
+    {
+      "id": "base",
+      "name": "Base",
+      "symbol": "ETH",
+      "network": "base-sepolia",
+      "path": "m/44'/60'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "0x75a2Af49afa32c7046be5d09737892C006EBf232"
+    },
+    {
+      "id": "arbitrum",
+      "name": "Arbitrum",
+      "symbol": "ETH",
+      "network": "arbitrum-sepolia",
+      "path": "m/44'/60'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "0x75a2Af49afa32c7046be5d09737892C006EBf232"
+    },
+    {
+      "id": "avalanche",
+      "name": "Avalanche C-Chain",
+      "symbol": "AVAX",
+      "network": "fuji",
+      "path": "m/44'/60'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "0x75a2Af49afa32c7046be5d09737892C006EBf232"
+    },
+    {
+      "id": "solana",
+      "name": "Solana",
+      "symbol": "SOL",
+      "network": "devnet",
+      "path": "m/44'/501'/0'/0'",
+      "scheme": "ed25519",
+      "address": "FQKsk3pF97FEWwNvgQ9xzHPYPxvW2RsFJgfovHpdryoD"
+    },
+    {
+      "id": "cosmos",
+      "name": "Cosmos Hub",
+      "symbol": "ATOM",
+      "network": "ics-testnet-provider",
+      "path": "m/44'/118'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "cosmos10tsl7tdjg37836eavtxszaghpkl7peyfqh3v6x"
+    },
+    {
+      "id": "zcash",
+      "name": "Zcash (transparent)",
+      "symbol": "TAZ",
+      "network": "testnet",
+      "path": "m/44'/1'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "tmACiqG6DkomK8fucYnmBMoz7pYzGZqS5V9"
+    },
+    {
+      "id": "litecoin",
+      "name": "Litecoin",
+      "symbol": "tLTC",
+      "network": "testnet",
+      "path": "m/84'/1'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "tltc1qvlzlv04v3jtspc3w92ejp0qzte39ax24jpxjxr"
+    },
+    {
+      "id": "dogecoin",
+      "name": "Dogecoin",
+      "symbol": "tDOGE",
+      "network": "testnet",
+      "path": "m/44'/1'/0'/0/0",
+      "scheme": "secp256k1",
+      "address": "nUgXmMsEdCqDomR4i3HLAVyM5upxeDw3dW"
+    }
+  ]
+}

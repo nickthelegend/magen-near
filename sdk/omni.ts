@@ -90,3 +90,13 @@ export async function depositAddress(chain: UtxoChain, account: string) {
   return { address: onChain, registered: !!r.address, minDeposit: BigInt(cfg.min_deposit_amount ?? 0), confirmations: cfg.confirmations_strategy, feeMin: BigInt(cfg.deposit_bridge_fee?.fee_min ?? 0) };
 }
 export const bridgedBalance = async (chain: UtxoChain, account: string) => BigInt(await view(UTXO[chain].token, 'ft_balance_of', { account_id: account }));
+
+/** SPL token balance (e.g. bridged wNEAR) at a Solana devnet address, read live. */
+export async function splBalance(owner: string, mint = WNEAR_SOL_MINT) {
+  const r = await fetch('https://api.devnet.solana.com', { method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(12000),
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'getTokenAccountsByOwner', params: [owner, { mint }, { encoding: 'jsonParsed' }] }) });
+  const j = await r.json(); if (j.error) throw Error('Solana devnet RPC: ' + j.error.message);
+  let raw = 0n, decimals = 9;
+  for (const a of j.result.value) { const t = a.account.data.parsed.info.tokenAmount; raw += BigInt(t.amount); decimals = t.decimals; }
+  return { amount: raw, decimals };
+}

@@ -1,76 +1,75 @@
 import type { ReactNode } from 'react';
-import { LayoutGrid, ArrowUpRight, ArrowDownLeft, History, ShieldCheck, Power, Crosshair, Lock, LockOpen, ChevronRight, Home, Network, EyeOff, Repeat } from 'lucide-react';
+import { Home, ArrowUpRight, ArrowDownLeft, History, ShieldCheck, Power, Crosshair, Lock, LockOpen, ChevronRight, Layers, EyeOff, Repeat, Globe } from 'lucide-react';
 import { useWallet, DEMO } from '../lib/store.tsx';
 import { short } from '../lib/chain.ts';
+import { Brand, Mark } from '../ui/Logo.tsx';
 
 const NAV = [
-  { to: '', label: 'Overview', icon: LayoutGrid },
+  { to: '', label: 'Home', icon: Home },
+  { to: 'chains', label: 'All chains', icon: Layers },
   { to: 'send', label: 'Send', icon: ArrowUpRight },
   { to: 'receive', label: 'Receive', icon: ArrowDownLeft },
-  { to: 'activity', label: 'Activity', icon: History },
-  { to: 'chains', label: 'Chains', icon: Network },
+  { to: 'swap', label: 'Swap', icon: Repeat },
+  { to: 'bridge', label: 'Bridge', icon: Globe },
   { to: 'private', label: 'Private send', icon: EyeOff },
-  { to: 'swap', label: 'Swap & bridge', icon: Repeat },
+  { to: 'activity', label: 'Activity', icon: History },
 ];
 const PROTECT = [
-  { to: 'security', label: 'Keys & security', icon: ShieldCheck },
+  { to: 'security', label: 'Keys & guardians', icon: ShieldCheck },
   { to: 'qday', label: 'Q-Day switch', icon: Power },
-  { to: 'drill', label: 'Key-recovery drill', icon: Crosshair },
+  { to: 'drill', label: 'Steal-the-key drill', icon: Crosshair },
 ];
 const TABS = [
-  { to: '', label: 'Home', icon: Home }, { to: 'activity', label: 'Activity', icon: History }, { to: 'send', label: 'Send, signed twice', icon: ArrowUpRight },
-  { to: 'security', label: 'Keys and security', icon: ShieldCheck }, { to: 'drill', label: 'Key-recovery drill', icon: Crosshair },
+  { to: '', label: 'Home', icon: Home }, { to: 'chains', label: 'Chains', icon: Layers }, { to: 'send', label: 'Send', icon: ArrowUpRight },
+  { to: 'swap', label: 'Swap', icon: Repeat }, { to: 'security', label: 'Security', icon: ShieldCheck },
 ];
-/** Magen's quantum-shield mark: a lattice shield with a send arrow. */
-export const ShieldSend = ({ size = 26 }: { size?: number }) => <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
-  <path d="M16 3.5 26 7.2v7.6c0 6.3-4.2 11.2-10 13.7C10.2 26 6 21.1 6 14.8V7.2L16 3.5Z" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" />
-  <path d="M11 10v11M21 10v11M8.5 15.5h15" stroke="#fff" strokeOpacity=".45" strokeWidth="1.2" />
-  <path d="M12.5 19.5 19.5 12.5M14 12.5h5.5V18" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-</svg>;
-const TITLES: Record<string, string> = { chains: 'Chains', private: 'Private send', swap: 'Swap & bridge', '': 'Overview', send: 'Send', receive: 'Receive', activity: 'Activity', security: 'Keys & security', qday: 'Q-Day switch', drill: 'Key-recovery drill' };
+export const TITLES: Record<string, string> = { '': 'Home', chains: 'All chains', send: 'Send', receive: 'Receive', swap: 'Swap', bridge: 'Bridge', private: 'Private send', activity: 'Activity', security: 'Keys & guardians', qday: 'Q-Day switch', drill: 'Steal-the-key drill' };
+
+/** Kept for older imports: the mark as the send-tab icon. */
+export const ShieldSend = ({ size = 26 }: { size?: number }) => <Mark size={size} glow={false} />;
 
 export function AppShell({ route, children }: { route: string; children: ReactNode }) {
   const { vault, account, live, lock, readOnly } = useWallet();
   const migrated = live?.status?.migrated;
-  const status = !live ? 'Loading…' : migrated ? 'Two locks + native PQ key' : live.status ? 'Two locks on' : 'Plain account';
+  const status = !live ? 'Loading…' : migrated ? 'Quantum-only key on' : live.status ? 'Two locks on' : 'Plain account';
   return <div className="app">
     <aside className="side">
-      <a className="brand" href="#/"><img src="/art/icon.webp" alt="" />magen</a>
+      <Brand />
       <a className="acct-switch" href={readOnly ? '#/start' : '#/app/security'}>
         <span className="avatar">{account[0].toUpperCase()}</span>
         <span className="who"><b>{readOnly ? DEMO.label : short(account, 18, 8)}</b><small>{readOnly ? short(account, 16, 8) : status}</small></span>
-        <ChevronRight size={16} />
+        <ChevronRight size={16} color="var(--text-3)" />
       </a>
       <nav className="side-nav">
         {NAV.map(n => <a key={n.to} href={`#/app${n.to ? '/' + n.to : ''}`} className={route === n.to ? 'on' : ''}><n.icon size={18} />{n.label}</a>)}
         <span className="side-label">Protection</span>
-        {PROTECT.map(n => <a key={n.to} href={`#/app/${n.to}`} className={route === n.to ? 'on' : ''}><n.icon size={18} />{n.label}{n.to === 'qday' && <span className={`badge pill ${migrated ? 'pill-blue' : 'pill-gray'}`}>{migrated ? 'On' : 'Off'}</span>}</a>)}
+        {PROTECT.map(n => <a key={n.to} href={`#/app/${n.to}`} className={route === n.to ? 'on' : ''}><n.icon size={18} />{n.label}{n.to === 'qday' && <span className={`badge pill ${migrated ? 'pill-green' : 'pill-gray'}`}>{migrated ? 'On' : 'Off'}</span>}</a>)}
       </nav>
       <div className="side-foot">
-        <span className="netline"><span className="dot" />NEAR testnet</span>
+        <span className="netline"><span className="live-dot" />NEAR testnet</span>
         {vault ? <button className="btn btn-light btn-sm" onClick={lock}><Lock size={15} /> Lock wallet</button>
-          : <a className="btn btn-dark btn-sm" href="#/start"><LockOpen size={15} /> Unlock or upgrade</a>}
+          : <a className="btn btn-primary btn-sm" href="#/start"><LockOpen size={15} /> Create or unlock</a>}
       </div>
     </aside>
     <div className="main">
       <header className="top"><h1>{TITLES[route] ?? ''}</h1>
         <div className="top-right">
-          <span className={`pill ${readOnly ? 'pill-gray' : 'pill-green'}`}><span className="dot" />{readOnly ? 'View only' : 'Unlocked'}</span>
-          <span className="pill pill-blue">{status}</span>
+          <span className={`pill ${readOnly ? 'pill-gray' : 'pill-green'}`}><span className="dot" />{readOnly ? 'Demo · view only' : 'Unlocked'}</span>
+          <span className="pill pill-green">{status}</span>
         </div>
       </header>
       <header className="mtop">
-        <a className="brand" href="#/"><img src="/art/icon.webp" alt="" />magen</a>
+        <Brand size={26} />
         <div className="mtop-right">
-          <span className={`pill ${readOnly ? 'pill-gray' : 'pill-green'}`}>{readOnly ? 'View only' : 'Unlocked'}</span>
+          <span className={`pill ${readOnly ? 'pill-gray' : 'pill-green'}`}>{readOnly ? 'Demo' : 'Unlocked'}</span>
           {vault ? <button className="btn btn-light btn-sm" aria-label="Lock wallet" onClick={lock} style={{ padding: '0 10px' }}><Lock size={15} /></button>
-            : <a className="btn btn-dark btn-sm" href="#/start">Unlock</a>}
+            : <a className="btn btn-primary btn-sm" href="#/start">Start</a>}
         </div>
       </header>
       <main className="page">{children}</main>
-      <nav className="tabbar" aria-label="Wallet" style={{ ['--i' as any]: Math.max(0, TABS.findIndex(t => t.to === route)) }} data-send={route === 'send' ? '1' : undefined}>
-        {TABS.map(t => <a key={t.to} href={`#/app${t.to ? '/' + t.to : ''}`} aria-label={t.label} aria-current={route === t.to ? 'page' : undefined} className={`${route === t.to ? 'on' : ''} ${t.to === 'send' ? 'tab-send' : ''}`}>
-          {t.to === 'send' ? <span className="fab"><ShieldSend /></span> : <t.icon size={22} strokeWidth={route === t.to ? 2 : 1.6} fill={route === t.to ? 'rgba(143,168,255,.35)' : 'none'} />}
+      <nav className="tabbar" aria-label="Wallet">
+        {TABS.map(t => <a key={t.to} href={`#/app${t.to ? '/' + t.to : ''}`} aria-label={t.label} aria-current={route === t.to ? 'page' : undefined} className={route === t.to ? 'on' : ''}>
+          {t.to === 'send' ? <span className="fab"><ArrowUpRight size={22} /></span> : <t.icon size={22} strokeWidth={route === t.to ? 2.1 : 1.6} />}
         </a>)}
       </nav>
     </div>

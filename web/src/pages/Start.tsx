@@ -1,39 +1,156 @@
-import { useState } from 'react';
-import { ArrowLeft, ArrowRight, ShieldCheck, Sparkles, LockOpen, ChevronRight, ShieldAlert, FileUp } from 'lucide-react';
-import { base64, keyString, random, sealVault } from '../../../sdk/index.ts';
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, ArrowRight, ShieldCheck, Sparkles, LockOpen, ChevronRight, ShieldAlert, FileUp, Eye, KeyRound, Atom, Check, RotateCcw } from 'lucide-react';
+import { base64, keyString, random, sealVault, view } from '../../../sdk/index.ts';
 import { precheckUpgrade, seedFromPhrase, seedFromPrivateKey, upgradeInPlace, edKeyString } from '../../../sdk/upgrade.ts';
 import { createWithHelper } from '../../../sdk/drillflow.ts';
+import { newMnemonic, validMnemonic, magenKeysFromMnemonic, deriveAll, nearKey } from '../../../sdk/hd.ts';
+import { publicKeys } from '../../../sdk/index.ts';
 import { useWallet, downloadJson } from '../lib/store.tsx';
-import { friendlyError, near } from '../lib/chain.ts';
+import { friendlyError, near, readAccount } from '../lib/chain.ts';
 import { Spinner, TxLink } from '../ui/bits.tsx';
+import { Brand, Mark } from '../ui/Logo.tsx';
+import { ChainLogo } from '../ui/chain.tsx';
+import { shortAddr } from '../lib/multi.ts';
 
-type Mode = 'choose' | 'upgrade' | 'create' | 'unlock';
+type Mode = 'choose' | 'create' | 'restore' | 'upgrade' | 'unlock';
 
 export function Start({ mode: initial = 'choose', account: preset = '' }: { mode?: Mode; account?: string }) {
   const { hasBackup } = useWallet();
   const [mode, setMode] = useState<Mode>(initial);
   return <div className="start">
     <aside className="start-art">
-      <a className="brand" href="#/"><img src="/art/icon.webp" alt="" />magen</a>
-      <img src="/art/hero.webp" alt="" />
-      <p>Your account keeps its name, balance and history. It gains a second lock that a quantum computer can’t pick, and NEAR checks both on every payment.</p>
+      <Brand />
+      <div style={{ display: 'grid', placeItems: 'center', flex: 1 }}><div style={{ filter: 'drop-shadow(0 0 60px rgba(108,240,194,.35))' }}><Mark size={220} /></div></div>
+      <p>One seed. Every chain. A quantum-safe key from day one.</p>
     </aside>
     <main className="start-main"><div className="start-box rise">
-      <a className="brand only-m" href="#/" style={{ color: 'var(--text)' }}><img src="/art/icon.webp" alt="" style={{ width: 28, height: 28, borderRadius: 8 }} />magen</a>
+      <span className="only-m"><Brand /></span>
       {mode === 'choose' && <>
-        <div><h1>Add the second lock.</h1><p className="lede" style={{ fontSize: 15.5 }}>NEAR testnet preview. Your keys are made and kept on this device.</p></div>
+        <div><h1>Welcome to Magen.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>NEAR testnet. Your keys are made and kept on this device.</p></div>
         <div className="choices">
-          <button className="choice primary" onClick={() => setMode('upgrade')}><span className="ci"><ShieldCheck size={22} /></span><span><b>Upgrade an account I have</b><small>Same name and balance. One transaction.</small></span><ChevronRight size={18} /></button>
-          <button className="choice" onClick={() => setMode('create')}><span className="ci"><Sparkles size={22} /></span><span><b>Start with a new testnet account</b><small>We create it with 10 test NEAR, then upgrade it.</small></span><ChevronRight size={18} /></button>
-          <button className="choice" onClick={() => setMode('unlock')}><span className="ci"><LockOpen size={22} /></span><span><b>{hasBackup ? 'Unlock my wallet' : 'Restore from a backup file'}</b><small>{hasBackup ? 'Your encrypted backup is on this device.' : 'Use the encrypted file Magen gave you.'}</small></span><ChevronRight size={18} /></button>
+          <button className="choice primary" onClick={() => setMode('create')}><span className="ci"><Sparkles size={22} /></span><span><b>Create a new wallet</b><small>12 words, every chain, a quantum-safe key.</small></span><ChevronRight size={18} /></button>
+          <button className="choice" onClick={() => setMode(hasBackup ? 'unlock' : 'restore')}><span className="ci"><LockOpen size={22} /></span><span><b>{hasBackup ? 'Unlock my wallet' : 'I have 12 words'}</b><small>{hasBackup ? 'Your encrypted wallet is on this device.' : 'Restore a Magen wallet.'}</small></span><ChevronRight size={18} /></button>
+          <button className="choice" onClick={() => setMode('upgrade')}><span className="ci"><ShieldCheck size={22} /></span><span><b>Upgrade a NEAR account</b><small>Keep its name and balance, add the second lock.</small></span><ChevronRight size={18} /></button>
         </div>
-        <a className="link" href="#/app">Just look around the demo wallet</a>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}><a className="link" href="#/app">Look around the demo wallet</a>{hasBackup && <button className="link" onClick={() => setMode('restore')}>Restore with 12 words</button>}{!hasBackup && <button className="link" onClick={() => setMode('unlock')}>Unlock a backup file</button>}</div>
       </>}
+      {mode === 'create' && <Create back={() => setMode('choose')} />}
+      {mode === 'restore' && <Restore back={() => setMode('choose')} />}
       {mode === 'upgrade' && <Upgrade preset={preset} back={() => setMode('choose')} />}
-      {mode === 'create' && <Upgrade create back={() => setMode('choose')} />}
       {mode === 'unlock' && <Unlock back={() => setMode('choose')} />}
     </div></main>
   </div>;
+}
+
+function Phrase({ words, hidden, onReveal }: { words: string[]; hidden: boolean; onReveal?: () => void }) {
+  return <div className={`phrase ${hidden ? 'hidden' : ''}`}>
+    {words.map((w, i) => <span key={i}><i>{i + 1}</i>{w}</span>)}
+    {hidden && <button className="phrase-cover" onClick={onReveal}><Eye size={22} />Tap to reveal<small className="card-sub">Make sure no one is watching</small></button>}
+  </div>;
+}
+
+function Create({ back }: { back: () => void }) {
+  const { adopt } = useWallet();
+  const [step, setStep] = useState(0);
+  const [name, setName] = useState('');
+  const [taken, setTaken] = useState<boolean | null>(null);
+  const [phrase] = useState(() => newMnemonic());
+  const words = phrase.split(' ');
+  const [hidden, setHidden] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [pw, setPw] = useState(''); const [pw2, setPw2] = useState('');
+  const [busy, setBusy] = useState(''); const [err, setErr] = useState('');
+  const [done, setDone] = useState<{ hash: string; account: string } | null>(null);
+  const derived = useMemo(() => step >= 2 ? deriveAll(phrase) : null, [step, phrase]);
+  const id = `${name}.testnet`;
+  useEffect(() => {
+    setTaken(null); if (!/^[a-z0-9][a-z0-9-]{2,30}$/.test(name)) return;
+    let on = true; const t = setTimeout(() => readAccount(id).then(a => on && setTaken(!!a)).catch(() => {}), 300);
+    return () => { on = false; clearTimeout(t); };
+  }, [name]);
+  const create = async () => {
+    setErr('');
+    try {
+      if (pw.length < 10) throw Error('Use a password of at least 10 characters.');
+      if (pw !== pw2) throw Error('The two passwords don’t match.');
+      const mk = magenKeysFromMnemonic(phrase); const n = nearKey(phrase);
+      setBusy(`Creating ${id} on NEAR testnet…`);
+      await createWithHelper(id, n.publicKey);
+      setBusy('Adding your two locks…');
+      const wasm = new Uint8Array(await (await fetch('/wallet.wasm')).arrayBuffer());
+      const up = await upgradeInPlace(id, n.seed, wasm, [n.publicKey], mk.keys.pq, undefined, 'ml-dsa', undefined, mk.feeSeed);
+      if (!up.result.success) throw Error(friendlyError(up.result.error));
+      setBusy('Encrypting your wallet on this device…');
+      await adopt({ wallet: id, keys: up.keys, relay: up.fee, mnemonic: phrase }, pw);
+      setDone({ hash: up.result.hash, account: id });
+    } catch (e: any) { setErr(friendlyError(String(e.message))); } finally { setBusy(''); }
+  };
+  if (done) return <>
+    <div className="result ok"><h3><ShieldCheck size={24} color="var(--mint)" />{done.account} is ready.</h3><p>Two locks on NEAR, an address on every chain, all from your 12 words.</p><TxLink hash={done.hash} label="View the creation transaction" /></div>
+    <a className="btn btn-primary btn-lg btn-block" href="#/app">Open my wallet <ArrowRight size={18} /></a>
+  </>;
+  return <>
+    <button className="backstep" onClick={() => step ? setStep(step - 1) : back()}><ArrowLeft size={16} />Back</button>
+    <div className="prog"><i style={{ width: `${(step + 1) * 25}%` }} /></div>
+    {step === 0 && <>
+      <div><h1>Pick a name.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>Your NEAR address. People send to it like an email.</p></div>
+      <label className="field"><span>Name</span><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><input className="input" value={name} onChange={e => setName(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))} placeholder="yourname" autoCapitalize="off" spellCheck={false} autoFocus /><b style={{ color: 'var(--text-3)' }}>.testnet</b></div>
+        <span className="hint">{!name ? '3–31 letters, numbers or hyphens.' : taken === null ? 'Checking…' : taken ? <span style={{ color: 'var(--red)' }}>Taken. Try another.</span> : <span style={{ color: 'var(--mint)' }}>Available</span>}</span></label>
+      <button className="btn btn-primary btn-lg btn-block" disabled={taken !== false} onClick={() => setStep(1)}>Continue <ArrowRight size={18} /></button>
+    </>}
+    {step === 1 && <>
+      <div><h1>Your 12 words.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>They are your wallet on every chain. Write them down, in order.</p></div>
+      <Phrase words={words} hidden={hidden} onReveal={() => setHidden(false)} />
+      <label className="check"><input type="checkbox" checked={saved} onChange={e => setSaved(e.target.checked)} disabled={hidden} />I wrote them down somewhere safe.</label>
+      <button className="btn btn-primary btn-lg btn-block" disabled={!saved} onClick={() => setStep(2)}>Continue <ArrowRight size={18} /></button>
+    </>}
+    {step === 2 && derived && <>
+      <div><h1>Every chain, ready.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>All from your words, made on this device.</p></div>
+      <div className="derive-list">
+        <div className="derive-row" style={{ borderColor: 'rgba(108,240,194,.35)' }}><span className="lock-ico pq" style={{ width: 26, height: 26, borderRadius: 8 }}><Atom size={15} /></span><b>Quantum-safe key</b><span className="mono" style={{ color: 'var(--mint)' }}>ML-DSA-65</span></div>
+        {derived.chains.map((c, i) => <div key={c.id} className="derive-row" style={{ animationDelay: `${(i + 1) * 70}ms` }}><ChainLogo id={c.id} size="sm" /><b>{c.name}</b><span className="mono">{c.id === 'near' ? id : shortAddr(c.address, 6)}</span></div>)}
+      </div>
+      <button className="btn btn-primary btn-lg btn-block" onClick={() => setStep(3)}>Continue <ArrowRight size={18} /></button>
+    </>}
+    {step === 3 && <>
+      <div><h1>Lock it on this device.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>Your words are encrypted with this password.</p></div>
+      <label className="field"><span>Password</span><input className="input" type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="At least 10 characters" autoComplete="new-password" /></label>
+      <label className="field"><span>Repeat password</span><input className="input" type="password" value={pw2} onChange={e => setPw2(e.target.value)} autoComplete="new-password" /></label>
+      <div className="txplan"><div>One transaction creates {id}</div><div><code>DeployContract</code>Magen wallet (magen-3)</div><div><code>new</code>Lock 1 ed25519 · Lock 2 ML-DSA-65</div><div><code>AddKey</code>ML-DSA fee key (execute only)</div></div>
+      {err && <p className="err" role="alert">{err}</p>}
+      <button className="btn btn-primary btn-lg btn-block" onClick={create} disabled={!pw || !!busy}>{busy ? <><Spinner />{busy}</> : <>Create wallet <ArrowRight size={18} /></>}</button>
+    </>}
+  </>;
+}
+
+function Restore({ back }: { back: () => void }) {
+  const { adopt } = useWallet();
+  const [phrase, setPhrase] = useState(''); const [account, setAccount] = useState('');
+  const [pw, setPw] = useState(''); const [busy, setBusy] = useState(false); const [err, setErr] = useState('');
+  const go = async () => {
+    setErr(''); setBusy(true);
+    try {
+      const p = phrase.trim().toLowerCase().split(/\s+/).join(' ');
+      if (!validMnemonic(p)) throw Error('Those words are not a valid recovery phrase.');
+      if (pw.length < 10) throw Error('Use a password of at least 10 characters.');
+      const id = account.trim().toLowerCase();
+      const mk = magenKeysFromMnemonic(p);
+      const s = await view(id).catch(() => { throw Error(`${id} is not a Magen wallet on NEAR testnet.`); });
+      const pk = publicKeys(mk.keys);
+      if (s.ed !== base64.encode(pk.ed) || s.pq !== base64.encode(pk.pq)) throw Error('These words don’t open that account.');
+      await adopt({ wallet: id, keys: mk.keys, relay: { account: id, seed: mk.feeSeed, pq: true }, mnemonic: p }, pw);
+      location.hash = '#/app';
+    } catch (e: any) { setErr(e.message); } finally { setBusy(false); }
+  };
+  return <>
+    <button className="backstep" onClick={back}><ArrowLeft size={16} />Back</button>
+    <div><h1>Restore your wallet.</h1><p className="lede" style={{ fontSize: 15.5, marginTop: 6 }}>Your 12 words open every chain again.</p></div>
+    <label className="field"><span>Account</span><input className="input" value={account} onChange={e => setAccount(e.target.value)} placeholder="yourname.testnet" autoCapitalize="off" spellCheck={false} /></label>
+    <label className="field"><span>12 words</span><textarea className="input mono masked" value={phrase} onChange={e => setPhrase(e.target.value)} placeholder="word word word …" autoCapitalize="off" spellCheck={false} /></label>
+    <label className="field"><span>New password for this device</span><input className="input" type="password" value={pw} onChange={e => setPw(e.target.value)} autoComplete="new-password" /></label>
+    {err && <p className="err" role="alert">{err}</p>}
+    <button className="btn btn-primary btn-lg btn-block" onClick={go} disabled={busy || !phrase || !account || !pw}>{busy ? <Spinner /> : <RotateCcw size={18} />}Restore</button>
+  </>;
 }
 
 function Upgrade({ preset = '', create = false, back }: { preset?: string; create?: boolean; back: () => void }) {

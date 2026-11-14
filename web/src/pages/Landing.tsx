@@ -1,231 +1,223 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, Search, ShieldCheck, ShieldAlert, Check, X, FileCode2, KeyRound, Trash2, Lock, ExternalLink, Chrome, Smartphone, Globe, Download } from 'lucide-react';
-import { scanAccount, type Scan } from '../../../sdk/scan.ts';
-import { networkStatus, short, txUrl } from '../lib/chain.ts';
-import { Gauge, Spinner, useAsync } from '../ui/bits.tsx';
+import { ArrowRight, Check, Chrome, Smartphone, Globe, Download, KeyRound, Atom, ArrowUpRight, ExternalLink, Repeat, Send, Bitcoin, ShieldCheck, Sparkles } from 'lucide-react';
+import { Brand, Mark } from '../ui/Logo.tsx';
+import { ChainLogo } from '../ui/chain.tsx';
+import { rpc } from '../../../sdk/index.ts';
+import { RPCS } from '../../../sdk/scan.ts';
+import { demoWallet, LOGO, fmt } from '../lib/multi.ts';
+import { readAccount } from '../lib/chain.ts';
+import { ftBalance } from '../../../sdk/swap.ts';
+import { splBalance } from '../../../sdk/omni.ts';
 
-const SAMPLES = [
-  { id: 'root.near', note: 'mainnet' },
-  { id: 'aurora', note: 'mainnet' },
-  { id: 'magen.drill-mwf4jsnn.testnet', note: 'Magen' },
+const CHAINS: [string, string, string?][] = [
+  ['near', 'NEAR', 'base'], ['bitcoin', 'Bitcoin', 'in'], ['zcash', 'Zcash', 'in'], ['solana', 'Solana', 'out'], ['ethereum', 'Ethereum', 'out'], ['base', 'Base', 'out'],
+  ['arbitrum', 'Arbitrum', 'out'], ['avalanche', 'Avalanche', 'out'], ['cosmos', 'Cosmos'], ['litecoin', 'Litecoin'], ['dogecoin', 'Dogecoin'],
 ];
+const TAG: Record<string, string> = { base: 'Quantum-safe base', in: 'Bridge in · live', out: 'Bridge out · live' };
 
-export function Landing({ initial }: { initial?: string }) {
-  const [q, setQ] = useState(initial ?? '');
-  const [scan, setScan] = useState<Scan | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState('');
-  const net = useAsync(networkStatus, []);
-  const drill = useAsync(() => fetch('/drill-live.json').then(r => r.json()), []);
-  const run = async (id: string) => {
-    setQ(id); setErr(''); setBusy(true); setScan(null);
-    try { const s = await scanAccount(id); setScan(s); history.replaceState(null, '', `#/scan/${s.account}`); }
-    catch (e: any) { setErr(e.message); } finally { setBusy(false); }
-  };
-  useEffect(() => { if (initial) run(initial); }, []);
-  const d = drill.data;
-  const tx = (name: string) => d?.transactions?.find((t: any) => t.name === name);
+const EXPLORER_TX = (h: string) => `https://testnet.nearblocks.io/txns/${h}`;
+type Live = { height?: number; protocol?: number; near?: bigint; usdt?: bigint; sol?: bigint };
+function useLive(account: string | null) {
+  const [l, set] = useState<Live>({});
+  useEffect(() => {
+    if (!account) return;
+    let on = true;
+    const load = async () => {
+      const [st, acc, usdt, sol] = await Promise.allSettled([rpc('status', [], RPCS.testnet), readAccount(account), ftBalance('usdt.itachicara.testnet', account), demoWallet().then(d => splBalance(d.chains.find((c: any) => c.id === 'solana').address))]);
+      if (!on) return;
+      set({
+        height: st.status === 'fulfilled' ? st.value.sync_info.latest_block_height : undefined, protocol: st.status === 'fulfilled' ? st.value.protocol_version : undefined,
+        near: acc.status === 'fulfilled' && acc.value ? acc.value.amount : undefined, usdt: usdt.status === 'fulfilled' ? usdt.value : undefined, sol: sol.status === 'fulfilled' ? sol.value.amount : undefined,
+      });
+    };
+    load(); const t = setInterval(load, 6000); return () => { on = false; clearInterval(t); };
+  }, [account]);
+  return l;
+}
+const y24 = (v?: bigint) => v === undefined ? '…' : fmt(Number(v / 10n ** 18n) / 1e6, 4);
+const y9 = (v?: bigint) => v === undefined ? '…' : fmt(Number(v) / 1e9, 4);
+
+export function Landing() {
+  const [demo, setDemo] = useState<any>(null);
+  const [proof, setProof] = useState<any[]>([]);
+  useEffect(() => { demoWallet().then(setDemo).catch(() => {}); fetch('/v2-live.json').then(r => r.json()).then(d => setProof(d.runs ?? [])).catch(() => {}); }, []);
+  const live = useLive(demo?.account ?? null);
+  const swap = proof.find(p => p.what?.startsWith('swap') && p.success);
+  const out = proof.find(p => p.what?.startsWith('bridge out') && p.success);
+  const create = proof.find(p => p.what?.startsWith('create') && p.success);
+
   return <div className="landing">
     <nav className="nav"><div className="nav-in">
-      <a className="brand" href="#/"><img src="/art/icon.webp" alt="" />magen</a>
-      <div className="nav-links"><a href="#get">Get Magen</a><a href="#drill">The drill</a><a href="#how">How it works</a><a href="#limits">Security</a><a href="#faq">FAQ</a></div>
-      <div className="nav-right"><a className="btn btn-ghost-dark btn-sm hide-sm" href="/downloads/magen-extension.zip">Get the extension</a><a className="btn btn-primary btn-sm" href="#/app">Open wallet</a></div>
+      <Brand />
+      <div className="nav-links"><a href="#chains">Chains</a><a href="#how">How it works</a><a href="#compare">Compare</a><a href="#qday">Q-Day</a><a href="#download">Download</a></div>
+      <div className="nav-right"><a className="btn btn-ghost-dark btn-sm hide-sm" href="#download"><Download size={15} />Download</a><a className="btn btn-primary btn-sm" href="#/app">Open wallet</a></div>
     </div></nav>
 
-    <header className="hero"><div className="hero-in">
-      <div className="rise">
-        <h1>Keep your NEAR account. Add a second lock <em>a quantum computer can’t pick.</em></h1>
-        <p className="hero-lede">Magen upgrades the account you already have, in place. After that, every payment needs your usual key and a post-quantum ML-DSA-65 key, and NEAR checks both.</p>
-        <div className="scanbox">
-          <form className="scan-form" onSubmit={e => { e.preventDefault(); if (q.trim()) run(q); }}>
-            <input aria-label="NEAR account to scan" placeholder="Paste any NEAR account, like alice.near" value={q} onChange={e => setQ(e.target.value)} autoCapitalize="off" autoCorrect="off" spellCheck={false} />
-            <button className="btn btn-primary" disabled={busy || !q.trim()}>{busy ? <Spinner /> : <Search size={17} />} Check my account</button>
-          </form>
-          <div className="scan-try">Try {SAMPLES.map(s => <button key={s.id} type="button" onClick={() => run(s.id)}>{short(s.id, 14, 8)} <span style={{ opacity: .6 }}>· {s.note}</span></button>)}</div>
-        </div>
-        <div className="hero-meta">
-          <span>NEAR mainnet protocol <b>{net.data?.mainnet ?? '…'}</b></span>
-          <span>testnet <b>{net.data?.testnet ?? '…'}</b></span>
-          <span>ML-DSA-65 keys native since <b>July 2026</b></span>
+    <header className="hero6"><div className="hero6-grid">
+      <div className="h6-portrait rise">
+        <img src="/v4/hero-landing.jpg" alt="A man in profile among floating matte coins" width={1536} height={1024} />
+        <div className="h6-copy">
+          <span className="hero-chip"><b>Live</b>ML-DSA-65 signatures, checked on NEAR</span>
+          <h1>One seed.<br />Every chain.<br /><em>Quantum-safe.</em></h1>
+          <p className="hero-lede">Bitcoin, Zcash, Ethereum and Solana from 12 words, kept on NEAR under a quantum-safe signature.</p>
+          <div className="hero-cta">
+            <a className="btn btn-primary btn-lg" href="#/start/create">Create a wallet <ArrowRight size={18} /></a>
+            <a className="btn btn-onink btn-lg" href="#download"><Download size={18} />Get the app</a>
+          </div>
         </div>
       </div>
-      <div className="hero-art"><img src="/art/hero.webp" alt="A wallet held shut by an ordinary padlock and a second lock made of a blue lattice" /></div>
+      <div className="h6-stage rise" style={{ animationDelay: '.1s' }}>
+        <PhonePreview demo={demo} live={live} />
+      </div>
+      <div className="h6-card magenta rise" style={{ animationDelay: '.15s' }}>
+        <span className="h6-ico"><ShieldCheck size={20} /></span>
+        <div><small>Every move</small><b>Signed twice</b><span className="h6-sub">ed25519 + ML-DSA-65, both checked on NEAR</span></div>
+        <a className="btn btn-ink btn-block" href="#how">How it works</a>
+      </div>
+      <div className="h6-card ink rise" style={{ animationDelay: '.2s' }}>
+        <span className="h6-ico"><ChainLogo id="bitcoin" size="sm" /></span>
+        <div><small>Bridge in</small><b>BTC → nBTC</b><span className="h6-sub">{out ? `Bridged out to Solana in ${out.destination?.seconds_after_init ?? '~15'} s, live` : 'Your own Bitcoin deposit address'}</span></div>
+        <a className="btn btn-primary btn-block" href="#/start/create">Start now</a>
+      </div>
     </div></header>
 
-    {(scan || err || busy) && <section className="scan-result rise" aria-live="polite">
-      {err ? <div className="card card-pad"><div className="banner banner-red"><ShieldAlert size={18} /><div><strong>Couldn’t scan that account</strong>{err}</div></div></div>
-        : busy ? <div className="card scan-card"><div className="scan-score"><div className="skel" style={{ width: 160, height: 160, borderRadius: '50%', opacity: .15 }} /></div><div className="scan-body"><div className="skel" style={{ height: 28, width: '70%' }} /><div className="skel" style={{ height: 160 }} /></div></div>
-        : scan && <ScanCard s={scan} />}
-    </section>}
-
-    <section className="section" id="get">
-      <p className="eyebrow">Get Magen</p>
-      <h2 className="h2">In your browser and on your phone.</h2>
-      <p className="lede">The same two locks everywhere. Keys are made on your device and never leave it.</p>
-      <div className="get-grid">
-        <div className="get-card dark">
-          <span className="get-ico"><Chrome size={22} /></span>
-          <h3>Chrome extension</h3>
-          <p>Unlock, send, receive and flip the Q-Day switch from the toolbar. dApps connect through <code>window.magen</code>, and every request shows “Signed twice: classical + quantum-safe”.</p>
-          <div className="get-actions"><a className="btn btn-primary" href="/downloads/magen-extension.zip" download><Download size={17} />Download .zip</a><a className="link" style={{ color: '#8fa8ff' }} href="/dapp/index.html">Try the demo dApp</a></div>
-          <small>chrome://extensions → Developer mode → Load unpacked</small>
-        </div>
-        <div className="get-card">
-          <span className="get-ico"><Smartphone size={22} /></span>
-          <h3>iPhone app</h3>
-          <p>Upgrade, send with both signatures, receive by QR and flip the Q-Day switch. Keys live in the iOS keychain; ML-DSA-65 signs on the phone.</p>
-          <div className="get-actions"><a className="btn btn-dark" href="/downloads/Magen-NEAR-iOS-Simulator.zip" download><Download size={17} />iOS Simulator build</a></div>
-          <small>Unzip, then xcrun simctl install booted Magen.app</small>
-        </div>
-        <div className="get-card">
-          <span className="get-ico"><Globe size={22} /></span>
-          <h3>Web wallet</h3>
-          <p>The readiness scan, the key-recovery drill and a full wallet in any browser. Nothing to install.</p>
-          <div className="get-actions"><a className="btn btn-light" href="#/app">Open the web wallet</a></div>
-          <small>NEAR testnet preview</small>
-        </div>
-      </div>
-      <pre className="snippet"><code>{`const { accountId } = await window.magen.connect();
-await window.magen.signAndSendTransaction({
-  receiverId: 'bob.testnet',
-  actions: [{ type: 'Transfer', params: { deposit: '100000000000000000000000' } }],
-}); // signed with ed25519 + ML-DSA-65, both checked on chain`}</code></pre>
+    <section className="section section-tight" id="chains">
+      <div className="sec-head"><span className="eyebrow">Twelve words, eleven chains</span><h2 className="h2">Every address you need. One phrase to back it up.</h2></div>
+      <div className="chain-marquee">{CHAINS.map(([id, name, t]) => <span key={id} className={`chain-chip ${t ? 'live' : ''}`}><ChainLogo id={id} />{name}{t && <small>{TAG[t]}</small>}</span>)}</div>
     </section>
 
-    <section className="section section-tight" id="drill">
-      <p className="eyebrow">Steal the key, still get nothing</p>
-      <h2 className="h2">Same stolen key. One account emptied. One didn’t move.</h2>
-      <p className="lede">We ran a key-recovery drill on NEAR testnet. Both accounts started with one classical key, weakened on purpose so a laptop can play the quantum computer. The attacker read each public key from the chain and worked out the private key.</p>
-      <div className="duel">
-        <div className="duel-card">
-          <h3><ShieldAlert size={16} /> Plain NEAR account</h3>
-          <div className="duel-num"><s>{d?.balances?.before?.plain ?? '4.00'}</s><small>NEAR</small></div>
-          <div className="duel-num" style={{ fontSize: 30, marginTop: 10, color: 'var(--red)' }}>0.00 <small>NEAR · drained</small></div>
-          <div className="duel-foot">
-            <span className="txline">The recovered key moved everything to the attacker.</span>
-            {tx('attacker drains plain account') && <span className="txline"><a href={txUrl(tx('attacker drains plain account').hash)} target="_blank" rel="noreferrer">Drain transaction {short(tx('attacker drains plain account').hash)}</a></span>}
-          </div>
-        </div>
-        <div className="duel-card dark">
-          <h3><ShieldCheck size={16} /> Magen account</h3>
-          <div className="duel-num">{d?.balances?.after?.magen ?? '4.00'}<small>NEAR</small></div>
-          <div style={{ marginTop: 14 }}><span className="pill pill-ink"><span className="dot" style={{ color: '#8fa8ff' }} />Refused on chain: quantum half missing</span></div>
-          <img className="art" src="/art/crowbar.webp" alt="" />
-          <div className="duel-foot">
-            <span className="txline">The same key signed a transfer. The contract asked for the second signature.</span>
-            {tx('attacker tries the Magen account') && <span className="txline"><a href={txUrl(tx('attacker tries the Magen account').hash)} target="_blank" rel="noreferrer">Refused transaction {short(tx('attacker tries the Magen account').hash)}</a></span>}
-          </div>
-        </div>
+    <section className="section" id="how"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow">How it works</span><h2 className="h2">Quantum-safe, without learning anything new.</h2></div>
+      <div className="steps3">
+        <div className="step-card"><span className="n">01</span><h3>Write down 12 words</h3><p>They open Bitcoin, Ethereum, Solana and more. The same words also make your quantum-safe key.</p>
+          <div className="art"><div className="words">{['ocean', 'lattice', 'harbor', 'violet', 'anchor', 'meadow'].map((w, i) => <span key={i}><i>{i + 1}</i><span className="blurred">{w}</span></span>)}</div><div className="sigline" style={{ color: 'var(--mint)' }}><Atom size={15} /><b>ML-DSA-65 key</b><small>same seed</small></div></div></div>
+        <div className="step-card"><span className="n">02</span><h3>Bring coins to NEAR</h3><p>Send BTC or ZEC to your personal bridge address. They arrive on NEAR as nBTC or nZEC.</p>
+          <div className="art">{[['bitcoin', 'Bitcoin', 'nBTC'], ['zcash', 'Zcash', 'nZEC'], ['solana', 'Solana', 'wNEAR out']].map(([id, n, t]) => <div key={id} className="sigline"><ChainLogo id={id} size="sm" /><b>{n}</b><small>{t}</small></div>)}</div></div>
+        <div className="step-card"><span className="n">03</span><h3>Every move, signed twice</h3><p>Send, swap or bridge out: NEAR checks your classical and your quantum-safe signature before anything moves.</p>
+          <div className="art sigpair"><div className="sigline"><KeyRound size={15} /><b>ed25519</b><Check size={15} className="ico-ok" style={{ marginLeft: 'auto' }} /></div><div className="sigline"><Atom size={15} color="var(--mint)" /><b>ML-DSA-65</b><Check size={15} className="ico-ok" style={{ marginLeft: 'auto' }} /></div><div className="sigline"><ShieldCheck size={15} /><b>Both verified on NEAR</b><small>or nothing moves</small></div></div></div>
       </div>
-      <div style={{ marginTop: 22, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-        <a className="btn btn-dark" href="#/app/drill">Run the drill yourself <ArrowRight size={17} /></a>
-        <span className="hint">Simulated key compromise on testnet. Real ed25519 keys come from 2<sup>256</sup> possibilities, not 2<sup>18</sup>.</span>
-      </div>
-    </section>
+    </div></section>
 
-    <section className="section section-tight" id="how">
-      <p className="eyebrow">How the upgrade works</p>
-      <h2 className="h2">One transaction. Same name, same balance, a second lock.</h2>
-      <p className="lede">On NEAR an account is not its key, so the lock can change while everything else stays. Magen sends one atomic transaction from your own key.</p>
-      <div className="txviz">
-        <div className="txviz-art"><img src="/art/classical-vs-lattice.webp" alt="An ordinary padlock next to a lattice padlock" /></div>
-        <div className="actions-list">
-          <div className="act"><span className="act-ico"><FileCode2 size={20} /></span><div><h4>Deploy the wallet contract <code>DeployContract</code></h4><p>Your account starts running Magen’s open-source contract. Funds stay where they are.</p></div></div>
-          <div className="act"><span className="act-ico"><Lock size={20} /></span><div><h4>Set both locks <code>new(ed25519, ML-DSA-65)</code></h4><p>Your current key becomes the first lock. A new ML-DSA-65 key, made in your browser, becomes the second.</p></div></div>
-          <div className="act"><span className="act-ico"><Trash2 size={20} /></span><div><h4>Take away the master key <code>DeleteKey</code></h4><p>No key can move funds by itself any more. Not yours, not a thief’s.</p></div></div>
-          <div className="act"><span className="act-ico"><KeyRound size={20} /></span><div><h4>Add a post-quantum doorbell <code>AddKey · ML-DSA-65 · execute only</code></h4><p>A new ML-DSA-65 key that can only ask the contract to act and pay its fee. NEAR now lists zero classical keys for your account.</p></div></div>
+    <section className="section" id="proof"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow"><span className="live-dot" />Live on NEAR testnet</span><h2 className="h2">Real transactions, not promises.</h2></div>
+      <div className="proof-grid">
+        <div className="card"><div className="proof-list">
+          {create && <ProofRow icon={<Sparkles size={18} />} title="Wallet created from 12 words" sub="Deploy + both locks + ML-DSA fee key, one tx" hash={create.hash} />}
+          {swap && <ProofRow icon={<Repeat size={18} />} title={`Swap 1 NEAR → ${y24(BigInt(swap.received))} USDT`} sub="4 calls, one dual-signed approval, Ref Finance" hash={swap.hash} />}
+          {out && <ProofRow icon={<Send size={18} />} title="Bridge 0.5 NEAR to Solana devnet" sub={`Omni Bridge · finalised on Solana in ${out.destination?.seconds_after_init ?? '~15'} s`} hash={out.hash} />}
+          <ProofRow icon={<Bitcoin size={18} />} title="Bitcoin and Zcash deposit addresses" sub="Derived on chain by the Omni connectors" href={demo ? `https://testnet.nearblocks.io/address/btc-connector.n-bridge.testnet` : undefined} />
+        </div></div>
+        <div className="stats">
+          <div className="stat"><b className="num">{live.height?.toLocaleString() ?? '…'}</b><span>NEAR testnet block, live</span></div>
+          <div className="stat"><b>{live.protocol ?? '…'}</b><span>Protocol version (ML-DSA since 87)</span></div>
+          <div className="stat"><b className="num">{y24(live.usdt)}</b><span>USDT the demo wallet swapped for</span></div>
+          <div className="stat"><b className="num">{y9(live.sol)}</b><span>wNEAR it bridged to its Solana address</span></div>
         </div>
       </div>
-      <div className="stats">
-        <div className="stat"><b>2</b><span>signatures checked on chain for every payment</span></div>
-        <div className="stat"><b>3,309</b><span>bytes in each ML-DSA-65 signature, verified by NEAR itself</span></div>
-        <div className="stat"><b>{d ? '1' : '…'}</b><span>transaction to upgrade, no funds moved</span></div>
-        <div className="stat"><b>74</b><span>automated tests, 46 of them against a real local NEAR node</span></div>
-      </div>
-    </section>
+    </div></section>
 
-    <section className="section section-tight">
-      <div className="features">
-        <div className="feature"><div><h3>The second lock</h3><p>ML-DSA-65 is the NIST post-quantum signature NEAR added in 2026. Magen requires it next to ed25519, the hybrid setup European security agencies recommend during the transition.</p></div><img src="/art/lattice-lock.webp" alt="" /></div>
-        <div className="feature"><div><h3>Your account, not a new one</h3><p>Other quantum-safe wallets make you move into a fresh vault. Magen keeps your name, balance, staking and history.</p></div><img src="/art/shield-wallet.webp" alt="" /></div>
-        <div className="feature"><div><h3>The Q-Day switch</h3><p>When classical keys stop being safe, one tap adds a native ML-DSA-65 access key. NEAR then shows it in the account’s key list.</p></div><img src="/art/classical-vs-lattice.webp" alt="" /></div>
-        <div className="feature"><div><h3>Refused, on the record</h3><p>Forged halves, replays, expired or edited payments: the contract refuses them on chain, with a reason anyone can read.</p></div><img src="/art/crowbar.webp" alt="" /></div>
-      </div>
-    </section>
+    <section className="section" id="compare"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow">Compare</span><h2 className="h2">Multichain wallets aren’t quantum-safe. Quantum-safe wallets aren’t multichain.</h2></div>
+      <Compare />
+    </div></section>
 
-    <section className="dark-band" id="limits"><div className="section">
-      <p className="eyebrow" style={{ color: '#8fa8ff' }}>Security, plainly</p>
-      <h2 className="h2">What Magen protects, and what it doesn’t.</h2>
+    <section className="section" id="qday"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow">Q-Day, simply</span><h2 className="h2">The day a quantum computer can forge today’s signatures.</h2><p className="lede">Magen is ready for both sides of it.</p></div>
+      <div className="qday-band">
+        <div className="era"><span className="pill">Today</span><h3>Two locks on every move</h3><p>Your classical key and your ML-DSA-65 key both sign. Stealing one gets a thief nothing.</p>
+          <div className="sigpair"><div className="sigline"><KeyRound size={15} /><b>ed25519</b><small>required</small></div><div className="sigline" style={{ color: 'var(--mint)' }}><Atom size={15} /><b>ML-DSA-65</b><small>required</small></div></div></div>
+        <div className="era after"><span className="pill pill-green">Q-Day switch</span><h3>One tap, quantum-only</h3><p>Flip the switch and NEAR itself lists your ML-DSA-65 key. Then remove the classical key for good.</p>
+          <div className="sigpair"><div className="sigline" style={{ opacity: .45 }}><KeyRound size={15} /><b><s>ed25519</s></b><small>removed</small></div><div className="sigline" style={{ color: 'var(--mint)' }}><Atom size={15} /><b>ML-DSA-65</b><small>native NEAR key</small></div></div></div>
+      </div>
+    </div></section>
+
+    <section className="section" id="limits"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow">Honest limits</span><h2 className="h2">What Magen protects, and what it can’t.</h2></div>
       <div className="limits">
-        <div className="limit-col"><h3><Check size={18} /> Protects</h3><ul>
-          <li>Your NEAR balance against someone who works out your classical key from public chain data.</li>
-          <li>Against a broken signature scheme: a forger needs ed25519 and ML-DSA-65 at once.</li>
-          <li>Against replayed, expired or edited payments. Each one is signed with its own nonce and expiry.</li>
+        <div className="limit-col"><h3>Protected</h3><ul>
+          <li>Everything on your NEAR account: nothing moves without both signatures, checked on chain.</li>
+          <li>The control path: swaps, bridges and sends out of NEAR all start with that dual check.</li>
+          <li>Coins you bridge in (nBTC, nZEC) sit under that lock.</li>
         </ul></div>
-        <div className="limit-col no"><h3><X size={18} /> Doesn’t protect</h3><ul>
-          <li>A stolen device or password. Both keys live in your browser, encrypted with your password.</li>
-          <li>Chain Signatures and validator keys. They are still classical on NEAR today.</li>
-          <li>Real money yet. Magen runs on NEAR testnet and has not been audited.</li>
+        <div className="limit-col no"><h3>Not yet</h3><ul>
+          <li>Bitcoin, Ethereum and Solana keys are classical on their own chains. Magen can’t change that.</li>
+          <li>The bridges’ MPC signers are classical too. Bridging ZEC in removes its shielding.</li>
+          <li>Testnet only, no audit. Both keys live on your device.</li>
         </ul></div>
       </div>
     </div></section>
 
-    <section className="section" id="faq">
-      <p className="eyebrow">Questions</p>
-      <h2 className="h2">Fair questions.</h2>
+    <section className="section" id="download"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow">Download</span><h2 className="h2">Phone, browser and web. One phrase on all three.</h2></div>
+      <div className="get-grid">
+        <div className="get-card dark"><span className="get-ico"><Smartphone size={22} /></span><h3>iPhone app</h3><p>Create a wallet, scan, send and swap. Keys stay in the iOS keychain.</p><div className="get-actions"><a className="btn btn-primary btn-sm" href="/downloads/Magen-NEAR-iOS-Simulator.zip"><Download size={15} />iOS Simulator build</a></div><small>Release build for Apple-silicon simulators</small></div>
+        <div className="get-card"><span className="get-ico"><Chrome size={22} /></span><h3>Chrome extension</h3><p>A popup wallet that dApps reach through <span className="mono">window.magen</span>.</p><div className="get-actions"><a className="btn btn-light btn-sm" href="/downloads/magen-extension.zip"><Download size={15} />Extension .zip</a></div><small>chrome://extensions → Load unpacked</small></div>
+        <div className="get-card"><span className="get-ico"><Globe size={22} /></span><h3>Web wallet</h3><p>Everything, in the browser. Look around the live demo wallet first.</p><div className="get-actions"><a className="btn btn-light btn-sm" href="#/app">Open the web wallet <ArrowUpRight size={15} /></a></div><small>NEAR testnet</small></div>
+      </div>
+    </div></section>
+
+    <section className="section" id="faq"><div className="wrap">
+      <div className="sec-head"><span className="eyebrow">FAQ</span><h2 className="h2">Questions</h2></div>
       <div className="faq">
-        <details><summary>Is there a quantum computer that can do this today?</summary><p>No. The largest public break so far is a 15-bit elliptic-curve key (April 2026). Google estimates a 256-bit curve needs under 500,000 physical qubits. Magen is preparation: your keys are public on NEAR today, so an attacker can collect them now and use them later.</p></details>
-        <details><summary>Why are my keys public?</summary><p>NEAR shows every account’s access keys to anyone through view_access_key_list. A 64-character implicit account is its public key. That is fine for classical cryptography and exactly what a quantum attacker needs.</p></details>
-        <details><summary>Why two signatures and not only the post-quantum one?</summary><p>ML-DSA is new. If an implementation bug appears, ed25519 still holds. If ed25519 falls, ML-DSA still holds. NEAR’s native keys are one scheme each, so Magen enforces the pair in a contract.</p></details>
-        <details><summary>What does the Q-Day switch change?</summary><p>It adds your ML-DSA-65 key to the account as a native NEAR full-access key. After that, that post-quantum key alone can act at the protocol level, which is what you want once classical keys can be forged.</p></details>
-        <details><summary>Is the drill a real attack?</summary><p>It is a real attack on deliberately weak keys. The drill’s classical keys come from only 262,144 possibilities, so a laptop finds them from the public key in seconds. The drain and the refusal are real testnet transactions.</p></details>
-        <details><summary>Where is the code?</summary><p>The contract, signing SDK, tests and this app are MIT-licensed. Every testnet transaction is listed in the repository’s deployments folder.</p></details>
+        <details><summary>What is a quantum-safe key?</summary><p>ML-DSA-65 is a signature scheme NIST standardised in 2024. Today’s keys (ed25519, secp256k1) can be broken by a large quantum computer; ML-DSA is built to resist one. NEAR checks ML-DSA signatures natively since protocol 87.</p></details>
+        <details><summary>Why sign twice instead of switching?</summary><p>Hybrid is what European security agencies recommend during the transition: if either scheme has a flaw, the other still holds. When you’re ready, the Q-Day switch makes the ML-DSA key a native NEAR key.</p></details>
+        <details><summary>Does this make my Bitcoin quantum-safe?</summary><p>No. Bitcoin’s own keys stay classical. What Magen does is give your coins a quantum-safe home: bridge them to NEAR, where every move needs your ML-DSA signature.</p></details>
+        <details><summary>What do the 12 words back up?</summary><p>Every chain address (standard BIP-39/44 paths), your NEAR key and your ML-DSA-65 key, derived from the same seed with HKDF-SHA-256 and the label <span className="mono">magen:ml-dsa-65:v1</span>.</p></details>
+        <details><summary>Is it live?</summary><p>On NEAR testnet, yes: every transaction on this page links to the explorer. Not audited, not for real funds yet.</p></details>
       </div>
-    </section>
+    </div></section>
 
-    <section className="section section-tight">
-      <div className="cta-band">
-        <div><h2>Check your account, then add the second lock.</h2><p style={{ color: 'var(--on-ink-2)', marginTop: 12, lineHeight: 1.6 }}>Testnet preview. Takes one transaction.</p>
-          <div style={{ display: 'flex', gap: 10, marginTop: 24, flexWrap: 'wrap' }}><a className="btn btn-primary btn-lg" href="#/start">Upgrade my account</a><a className="btn btn-ghost-dark btn-lg" href="#/app">See the demo wallet</a></div></div>
-        <img src="/art/shield-wallet.webp" alt="" />
-      </div>
-    </section>
+    <section className="section"><div className="cta-band"><Mark size={64} /><h2>Your coins deserve a lock from the future.</h2><a className="btn btn-primary btn-lg" href="#/start/create">Create a wallet <ArrowRight size={18} /></a></div></section>
 
-    <footer className="footer"><div className="footer-in">
-      <span>Magen · מגן means shield · NEAR testnet preview, not audited</span>
-      <span style={{ display: 'flex', gap: 18 }}><a href="/magen-source.zip">Source <ExternalLink size={12} /></a><a href="#/app/security">Security</a><a href="#/app/drill">Drill</a></span>
-    </div></footer>
+    <footer className="footer"><div className="footer-in"><Brand /><nav><a href="https://github.com/nickthelegend/magen-near" target="_blank" rel="noreferrer">GitHub</a><a href="#/app">Web wallet</a><a href="#download">Download</a><a href="/chains/README.txt">Logo credits</a></nav><span>NEAR testnet preview · MIT · not audited</span></div></footer>
   </div>;
 }
 
-function ScanCard({ s }: { s: Scan }) {
-  const tone = s.level === 'exposed' ? 'pill-red' : s.level === 'native' ? 'pill-blue' : s.level === 'protected' ? 'pill-blue' : 'pill-amber';
-  const label = s.level === 'exposed' ? 'Exposed' : s.level === 'native' ? 'Post-quantum native' : s.level === 'protected' ? 'Two locks' : 'Limited';
-  return <div className="card scan-card">
-    <div className="scan-score">
-      <span className={`pill ${tone}`} style={{ alignSelf: 'flex-start' }}>{label}</span>
-      <Gauge score={s.score} />
-      <div className="acct"><b style={{ color: '#fff', fontWeight: 600 }}>{s.account}</b><br />NEAR {s.network}{s.implicit ? ' · implicit account' : ''}</div>
-    </div>
-    <div className="scan-body">
-      <h3>{s.headline}</h3>
-      {s.implicit && <div className="banner banner-gray"><KeyRound size={18} /><div>This account’s name is its public key, so it has been public since the account was made.</div></div>}
-      <div className="checks">
-        {s.checks.map(c => <div className="check-row" key={c.label}>
-          {c.ok ? <Check size={20} className="ico-ok" /> : <X size={20} className="ico-bad" />}
-          <div><b>{c.label}</b><p>{c.detail}</p></div><span className="pts">{c.ok ? `+${c.points}` : `0 / ${c.points}`}</span>
-        </div>)}
-      </div>
-      <div className="keys-mini">{s.keys.slice(0, 4).map(k => <span className="keychip" key={k.publicKey}>
-        <span className={`pill ${k.scheme === 'ml-dsa-65' ? 'pill-blue' : k.fullAccess ? 'pill-red' : 'pill-gray'}`}>{k.scheme}</span>
-        <span className="mono">{short(k.publicKey, 16, 6)}</span><span className="card-sub">{k.fullAccess ? 'full access' : `calls ${k.methods?.join(', ') || 'any method'}`}</span>
-      </span>)}{s.keys.length > 4 && <span className="keychip">+{s.keys.length - 4} more</span>}</div>
-      <div className="scan-actions">
-        {s.level === 'exposed' && s.network === 'testnet' && <a className="btn btn-primary" href={`#/start/upgrade/${s.account}`}>Upgrade this account in place <ArrowRight size={17} /></a>}
-        {s.level === 'exposed' && s.network === 'mainnet' && <><a className="btn btn-primary" href="#/start">Try the upgrade on testnet <ArrowRight size={17} /></a><span className="hint">Magen is a testnet preview. Mainnet upgrades come after an audit.</span></>}
-        {s.isMagen && <a className="btn btn-dark" href="#/app">Open this wallet</a>}
-        <a className="link" href={`${s.network === 'mainnet' ? 'https://near.rocks' : 'https://testnet.near.rocks'}/account/${s.account}`} target="_blank" rel="noreferrer">See keys in the explorer <ExternalLink size={13} /></a>
-      </div>
-    </div>
-  </div>;
+function ProofRow({ icon, title, sub, hash, href }: { icon: any; title: string; sub: string; hash?: string; href?: string }) {
+  const link = hash ? EXPLORER_TX(hash) : href;
+  return <a className="proof-row" href={link} target="_blank" rel="noreferrer"><span className="lock-ico pq">{icon}</span><span><b>{title}</b><small>{sub}{hash ? ` · ${hash.slice(0, 8)}…` : ''}</small></span><ExternalLink size={16} color="var(--text-3)" /></a>;
+}
+
+function PhonePreview({ demo, live }: { demo: any; live: Live }) {
+  const rows = [
+    { id: 'near', name: 'NEAR', amt: live.near !== undefined ? fmt(Number(live.near / 10n ** 20n) / 1e4, 2) : '…', sym: 'NEAR' },
+    { id: 'usdt', name: 'USDT', amt: y24(live.usdt), sym: 'on NEAR' },
+    { id: 'solana', name: 'wNEAR', amt: y9(live.sol), sym: 'on Solana' },
+    { id: 'bitcoin', name: 'Bitcoin', amt: '0', sym: 'testnet3' },
+    { id: 'zcash', name: 'Zcash', amt: '—', sym: 'testnet' },
+  ];
+  return <div className="phone rise" style={{ animationDelay: '.1s' }}><div className="phone-screen">
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><span className="brand" style={{ fontSize: 16 }}><Mark size={24} />magen</span><span className="pill pill-green" style={{ height: 22, fontSize: 11 }}><span className="live-dot" />Two locks</span></div>
+    <div style={{ marginTop: 22, color: 'var(--text-3)', fontSize: 12 }}>{demo?.account ?? '…'}</div>
+    <div style={{ fontFamily: 'var(--display)', fontSize: 40, fontWeight: 600, letterSpacing: '-.045em', lineHeight: 1.1 }} className="num">{rows[0].amt}<small style={{ fontSize: 15, color: 'var(--text-3)', marginLeft: 6 }}>NEAR</small></div>
+    <div className="actions4" style={{ marginTop: 16, gap: 8 }}>{[['Receive', ArrowRight], ['Send', Send], ['Swap', Repeat], ['Bridge', Globe]].map(([l, I]: any) => <span key={l} className="action" style={{ padding: '10px 4px', fontSize: 11.5, borderRadius: 14 }}><span className="ai" style={{ width: 32, height: 32 }}><I size={15} /></span>{l}</span>)}</div>
+    <div style={{ marginTop: 16, display: 'grid' }}>{rows.map(r => <div key={r.id} className="list-row" style={{ padding: '9px 2px' }}><ChainLogo id={r.id} size="sm" /><span className="mid"><b style={{ fontSize: 13.5 }}>{r.name}</b><small>{r.sym}</small></span><span className="r"><b className="num" style={{ fontSize: 13.5 }}>{r.amt}</b></span></div>)}</div>
+  </div></div>;
+}
+
+const COLS = ['Magen', 'Phantom', 'Trust', 'Rabby', 'HOT', 'Meteor', 'NEAR Mobile vault', 'QRL'];
+const ROWS: [string, string[]][] = [
+  ['Bitcoin, Solana and EVM addresses', ['yes', 'yes', 'yes', 'part:EVM only', 'yes', 'part:NEAR first', 'no', 'no']],
+  ['Post-quantum signature key', ['yes', 'no', 'no', 'no', 'no', 'yes', 'yes', 'yes']],
+  ['Classical + post-quantum on every move', ['yes', 'no', 'no', 'no', 'no', 'no', 'no', 'no']],
+  ['PQ key from the same 12 words', ['yes', 'no', 'no', 'no', 'no', 'part:separate', 'no:own seed', 'part:own chain']],
+  ['Keeps your existing account', ['yes', '—', '—', '—', '—', 'yes', 'no', 'no']],
+  ['Bridge BTC/ZEC under the PQ lock', ['yes', 'no', 'no', 'no', 'part:classical', 'no', 'no', 'no']],
+  ['Swaps', ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'part', 'no']],
+];
+function Cell({ v }: { v: string }) {
+  const [k, note] = v.split(':');
+  if (k === 'yes') return <span className="yes"><Check size={17} /></span>;
+  if (k === 'part') return <span className="part">{note ?? 'Partly'}</span>;
+  if (k === 'no') return <span className="no">{note ?? '—'}</span>;
+  return <span className="no">{k}</span>;
+}
+function Compare() {
+  return <>
+    <div className="compare-wrap"><table className="compare">
+      <thead><tr><th />{COLS.map((c, i) => <th key={c} className={i === 0 ? 'us' : ''}>{i === 0 ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Mark size={18} />Magen</span> : c}</th>)}</tr></thead>
+      <tbody>{ROWS.map(([label, vals]) => <tr key={label}><td>{label}</td>{vals.map((v, i) => <td key={i} className={i === 0 ? 'us' : ''}><Cell v={v} /></td>)}</tr>)}</tbody>
+    </table></div>
+    <p className="sources">Sources (Nov 2026): Phantom chain support (crypto.news, Sep 2026); Trust Wallet 2026 guide; Rabby is EVM-only; HOT Wallet Chrome listing (MPC + TEE, classical); Meteor ML-DSA rotation (cryptobriefing); <a href="https://www.nearmobile.app/blog/near-mobile-4-1-post-quantum-vaults" target="_blank" rel="noreferrer">NEAR Mobile 4.1 vaults</a> (separate account, can’t convert); <a href="https://www.theqrl.org/" target="_blank" rel="noreferrer">QRL</a> is its own chain. Full notes in the README.</p>
+  </>;
 }

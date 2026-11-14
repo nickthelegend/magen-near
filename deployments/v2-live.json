@@ -12,7 +12,7 @@
     },
     {
       "at": "2026-11-14T09:49:49.017Z",
-      "what": "swap 1.00 NEAR → USDT on Ref",
+      "what": "swap 1.00 NEAR \u2192 USDT on Ref",
       "account": "magen-noam.testnet",
       "hash": "ELcKc37Hvi9sFm7UaU9kegDQwbSJGfL9zu7LmQ31ErB2",
       "success": true,
@@ -31,7 +31,7 @@
     },
     {
       "at": "2026-11-14T09:51:21.761Z",
-      "what": "bridge out 0.50 NEAR → Solana devnet",
+      "what": "bridge out 0.50 NEAR \u2192 Solana devnet",
       "account": "magen-noam.testnet",
       "to": "FQKsk3pF97FEWwNvgQ9xzHPYPxvW2RsFJgfovHpdryoD",
       "hash": "5dxk6cxTnad8Mfk73PsCZuJcQ2iZVCuaHzMZnLGpgqwD",
@@ -46,7 +46,14 @@
         "Transfer 500000000000000000000000 from magen-noam.testnet to omni.n-bridge.testnet",
         "{\"InitTransferEvent\":{\"transfer_message\":{\"origin_nonce\":20249,\"token\":\"near:wrap.testnet\",\"amount\":\"500000000000000000000000\",\"recipient\":\"sol:FQKsk3pF97FEWwNvgQ9xzHPYPxvW2RsFJgfovHpdryoD\",\"fee\":{\"fee\":\"60625170900900403740672\",\"native_fee\":\"0\"},\"sender\":\"near:magen-noam.testnet\",\"msg\":\"\",\"destination_nonce\":14120,\"origin_transfer_id\":null}}}",
         "MAGEN_SETTLED nonce=1 success=true migration=false"
-      ]
+      ],
+      "destination": {
+        "chain": "solana-devnet",
+        "status": "Finalised",
+        "tx": "36sFjHTNed9NuTtrgHNqUVQiNiCqDKnitcU8JUTaTR17GynqTPQZGgWfe4rGRZAf9crd8U7AR1mt5LTwCJoAeRyb",
+        "explorer": "https://explorer.solana.com/tx/36sFjHTNed9NuTtrgHNqUVQiNiCqDKnitcU8JUTaTR17GynqTPQZGgWfe4rGRZAf9crd8U7AR1mt5LTwCJoAeRyb?cluster=devnet",
+        "seconds_after_init": 13
+      }
     }
   ]
 }
