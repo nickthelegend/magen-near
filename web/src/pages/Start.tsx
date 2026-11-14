@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ArrowLeft, ArrowRight, ShieldCheck, Sparkles, LockOpen, ChevronRight, ShieldAlert, FileUp } from 'lucide-react';
-import { base64, keyString, random } from '../../../sdk/index.ts';
+import { base64, keyString, random, sealVault } from '../../../sdk/index.ts';
 import { precheckUpgrade, seedFromPhrase, seedFromPrivateKey, upgradeInPlace, edKeyString } from '../../../sdk/upgrade.ts';
 import { createWithHelper } from '../../../sdk/drillflow.ts';
 import { useWallet, downloadJson } from '../lib/store.tsx';
@@ -73,7 +73,7 @@ function Upgrade({ preset = '', create = false, back }: { preset?: string; creat
       if (!s) throw Error('Check the account first.');
       setBusy('Making your ML-DSA-65 key and sending the upgrade…');
       const wasm = new Uint8Array(await (await fetch('/wallet.wasm')).arrayBuffer());
-      const up = await upgradeInPlace(id, s, wasm, keys, undefined, undefined, 'ml-dsa', async v => { const sealed = await adopt(v, pw); downloadJson(sealed, `magen-${id}-backup.json`); });
+      const up = await upgradeInPlace(id, s, wasm, keys, undefined, undefined, 'ml-dsa', async v => { const sealed = await sealVault(v, pw); downloadJson(sealed, `magen-${id}-backup.json`); });
       if (!up.result.success) throw Error(friendlyError(up.result.error));
       const vault = { wallet: id, keys: up.keys, relay: up.fee };
       setBusy('Encrypting your backup…');
