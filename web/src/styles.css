@@ -710,3 +710,17 @@ textarea.input { height: auto; min-height: 90px; padding: 14px 16px; resize: ver
   .w2-get-lede { font-size: 15px; }
   .w2-get-dl { padding: 10px 14px 10px 10px; gap: 12px; } .w2-get-dl-ico { width: 46px; height: 46px; border-radius: 14px; } .w2-get-dl b { font-size: 17px; } .w2-get-dl small { font-size: 12.5px; }
 }
+
+/* quantum-risk section */
+.q-risk .w2-sechead h2{margin-bottom:6px}
+.q-row{display:flex;align-items:stretch;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+.q-chip,.q-lock{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 16px;border-radius:24px;background:var(--s1,#111215);border:1px solid rgba(255,255,255,.08);width:172px;text-align:center}
+.q-chip b,.q-lock b{font-size:17px}
+.q-chip small,.q-lock small{color:rgba(255,255,255,.66);font-size:13px}
+.q-exp{margin-top:4px;font-size:12.5px;font-weight:600;color:#FFB3BA;background:rgba(255,90,106,.12);border:1px solid rgba(255,90,106,.3);padding:5px 10px;border-radius:999px}
+.q-lock{background:rgba(224,64,200,.12);border-color:rgba(224,64,200,.45);box-shadow:0 0 40px rgba(224,64,200,.25)}
+.q-ok{margin-top:4px;font-size:12.5px;font-weight:600;color:#F28BE0;background:rgba(224,64,200,.14);border:1px solid rgba(224,64,200,.35);padding:5px 10px;border-radius:999px}
+.q-arrow{display:flex;align-items:center;color:#E040C8}
+.q-src{margin-top:18px;text-align:center;font-size:13px;color:rgba(255,255,255,.6)}
+.q-src a{color:#F28BE0}
+@media (max-width:760px){.q-chip,.q-lock{width:calc(50% - 8px)}.q-arrow{width:100%;justify-content:center;transform:rotate(90deg)}}

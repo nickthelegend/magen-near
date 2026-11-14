@@ -68,9 +68,9 @@ export function Landing() {
         <a className="w2-cta" href="#/app">Open Wallet<span><ArrowRight size={16} /></span></a>
       </nav>
       <Stagger className="w2-head" inView={false} gap={0.12}>
-        <Item><span className="w2-chip"><span className="w2-chip-ico"><ShieldCheck size={13} /></span>One Seed · Every Chain · Quantum-Safe</span></Item>
-        <Item><h1>One Seed For <motion.span className="w2-box" initial={{ scale: .86, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: .45, type: 'spring', stiffness: 220, damping: 16 }}>Every Chain</motion.span><br />Quantum-Safe From Day One</h1></Item>
-        <Item><p className="w2-sub">Magen is a crypto wallet for iPhone, Chrome and the web. Twelve words hold your Bitcoin, Ethereum, Solana and more, and every payment needs a second, quantum-safe signature.</p></Item>
+        <Item><span className="w2-chip"><span className="w2-chip-ico"><ShieldCheck size={13} /></span>The Quantum Risk · Every Chain</span></Item>
+        <Item><h1>Every Chain's Keys Are <motion.span className="w2-box" initial={{ scale: .86, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: .45, type: 'spring', stiffness: 220, damping: 16 }}>Quantum-Exposed</motion.span><br />Magen Adds The Lock</h1></Item>
+        <Item><p className="w2-sub">Bitcoin, Ethereum, Solana and NEAR all sign with ECDSA or EdDSA keys. Shor's algorithm on a large quantum computer can recover a private key from its public key, and every account that has signed has already revealed it. Magen adds a NIST-standard ML-DSA-65 lock on NEAR and puts every chain behind it.</p></Item>
         <Item className="w2-stores">
           <a className="w2-store" href="#iphone"><Smartphone size={24} /><span><small>Download for</small>iPhone</span></a>
           <a className="w2-store" href="#chrome"><Chrome size={24} /><span><small>Add to</small>Chrome</span></a>
@@ -85,6 +85,17 @@ export function Landing() {
         <PhoneW2 demo={demo} live={live} />
       </div>
     </header>
+
+    <section className="w2-sec" id="risk"><Reveal className="w2-panel q-risk">
+      <Reveal className="w2-sechead"><span className="w2-chip"><span className="w2-chip-ico"><ShieldCheck size={13} /></span>Harvest Now, Crack Later</span><h2>Four Chains, One Weakness</h2></Reveal>
+      <Stagger className="q-row" gap={0.1}>
+        {([['bitcoin', 'Bitcoin', 'ECDSA / Schnorr · secp256k1'], ['ethereum', 'Ethereum', 'ECDSA · secp256k1'], ['solana', 'Solana', 'EdDSA · Ed25519'], ['near', 'NEAR', 'EdDSA · Ed25519']] as const).map(([id, name, alg]) =>
+          <Item key={id} className="q-chip"><ChainLogo id={id} /><b>{name}</b><small>{alg}</small><span className="q-exp">Public key exposed once it signs</span></Item>)}
+        <Item className="q-arrow"><ArrowRight size={26} /></Item>
+        <Item className="q-lock"><Mark size={46} /><b>Magen lock</b><small>ML-DSA-65 · NIST FIPS 204 (Aug 2024)</small><span className="q-ok">Verified on NEAR before any chain is signed</span></Item>
+      </Stagger>
+      <p className="q-src">Sources: <a href="https://csrc.nist.gov/pubs/fips/204/final" target="_blank" rel="noreferrer">NIST FIPS 204, Module-Lattice-Based Digital Signature Standard (Aug 13, 2024)</a> · <a href="https://arxiv.org/abs/quant-ph/9508027" target="_blank" rel="noreferrer">P. Shor, polynomial-time algorithms for discrete logarithms (1994/1995)</a>. No date for a large quantum computer is claimed here.</p>
+    </Reveal></section>
 
     <section className="w2-sec" id="features"><Reveal className="w2-panel">
       <Reveal className="w2-sechead"><span className="w2-chip"><span className="w2-chip-ico"><Zap size={13} /></span>Simple, Live And Quantum-Safe</span><h2>Every Chain, One Quantum-Safe Lock</h2></Reveal>
