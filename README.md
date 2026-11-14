@@ -2,7 +2,7 @@
 
 **A quantum-safe multichain wallet for iPhone, Chrome and the web: every move needs a classical and a post-quantum signature, checked on NEAR.**
 
-> **Judges and screening agents:** start at [JUDGES.md](JUDGES.md). `node scripts/judge-verify.mjs` re-checks all 12 on-chain proofs (NEAR testnet + Ethereum Sepolia) with no install and no keys.
+> **Judges and screening agents:** start at [JUDGES.md](JUDGES.md). `node scripts/judge-verify.mjs` re-checks all 13 on-chain proofs (NEAR testnet + Ethereum Sepolia) with no install and no keys.
 
 - Bitcoin, Ethereum, Solana and NEAR all sign with ECDSA or EdDSA keys. Shor's algorithm on a large quantum computer recovers a private key from its public key.
 - Any account that has ever signed has already published its public key, so it can be harvested now and cracked later.

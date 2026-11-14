@@ -66,6 +66,16 @@ const rc = await evm('eth_getTransactionReceipt', [SEPOLIA.hash]).catch(e => ({ 
 check(!!rc && rc.status === '0x1' && rc.from?.toLowerCase() === SEPOLIA.from, SEPOLIA.what,
   rc?.error ? rc.error : `status ${rc?.status}, from ${rc?.from}, block ${rc ? parseInt(rc.blockNumber, 16) : '?'} · https://sepolia.etherscan.io/tx/${SEPOLIA.hash}`);
 
+// 3b. Omni Bridge NEAR -> Base Sepolia, paid to the wallet's Chain Signatures EVM address (deployments/bridge-out-base-live.json).
+const BASE_RPC = 'https://sepolia.base.org';
+const base = async (method, params) => { const j = await post(BASE_RPC, { jsonrpc: '2.0', id: 1, method, params }); if (j.error) throw Error(JSON.stringify(j.error)); return j.result; };
+const BASE = { tx: '0x3aee1f45c264db39646cd24a4a7cf4c9d78c2ea731ac7a7fe59d26dd24b1cf19', token: '0xb8cae3ea035ab123c1833258835ef270c9934162', to: '0x3d839b64cc5c1df42819dbce6cc28d5c93a23813' };
+const brc = await base('eth_getTransactionReceipt', [BASE.tx]).catch(e => ({ error: e.message }));
+const bal = await base('eth_call', [{ to: BASE.token, data: '0x70a08231' + BASE.to.slice(2).padStart(64, '0') }, 'latest']).catch(() => null);
+const wnear = bal ? Number(BigInt(bal)) / 1e18 : 0;
+check(brc?.status === '0x1' && wnear > 0, 'Omni Bridge NEAR -> Base Sepolia finalised; wNEAR held by the NEAR-derived EVM address',
+  brc?.error ?? `status ${brc?.status}, recipient ${BASE.to} holds ${wnear.toFixed(6)} wNEAR · https://sepolia.basescan.org/tx/${BASE.tx}`);
+
 // 4. Live account state after the Q-Day switch: NEAR itself lists an ML-DSA-65 key.
 const keys = await rpc('query', { request_type: 'view_access_key_list', account_id: 'maya-safe.testnet', finality: 'final' }).catch(e => ({ error: e.message }));
 const pq = (keys.keys ?? []).filter(k => String(k.public_key).startsWith('ml-dsa'));

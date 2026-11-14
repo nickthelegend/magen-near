@@ -20,7 +20,7 @@ The script needs Node 18+ and nothing else. It checks every proof against public
 - an Ethereum Sepolia public RPC;
 - the contract source.
 
-Expected output: `12/12 checks passed.` It exits 0 only if all 12 pass. What it checks:
+Expected output: `13/13 checks passed.` It exits 0 only if all 13 pass. What it checks:
 
 | # | Check | Source of truth |
 |---|---|---|
@@ -34,8 +34,9 @@ Expected output: `12/12 checks passed.` It exits 0 only if all 12 pass. What it 
 | 8 | Ref Finance swap (4 calls, one dual-signed approval) | NEAR testnet tx `244z9R…` |
 | 9 | Omni Bridge NEAR → Solana devnet | NEAR testnet tx `7zHBYK…` |
 | 10 | The MPC signature was broadcast on Ethereum Sepolia from the NEAR-derived address | Sepolia tx `0xd8cee1…` |
-| 11 | `maya-safe.testnet` lists native `ml-dsa-65-hash:` access keys | `view_access_key_list` |
-| 12 | The wallet contract is live (`magen-3`, ML-DSA lock, 3 guardians, threshold 2) | `status()` view |
+| 11 | Omni Bridge NEAR → Base Sepolia finalised; wNEAR held by the wallet's Chain Signatures EVM address | Base Sepolia tx `0x3aee1f…`, `balanceOf` |
+| 12 | `maya-safe.testnet` lists native `ml-dsa-65-hash:` access keys | `view_access_key_list` |
+| 13 | The wallet contract is live (`magen-3`, ML-DSA lock, 3 guardians, threshold 2) | `status()` view |
 
 ## Do X → see Y
 
