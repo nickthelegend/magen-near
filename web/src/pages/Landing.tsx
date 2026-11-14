@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { ArrowRight, Check, Chrome, Smartphone, Globe, Download, KeyRound, Atom, ArrowUpRight, ExternalLink, Repeat, Send, Bitcoin, ShieldCheck, Sparkles, Plus, EyeOff, Layers, Zap } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Check, Chrome, X, FolderOpen, MousePointerClick, Terminal, Puzzle, Smartphone, Globe, Download, KeyRound, Atom, ArrowUpRight, ExternalLink, Repeat, Send, Bitcoin, ShieldCheck, Sparkles, Plus, EyeOff, Layers, Zap } from 'lucide-react';
 import { Brand, Mark } from '../ui/Logo.tsx';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Reveal, Stagger, Item, EASE } from '../ui/motion.tsx';
 import { ChainLogo } from '../ui/chain.tsx';
 import { rpc } from '../../../sdk/index.ts';
@@ -47,6 +47,15 @@ export function Landing() {
   const [proof, setProof] = useState<any[]>([]);
   useEffect(() => { demoWallet().then(setDemo).catch(() => {}); fetch('/v2-live.json').then(r => r.json()).then(d => setProof(d.runs ?? [])).catch(() => {}); }, []);
   const live = useLive(demo?.account ?? null);
+  const [get, setGet] = useState<Get | null>(null);
+  useEffect(() => {
+    const read = () => { const h = location.hash.slice(1); if (h === 'iphone' || h === 'chrome') setGet(h); };
+    read();
+    // A page opened at /#download (or any section) lands on that section once it has rendered.
+    const h = location.hash; if (h && !h.startsWith('#/') && h !== '#iphone' && h !== '#chrome') setTimeout(() => document.getElementById(h.slice(1))?.scrollIntoView(), 300);
+    addEventListener('hashchange', read); return () => removeEventListener('hashchange', read);
+  }, []);
+  const closeGet = () => { setGet(null); if (location.hash === '#iphone' || location.hash === '#chrome') history.replaceState(null, '', location.pathname + location.search); };
   const swap = proof.find(p => p.what?.startsWith('swap') && p.success);
   const out = proof.find(p => p.what?.startsWith('bridge out') && p.success);
   const create = proof.find(p => p.what?.startsWith('create') && p.success);
@@ -61,10 +70,11 @@ export function Landing() {
       <Stagger className="w2-head" inView={false} gap={0.12}>
         <Item><span className="w2-chip"><span className="w2-chip-ico"><ShieldCheck size={13} /></span>One Seed · Every Chain · Quantum-Safe</span></Item>
         <Item><h1>One Seed For <motion.span className="w2-box" initial={{ scale: .86, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: .45, type: 'spring', stiffness: 220, damping: 16 }}>Every Chain</motion.span><br />Quantum-Safe From Day One</h1></Item>
+        <Item><p className="w2-sub">Magen is a crypto wallet for iPhone, Chrome and the web. Twelve words hold your Bitcoin, Ethereum, Solana and more, and every payment needs a second, quantum-safe signature.</p></Item>
         <Item className="w2-stores">
-          <a className="w2-store" href="#download"><Smartphone size={24} /><span><small>Download for</small>iPhone</span></a>
-          <a className="w2-store" href="/downloads/magen-extension.zip"><Chrome size={24} /><span><small>Add to</small>Chrome</span></a>
-          <a className="w2-store hide-sm" href="#/app"><Globe size={24} /><span><small>Open the</small>Web wallet</span></a>
+          <a className="w2-store" href="#iphone"><Smartphone size={24} /><span><small>Download for</small>iPhone</span></a>
+          <a className="w2-store" href="#chrome"><Chrome size={24} /><span><small>Add to</small>Chrome</span></a>
+          <a className="w2-store" href="#/app"><Globe size={24} /><span><small>Open the</small>Web wallet</span></a>
         </Item>
       </Stagger>
       <div className="w2-stage">
@@ -190,8 +200,8 @@ export function Landing() {
     <section className="section" id="download"><div className="wrap">
       <Reveal className="sec-head"><span className="eyebrow">Download</span><h2 className="h2">Phone, Browser And Web. One Phrase On All Three.</h2></Reveal>
       <div className="get-grid">
-        <div className="get-card dark"><span className="get-ico"><Smartphone size={22} /></span><h3>iPhone app</h3><p>Create a wallet, scan, send and swap. Keys stay in the iOS keychain.</p><div className="get-actions"><a className="btn btn-primary btn-sm" href="/downloads/Magen-NEAR-iOS-Simulator.zip"><Download size={15} />iOS Simulator build</a></div><small>Release build for Apple-silicon simulators</small></div>
-        <div className="get-card"><span className="get-ico"><Chrome size={22} /></span><h3>Chrome extension</h3><p>A popup wallet that dApps reach through <span className="mono">window.magen</span>.</p><div className="get-actions"><a className="btn btn-light btn-sm" href="/downloads/magen-extension.zip"><Download size={15} />Extension .zip</a></div><small>chrome://extensions → Load unpacked</small></div>
+        <div className="get-card dark"><span className="get-ico"><Smartphone size={22} /></span><h3>iPhone app</h3><p>Create a wallet, scan, send and swap. Keys stay in the iOS keychain.</p><div className="get-actions"><a className="btn btn-primary btn-sm" href="#iphone"><Download size={15} />Get the iPhone app</a></div><small>iOS Simulator build for the hackathon · TestFlight not set up yet</small></div>
+        <div className="get-card"><span className="get-ico"><Chrome size={22} /></span><h3>Chrome extension</h3><p>A popup wallet that dApps reach through <span className="mono">window.magen</span>.</p><div className="get-actions"><a className="btn btn-light btn-sm" href="#chrome"><Download size={15} />Add to Chrome</a></div><small>Load unpacked · not on the Chrome Web Store yet</small></div>
         <div className="get-card"><span className="get-ico"><Globe size={22} /></span><h3>Web wallet</h3><p>Everything, in the browser. Look around the live demo wallet first.</p><div className="get-actions"><a className="btn btn-light btn-sm" href="#/app">Open the web wallet <ArrowUpRight size={15} /></a></div><small>NEAR testnet</small></div>
       </div>
     </div></section>
@@ -209,6 +219,8 @@ export function Landing() {
 
     <section className="section"><div className="cta-band w2-ctaband"><Mark size={64} /><h2>Your Coins Deserve A Lock From The Future</h2><a className="w2-cta" href="#/start/create">Create A Wallet<span><ArrowRight size={16} /></span></a></div></section>
 
+    <AnimatePresence>{get && <GetModal key={get} kind={get} onClose={closeGet} demo={demo} live={live} />}</AnimatePresence>
+
     <footer className="footer"><div className="footer-in"><Brand /><nav><a href="https://github.com/nickthelegend/magen-near" target="_blank" rel="noreferrer">GitHub</a><a href="#/app">Web wallet</a><a href="#download">Download</a><a href="/chains/README.txt">Logo credits</a></nav><span>NEAR testnet preview · MIT · not audited</span></div></footer>
   </div>;
 }
@@ -218,7 +230,7 @@ function FeatCard({ icon, title, text, href }: { icon: any; title: string; text:
 }
 
 /** The W2 phone: centred balance, chain avatars, striped asset bars. Live data from the demo wallet. */
-function PhoneW2({ demo, live }: { demo: any; live: Live }) {
+function PhoneW2({ demo, live, inline }: { demo: any; live: Live; inline?: boolean }) {
   const nearN = live.near !== undefined ? Number(live.near / 10n ** 20n) / 1e4 : undefined;
   const [w, d] = nearN !== undefined ? fmt(nearN, 2).split('.') : ['…', ''];
   const rows = [
@@ -227,7 +239,7 @@ function PhoneW2({ demo, live }: { demo: any; live: Live }) {
     { id: 'solana', name: 'wNEAR on Solana', amt: y9(live.sol), share: .35 },
     { id: 'bitcoin', name: 'nBTC', amt: live.nbtc ? y8(live.nbtc) : 'Bridge in', share: 1, max: true },
   ];
-  return <motion.div className="w2-phone" initial={{ y: 160, opacity: 0, x: '-50%' }} animate={{ y: 0, opacity: 1, x: '-50%' }} transition={{ delay: .35, type: 'spring', stiffness: 70, damping: 16 }}><div className="w2-screen">
+  return <motion.div className={`w2-phone${inline ? ' inline' : ''}`} initial={inline ? { y: 60, opacity: 0, rotate: -4 } : { y: 160, opacity: 0, x: '-50%' }} animate={inline ? { y: 0, opacity: 1, rotate: -4 } : { y: 0, opacity: 1, x: '-50%' }} transition={{ delay: inline ? .1 : .35, type: 'spring', stiffness: 70, damping: 16 }}><div className="w2-screen">
     <div className="w2-notch" />
     <div className="w2-bal"><small>Current Balance</small><b className="num">{w}{d && <span>.{d}</span>}<i>NEAR</i></b><small className="mono">{demo?.account ?? '…'}</small></div>
     <div className="w2-avs"><small>Your Chains</small><div>{['near', 'bitcoin', 'zcash', 'ethereum'].map(id => <ChainLogo key={id} id={id} />)}<span className="w2-plus"><Plus size={18} /></span></div></div>
@@ -266,4 +278,82 @@ function Compare() {
     </table></div>
     <p className="sources">Sources (Nov 2026): Phantom chain support (crypto.news, Sep 2026); Trust Wallet 2026 guide; Rabby is EVM-only; HOT Wallet Chrome listing (MPC + TEE, classical); Meteor ML-DSA rotation (cryptobriefing); <a href="https://www.nearmobile.app/blog/near-mobile-4-1-post-quantum-vaults" target="_blank" rel="noreferrer">NEAR Mobile 4.1 vaults</a> (separate account, can’t convert); <a href="https://www.theqrl.org/" target="_blank" rel="noreferrer">QRL</a> is its own chain. Full notes in the README.</p>
   </>;
+}
+
+type Get = 'iphone' | 'chrome';
+const GET = {
+  iphone: {
+    file: '/downloads/Magen-NEAR-iOS-Simulator.zip', chip: 'iPhone app', title: 'Magen For iPhone',
+    lede: 'The whole wallet as a native iPhone app: create a wallet, scan, send and swap, with your keys in the iOS keychain.',
+    button: 'Download for iPhone', buttonSub: 'iOS Simulator build', alt: 'No Mac? Open the web wallet instead',
+    honest: 'For the hackathon this is an iOS Simulator build. TestFlight isn’t set up yet, so it runs in Xcode’s Simulator on an Apple-silicon Mac, not on a physical iPhone.',
+    steps: [
+      { icon: Download, t: 'Download', d: 'Get the .zip above.' },
+      { icon: FolderOpen, t: 'Unzip', d: 'Double-click it. You get Magen.app.' },
+      { icon: MousePointerClick, t: 'Install', d: 'Open Simulator and drag Magen.app onto the iPhone, or run:', code: 'xcrun simctl install booted Magen.app' },
+    ],
+  },
+  chrome: {
+    file: '/downloads/magen-extension.zip', chip: 'Chrome extension', title: 'Magen For Chrome',
+    lede: 'A popup wallet beside your tabs. Apps you visit can ask it to sign through window.magen, and you approve each request.',
+    button: 'Download for Chrome', buttonSub: 'Chrome extension', alt: 'Rather not install? Open the web wallet instead',
+    honest: 'Not on the Chrome Web Store yet, so you load it yourself in developer mode. It takes about a minute.',
+    steps: [
+      { icon: Download, t: 'Download and unzip', d: 'You get a magen-extension folder.' },
+      { icon: Puzzle, t: 'Open extensions', d: 'Go to chrome://extensions and turn on Developer mode, top right.' },
+      { icon: MousePointerClick, t: 'Load unpacked', d: 'Click Load unpacked, pick the folder, then pin Magen from the puzzle menu.' },
+    ],
+  },
+} as const;
+
+/** Reads the real file size from the server, so the number is never stale. */
+function useFileSize(url: string) {
+  const [size, set] = useState<string | null>(null);
+  useEffect(() => {
+    let on = true;
+    fetch(url, { method: 'HEAD' }).then(r => { const n = Number(r.headers.get('content-length')); if (on && r.ok && n > 0) set(`${(n / 1e6).toFixed(1)} MB`); }).catch(() => {});
+    return () => { on = false; };
+  }, [url]);
+  return size;
+}
+
+/** The install moment for the iPhone and Chrome buttons: what you get, the real file and three plain steps. */
+function GetModal({ kind, onClose, demo, live }: { kind: Get; onClose: () => void; demo: any; live: Live }) {
+  const g = GET[kind];
+  const size = useFileSize(g.file);
+  const close = useRef(onClose); close.current = onClose;
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && close.current();
+    addEventListener('keydown', k); document.body.style.overflow = 'hidden';
+    return () => { removeEventListener('keydown', k); document.body.style.overflow = ''; };
+  }, []);
+  return <motion.div className="w2-get-bg" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .22 }}>
+    <motion.div className={`w2-get ${kind}`} role="dialog" aria-modal="true" aria-labelledby="get-title" onClick={e => e.stopPropagation()}
+      initial={{ opacity: 0, y: 40, scale: .97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 24, scale: .98 }} transition={{ type: 'spring', stiffness: 260, damping: 26 }}>
+      <button className="w2-get-x" onClick={onClose} aria-label="Close" autoFocus><X size={18} /></button>
+      <div className="w2-get-art" aria-hidden="true">
+        <div className="w2-ray" /><div className="w2-dots" />
+        {kind === 'iphone' ? <PhoneW2 demo={demo} live={live} inline />
+          : <motion.div className="w2-popup" initial={{ y: 50, opacity: 0, rotate: -3 }} animate={{ y: 0, opacity: 1, rotate: -3 }} transition={{ delay: .1, type: 'spring', stiffness: 80, damping: 16 }}>
+            <div className="w2-popup-bar"><i /><i /><i /><span><Puzzle size={13} />Magen</span></div>
+            <img src="/v5/ext-popup.jpg" alt="" width={760} height={1200} />
+          </motion.div>}
+      </div>
+      <div className="w2-get-body">
+        <span className="w2-chip"><span className="w2-chip-ico">{kind === 'iphone' ? <Smartphone size={13} /> : <Chrome size={13} />}</span>{g.chip}</span>
+        <h2 id="get-title">{g.title}</h2>
+        <p className="w2-get-lede">{g.lede}</p>
+        <a className="w2-get-dl" href={g.file} download>
+          <span className="w2-get-dl-ico"><Download size={22} /></span>
+          <span><b>{g.button}</b><small>{g.buttonSub}{size ? ` · ${size}` : ''} · .zip</small></span>
+          <ArrowRight size={18} />
+        </a>
+        <p className="w2-get-honest">{g.honest}</p>
+        <ol className="w2-get-steps">
+          {g.steps.map((s, i) => <li key={s.t}><span className="w2-get-n">{i + 1}</span><span><b>{s.t}</b><small>{s.d}</small>{'code' in s && <code className="w2-get-code"><Terminal size={13} />{s.code}</code>}</span></li>)}
+        </ol>
+        <a className="w2-get-alt" href="#/app" onClick={onClose}>{g.alt}<ArrowUpRight size={15} /></a>
+      </div>
+    </motion.div>
+  </motion.div>;
 }
