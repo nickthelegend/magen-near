@@ -12,7 +12,7 @@ import { PAIRS, ftBalance, refPool, refQuote, swapNearFor, type Pair } from '../
 import { OUT_ROUTES, UTXO, bridgeOut, bridgedBalance, depositAddress, outFee, outStatus, splBalance, type UtxoChain } from '../../../sdk/omni.ts';
 import { friendlyError, near, short, txUrl } from '../../../web/src/lib/chain.ts';
 import { Back, Btn, Card, Err, Pill, T, feeSigner, styles, type P } from './ui';
-import { Qr, Screen } from './Screen';
+import { Qr, Screen, decimal } from './Screen';
 import { ShieldSend } from './TabBar';
 import { C, FONT, LOGO, MONO } from './theme';
 import { units } from './Assets';
@@ -133,7 +133,7 @@ export function SwapTab(p: P) {
     <Card style={{ padding: 18, gap: 10 }}>
       <T s="label">You pay</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 60 }}>
-        <TextInput selectionColor={C.accent} style={{ flex: 1, fontFamily: FONT.display, fontSize: 40, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(t.replace(/[^\d.]/g, '')); setRes(null); setErr(''); }} editable={!busy} accessibilityLabel="Amount in NEAR" />
+        <TextInput selectionColor={C.accent} style={{ flex: 1, fontFamily: FONT.display, fontSize: 40, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(decimal(t)); setRes(null); setErr(''); }} editable={!busy} accessibilityLabel="Amount in NEAR" />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><ChainLogo id="near" size={14} /><T style={{ fontWeight: '600', fontSize: 16 }}>NEAR</T></View>
       </View>
       <T style={{ color: C.text3, fontSize: 13 }}>Available {(() => { const sp = spendable(live); return sp === null ? '…' : near(sp > 0n ? sp : 0n, 4); })()} NEAR (0.5 NEAR stays for storage)</T>
@@ -278,7 +278,7 @@ function BridgeOut(p: P & { seg: any }) {
     <Card style={{ padding: 18, gap: 10 }}>
       <T s="label">Amount</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 60 }}>
-        <TextInput selectionColor={C.accent} style={{ flex: 1, fontFamily: FONT.display, fontSize: 40, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(t.replace(/[^\d.]/g, '')); setRes(null); setErr(''); }} editable={!busy} accessibilityLabel="Amount in NEAR" />
+        <TextInput selectionColor={C.accent} style={{ flex: 1, fontFamily: FONT.display, fontSize: 40, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(decimal(t)); setRes(null); setErr(''); }} editable={!busy} accessibilityLabel="Amount in NEAR" />
         <T style={{ fontWeight: '600', fontSize: 16 }}>NEAR</T>
       </View>
       <T style={{ color: C.text3, fontSize: 13 }}>Available {(() => { const sp = spendable(live); return sp === null ? '…' : near(sp > 0n ? sp : 0n, 4); })()} NEAR · arrives as wNEAR on Solana</T>

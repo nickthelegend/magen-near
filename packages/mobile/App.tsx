@@ -20,7 +20,7 @@ import { parseScan } from './src/scan';
 import { Back, Btn, Card, Err, Logo, Ok, Pill, T, Tile, feeOf, feeSigner, open, styles, type Live, type P } from './src/ui';
 import { C, FONT, LOGO, MONO, TopGlow, fontAssets } from './src/theme';
 import { Onboarding } from './src/Onboarding';
-import { Screen } from './src/Screen';
+import { Screen, decimal } from './src/Screen';
 import { BridgeTab, ReceiveTab, SwapTab, TxBanner, nice, retrying } from './src/Flows';
 import { ChainAvatars, StripeBar, shares, units, useAssets } from './src/Assets';
 
@@ -279,7 +279,7 @@ function SendTab({ vault, live, refresh, go, prefill, addLocal }: P & { prefill:
       <TextInput selectionColor="#E040C8" style={styles.input} placeholder="bob.testnet" placeholderTextColor={C.text3} value={to} onChangeText={t => { setTo(t); setErr(''); }} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} accessibilityLabel="Send to" />
       <T s="label">Amount</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 64, paddingHorizontal: 4 }}>
-        <TextInput selectionColor="#E040C8" style={{ flex: 1, fontFamily: FONT.display, fontSize: 44, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" placeholder="0" placeholderTextColor={C.text3} value={amt} onChangeText={t => { setAmt(t.replace(/[^\d.]/g, '')); setErr(''); }} editable={stage === 'form'} accessibilityLabel="Amount in NEAR" />
+        <TextInput selectionColor="#E040C8" style={{ flex: 1, fontFamily: FONT.display, fontSize: 44, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" placeholder="0" placeholderTextColor={C.text3} value={amt} onChangeText={t => { setAmt(decimal(t)); setErr(''); }} editable={stage === 'form'} accessibilityLabel="Amount in NEAR" />
         <T style={{ color: C.text2, fontSize: 17, fontWeight: '600' }}>NEAR</T>
       </View>
       <StripeBar pct={frac} logo={LOGO.near} label={frac !== null && frac >= 0.995 ? 'Max' : `${amt || '0'} of ${near(spendable > 0n ? spendable : 0n, 2)} NEAR`}
@@ -502,7 +502,7 @@ function PrivateTab({ vault, live, go, refresh, addLocal }: P) {
         <Pressable onPress={async () => { setMeta((await Clipboard.getStringAsync()).trim()); setErr(''); }} style={[styles.input, { width: 80, alignItems: 'center', justifyContent: 'center' }]} accessibilityRole="button"><T style={{ color: C.accentText, fontWeight: '600' }}>Paste</T></Pressable></View>
       <T style={{ color: C.text3, fontSize: 12.5, lineHeight: 18 }}>Ask them for it: it starts with magen-meta: and is under Receive privately in their Magen app (its "meta-key").</T>
       <T s="label">Amount (NEAR)</T>
-      <TextInput selectionColor="#E040C8" style={styles.input} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(t.replace(/[^\d.]/g, '')); setErr(''); }} accessibilityLabel="Amount in NEAR" />
+      <TextInput selectionColor="#E040C8" style={styles.input} keyboardType="decimal-pad" value={amt} onChangeText={t => { setAmt(decimal(t)); setErr(''); }} accessibilityLabel="Amount in NEAR" />
       {sent?.success && <Pressable onPress={() => copy(sent.note, 'note')} style={[styles.input, { justifyContent: 'center' }]}><T numberOfLines={1} style={{ fontFamily: MONO, fontSize: 12 }}>{short(sent.note, 22, 6)}</T></Pressable>}
     </Card> : <Card style={{ padding: 18, gap: 10 }}>
       <T s="label">Your private code (safe to share)</T>
