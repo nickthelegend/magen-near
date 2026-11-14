@@ -1,0 +1,10 @@
+# Magen
+
+> A quantum-safe multichain wallet on NEAR testnet (iPhone app, Chrome extension, web). Every action needs an ed25519 signature and an ML-DSA-65 (FIPS 204) signature, both verified on chain by the account's own wallet contract. Bitcoin, Ethereum and Solana signatures from NEAR Chain Signatures are requested only after both pass.
+
+- [Judge guide](JUDGES.md): verification commands, "do X → see Y" steps, NEAR features used, limits
+- [README](README.md): product, proof table, how the upgrade works, build and run
+- [Wallet contract](contracts/src/lib.rs): dual verification, guardians, recovery, Q-Day migration
+- [Live verifier](scripts/judge-verify.mjs): `node scripts/judge-verify.mjs` re-checks 12 on-chain proofs
+- [Blocked / quote-only items](BLOCKED.md)
+- [Testing](TESTING.md)
