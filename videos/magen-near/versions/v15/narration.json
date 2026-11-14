@@ -1,0 +1,98 @@
+[
+ {
+  "id": "landing",
+  "text": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it from the site, for Chrome or for iPhone."
+ },
+ {
+  "id": "ext",
+  "text": "Load the Chrome extension, and open it. It's the same wallet in your browser, with a live demo account to look around."
+ },
+ {
+  "id": "phone-open",
+  "text": "On iPhone, the app opens to the same wallet."
+ },
+ {
+  "id": "create",
+  "text": "Now create a wallet. Pick a name. Then twelve words: your one backup, for every chain."
+ },
+ {
+  "id": "chains",
+  "text": "Those twelve words make your address on Bitcoin, Zcash, Ethereum, Base, Arbitrum, Avalanche, Solana and Cosmos, plus a quantum safe key, M L D S A sixty five."
+ },
+ {
+  "id": "create-sign",
+  "text": "One transaction gives the new account two locks on Near: your key, and the quantum safe one. Review it, and approve."
+ },
+ {
+  "id": "create-explorer",
+  "text": "On the explorer: the wallet contract, deployed with both keys."
+ },
+ {
+  "id": "home",
+  "text": "Ten test Near from the testnet helper, and every chain's address, from one seed."
+ },
+ {
+  "id": "unlock",
+  "text": "Now a wallet I've used all day. Unlock it with its password."
+ },
+ {
+  "id": "btc",
+  "text": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address. Two deposits arrived, and each was minted as n B T C on Near."
+ },
+ {
+  "id": "btc-explorer",
+  "text": "Here is the mint on Near, and the Bitcoin payment it came from, sent earlier from a testnet wallet."
+ },
+ {
+  "id": "zec",
+  "text": "Zcash works the same way. A testnet deposit to this address became n Z E C on Near."
+ },
+ {
+  "id": "swap",
+  "text": "Swap half a Near for U S D T on Ref Finance. The approval shows everything: network, signer, four calls in one batch, and two signatures, classical and quantum safe."
+ },
+ {
+  "id": "swap-explorer",
+  "text": "The Near network checked both signatures before the swap ran."
+ },
+ {
+  "id": "out",
+  "text": "Bridge out, to this wallet's own Solana address, through the Omni bridge. Same approval, same two signatures. Approve, and the bridge relays it."
+ },
+ {
+  "id": "out-explorer",
+  "text": "It starts on the Near network, and lands on Solana's dev net."
+ },
+ {
+  "id": "private",
+  "text": "Private send. Pay someone without linking the payment to their account. The money goes to a one time account that only they can open."
+ },
+ {
+  "id": "private-explorer",
+  "text": "On chain, it's a payment to a fresh account, nothing more."
+ },
+ {
+  "id": "guardians",
+  "text": "Back on the new wallet. Lose your phone, and guardians can help: any two of three can move your locks to a new device. Setting them up is signed twice, too."
+ },
+ {
+  "id": "qday",
+  "text": "And when classical keys stop being safe, flip the Q Day switch. It adds your quantum safe key to the account itself, as a native Near key."
+ },
+ {
+  "id": "qday-explorer",
+  "text": "The Near network now lists a post quantum key on this account, and the explorer marks it quantum safe."
+ },
+ {
+  "id": "phone",
+  "text": "The iPhone app carries the same two locks. Send shows exactly what you sign, and both signatures, before anything leaves the phone. Approve, and Near verifies both."
+ },
+ {
+  "id": "phone-explorer",
+  "text": "Here's that payment on the explorer."
+ },
+ {
+  "id": "close",
+  "text": "One seed. Every chain. A quantum safe lock on every move, and real bridges in and out. That's Magen, on Near testnet today."
+ }
+]

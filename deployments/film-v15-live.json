@@ -1,0 +1,20 @@
+{
+ "network": "NEAR testnet (+ Solana devnet destination)",
+ "recorded": "2026-11-14 (v15 film, every NEAR tx approved on camera in the app's approval sheet)",
+ "transactions": [
+  {"what": "create maya-safe.testnet (helper create + upgrade: magen-3 contract, ed25519 + ML-DSA-65 locks)", "account": "maya-safe.testnet", "hash": "VVaEemDSTXqigYubmNSTz2HPXq4igbyC1y39jMruGuQ"},
+  {"what": "swap 0.5 NEAR -> USDT on Ref (4-call batch, dual-signed)", "account": "magen-noam.testnet", "hash": "244z9RSELiRdQmhvDmV7sxBS3vMw6zNGE8xavcfGQTVi"},
+  {"what": "bridge out 0.3 NEAR -> Solana devnet via Omni (dual-signed)", "account": "magen-noam.testnet", "hash": "7zHBYKkdvHn5umWv3eAVZgiww3FN7NSRmoqaCx7U66at",
+   "solana_destination": "4Jp5jGsH4bYqARLLve2QAYfPCQWrh1Y1dP9freBemPfFBb4Wi2ddyRwtTAzhrp6u4X52oHGXhGaK6D3yXMNDXFGY"},
+  {"what": "private send 0.2 NEAR to a one-time account for maya-safe (dual-signed)", "account": "magen-noam.testnet", "hash": "4MUcmZp2vBjp9Uzq1cgAA1ctYSy6eTv9dmGQWMcekU21"},
+  {"what": "set 2-of-3 ML-DSA-65 guardians (dual-signed)", "account": "maya-safe.testnet", "hash": "4WnbGuP8Ae7wji3qAj836zGFj2XAxJb4rMmeNQoxo6rp"},
+  {"what": "Q-Day switch: native ML-DSA-65 full-access key (dual-signed)", "account": "maya-safe.testnet", "hash": "BAWh3doDhZsfYMT7uzrnLS8i59rwLMKdA1TTNE7XZbTF"},
+  {"what": "native ML-DSA-65-only 0.01 NEAR self-transfer (recorded, not used in the cut)", "account": "maya-safe.testnet", "hash": "EAR64GSrdX8htBLh4N5nufSv5rhW6BJu2WmmdjhF7X9o"},
+  {"what": "iPhone app: send 0.05 NEAR to maya-safe.testnet (dual-signed)", "account": "magen-noa.testnet", "hash": "8zE68ivr8yqCAxMZdH7jfWfCAPmzLUzSrn7DSz95AhoU"}
+ ],
+ "shown_earlier_deposits": [
+  {"what": "117,485 sats BTC deposit", "btc_tx": "81c3252954955553a2c81d10db5336a6bf651fafb9b82640da0388882d3bd095", "near_mint": "3ozwi6xYKwSXFWDhbQbANDNWg1YH2rt9XzGSLqbrrj66"},
+  {"what": "0.002 TAZ ZEC deposit", "zec_tx": "656c4847881bcc9401125ed113acd57e68bb8c0bb4b567ae41d91050238133c9", "near_mint": "9uGKrN1KbQnRZVDkLNcR7XqsYTj2LX3TiEKBQKMb8WG8"}
+ ],
+ "superseded_take": {"what": "first create take with the old logo (not in the film)", "account": "maya-qsafe.testnet", "hash": "217VS3LrqB3TfSNEHGeYY5gAogK1oVBZqwZBNth5qaUQ"}
+}

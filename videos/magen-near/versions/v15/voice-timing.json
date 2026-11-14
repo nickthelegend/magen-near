@@ -1,0 +1,122 @@
+[
+ {
+  "id": "landing",
+  "text": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it from the site, for Chrome or for iPhone.",
+  "speech": 10.347
+ },
+ {
+  "id": "ext",
+  "text": "Load the Chrome extension, and open it. It's the same wallet in your browser, with a live demo account to look around.",
+  "speech": 6.955
+ },
+ {
+  "id": "phone-open",
+  "text": "On iPhone, the app opens to the same wallet.",
+  "speech": 3.264
+ },
+ {
+  "id": "create",
+  "text": "Now create a wallet. Pick a name. Then twelve words: your one backup, for every chain.",
+  "speech": 5.248
+ },
+ {
+  "id": "chains",
+  "text": "Those twelve words make your address on Bitcoin, Zcash, Ethereum, Base, Arbitrum, Avalanche, Solana and Cosmos, plus a quantum safe key, M L D S A sixty five.",
+  "speech": 10.581
+ },
+ {
+  "id": "create-sign",
+  "text": "One transaction gives the new account two locks on Near: your key, and the quantum safe one. Review it, and approve.",
+  "speech": 6.976
+ },
+ {
+  "id": "create-explorer",
+  "text": "On the explorer: the wallet contract, deployed with both keys.",
+  "speech": 4.096
+ },
+ {
+  "id": "home",
+  "text": "Ten test Near from the testnet helper, and every chain's address, from one seed.",
+  "speech": 4.949
+ },
+ {
+  "id": "unlock",
+  "text": "Now a wallet I've used all day. Unlock it with its password.",
+  "speech": 4.245
+ },
+ {
+  "id": "btc",
+  "text": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address. Two deposits arrived, and each was minted as n B T C on Near.",
+  "speech": 8.384
+ },
+ {
+  "id": "btc-explorer",
+  "text": "Here is the mint on Near, and the Bitcoin payment it came from, sent earlier from a testnet wallet.",
+  "speech": 5.909
+ },
+ {
+  "id": "zec",
+  "text": "Zcash works the same way. A testnet deposit to this address became n Z E C on Near.",
+  "speech": 6.08
+ },
+ {
+  "id": "swap",
+  "text": "Swap half a Near for U S D T on Ref Finance. The approval shows everything: network, signer, four calls in one batch, and two signatures, classical and quantum safe.",
+  "speech": 10.176
+ },
+ {
+  "id": "swap-explorer",
+  "text": "The Near network checked both signatures before the swap ran.",
+  "speech": 3.776
+ },
+ {
+  "id": "out",
+  "text": "Bridge out, to this wallet's own Solana address, through the Omni bridge. Same approval, same two signatures. Approve, and the bridge relays it.",
+  "speech": 8.192
+ },
+ {
+  "id": "out-explorer",
+  "text": "It starts on the Near network, and lands on Solana's dev net.",
+  "speech": 3.968
+ },
+ {
+  "id": "private",
+  "text": "Private send. Pay someone without linking the payment to their account. The money goes to a one time account that only they can open.",
+  "speech": 7.616
+ },
+ {
+  "id": "private-explorer",
+  "text": "On chain, it's a payment to a fresh account, nothing more.",
+  "speech": 3.861
+ },
+ {
+  "id": "guardians",
+  "text": "Back on the new wallet. Lose your phone, and guardians can help: any two of three can move your locks to a new device. Setting them up is signed twice, too.",
+  "speech": 8.256
+ },
+ {
+  "id": "qday",
+  "text": "And when classical keys stop being safe, flip the Q Day switch. It adds your quantum safe key to the account itself, as a native Near key.",
+  "speech": 8.235
+ },
+ {
+  "id": "qday-explorer",
+  "text": "The Near network now lists a post quantum key on this account, and the explorer marks it quantum safe.",
+  "speech": 5.845
+ },
+ {
+  "id": "phone",
+  "text": "The iPhone app carries the same two locks. Send shows exactly what you sign, and both signatures, before anything leaves the phone. Approve, and Near verifies both.",
+  "speech": 9.963
+ },
+ {
+  "id": "phone-explorer",
+  "text": "Here's that payment on the explorer.",
+  "speech": 2.517
+ },
+ {
+  "id": "close",
+  "text": "One seed. Every chain. A quantum safe lock on every move, and real bridges in and out. That's Magen, on Near testnet today.",
+  "speech": 7.723
+ }
+]

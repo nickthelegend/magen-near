@@ -1,0 +1,146 @@
+[
+ {
+  "id": "landing",
+  "expected": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it from the site, for Chrome or for iPhone.",
+  "transcript": "Quantum computers will one day forge the signatures that guard every crypto wallet today. Magen is a wallet built for that day. Get it from the site for Chrome or for iPhone.",
+  "similarity": 1.0
+ },
+ {
+  "id": "ext",
+  "expected": "Load the Chrome extension, and open it. It's the same wallet in your browser, with a live demo account to look around.",
+  "transcript": "Load the Chrome extension and open it. It's the same wallet in your browser with a live demo account to look around.",
+  "similarity": 1.0
+ },
+ {
+  "id": "phone-open",
+  "expected": "On iPhone, the app opens to the same wallet.",
+  "transcript": "On iPhone, the app opens to the same wallet.",
+  "similarity": 1.0
+ },
+ {
+  "id": "create",
+  "expected": "Now create a wallet. Pick a name. Then twelve words: your one backup, for every chain.",
+  "transcript": "Now create a wallet, pick a name, then 12 words, your one backup for every chain.",
+  "similarity": 0.938
+ },
+ {
+  "id": "chains",
+  "expected": "Those twelve words make your address on Bitcoin, Zcash, Ethereum, Base, Arbitrum, Avalanche, Solana and Cosmos, plus a quantum safe key, M L D S A sixty five.",
+  "transcript": "Those 12 words make your address on Bitcoin, Zcash, Ethereum, Base, Arbitrum, Avalanche, Solana, and Cosmos, plus a Quantum SafeKey, MLDS65.",
+  "similarity": 0.735
+ },
+ {
+  "id": "create-sign",
+  "expected": "One transaction gives the new account two locks on Near: your key, and the quantum safe one. Review it, and approve.",
+  "transcript": "One transaction gives the new account two locks on near, your key and the quantum safe one. Review it and approve.",
+  "similarity": 1.0
+ },
+ {
+  "id": "create-explorer",
+  "expected": "On the explorer: the wallet contract, deployed with both keys.",
+  "transcript": "On the Explorer, the wallet contract deployed with both keys.",
+  "similarity": 1.0
+ },
+ {
+  "id": "home",
+  "expected": "Ten test Near from the testnet helper, and every chain's address, from one seed.",
+  "transcript": "10 tests near from the testnet helper and every chain's address from one seed.",
+  "similarity": 0.857
+ },
+ {
+  "id": "unlock",
+  "expected": "Now a wallet I've used all day. Unlock it with its password.",
+  "transcript": "Now a wallet I've used all day. Unlock it with its password.",
+  "similarity": 1.0
+ },
+ {
+  "id": "btc",
+  "expected": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address. Two deposits arrived, and each was minted as n B T C on Near.",
+  "transcript": "Bring Bitcoin in. This is the wallet's own Bitcoin deposit address. Two deposits arrived, and each was minted as NBTC on near.",
+  "similarity": 0.894
+ },
+ {
+  "id": "btc-explorer",
+  "expected": "Here is the mint on Near, and the Bitcoin payment it came from, sent earlier from a testnet wallet.",
+  "transcript": "Here is the mint on near, and the Bitcoin payment it came from, sent earlier from a testnet wallet.",
+  "similarity": 1.0
+ },
+ {
+  "id": "zec",
+  "expected": "Zcash works the same way. A testnet deposit to this address became n Z E C on Near.",
+  "transcript": "Zcash works the same way. A testnet deposit to this address became NZEC on near.",
+  "similarity": 0.848
+ },
+ {
+  "id": "swap",
+  "expected": "Swap half a Near for U S D T on Ref Finance. The approval shows everything: network, signer, four calls in one batch, and two signatures, classical and quantum safe.",
+  "transcript": "Swap half a near for USDT on REF Finance. The approval shows everything. Network, signer, four calls in one batch, and two signatures, classical and quantum safe.",
+  "similarity": 0.912
+ },
+ {
+  "id": "swap-explorer",
+  "expected": "The Near network checked both signatures before the swap ran.",
+  "transcript": "The near network checked both signatures before the swap ran.",
+  "similarity": 1.0
+ },
+ {
+  "id": "out",
+  "expected": "Bridge out, to this wallet's own Solana address, through the Omni bridge. Same approval, same two signatures. Approve, and the bridge relays it.",
+  "transcript": "Bridge out to this wallet's own Solana address through the Omni Bridge. Same approval, same two signatures. Approve and the bridge relays it.",
+  "similarity": 1.0
+ },
+ {
+  "id": "out-explorer",
+  "expected": "It starts on the Near network, and lands on Solana's dev net.",
+  "transcript": "It starts on the near network and lands on Solana's DevNet.",
+  "similarity": 0.87
+ },
+ {
+  "id": "private",
+  "expected": "Private send. Pay someone without linking the payment to their account. The money goes to a one time account that only they can open.",
+  "transcript": "Private send pays someone without linking the payment to their account. The money goes to a one-time account that only they can open.",
+  "similarity": 0.958
+ },
+ {
+  "id": "private-explorer",
+  "expected": "On chain, it's a payment to a fresh account, nothing more.",
+  "transcript": "On Chain, it's a payment to a fresh account, nothing more.",
+  "similarity": 1.0
+ },
+ {
+  "id": "guardians",
+  "expected": "Back on the new wallet. Lose your phone, and guardians can help: any two of three can move your locks to a new device. Setting them up is signed twice, too.",
+  "transcript": "Back on the new wallet, lose your phone and guardians can help. Any two of three can move your locks to a new device. Setting them up is signed twice too.",
+  "similarity": 1.0
+ },
+ {
+  "id": "qday",
+  "expected": "And when classical keys stop being safe, flip the Q Day switch. It adds your quantum safe key to the account itself, as a native Near key.",
+  "transcript": "And when classical keys stop being safe, flip the Q-Day switch. It adds your quantum safe key to the account itself as a native near key.",
+  "similarity": 1.0
+ },
+ {
+  "id": "qday-explorer",
+  "expected": "The Near network now lists a post quantum key on this account, and the explorer marks it quantum safe.",
+  "transcript": "The near network now lists a post quantum key on this account, and the explorer marks it quantum safe.",
+  "similarity": 1.0
+ },
+ {
+  "id": "phone",
+  "expected": "The iPhone app carries the same two locks. Send shows exactly what you sign, and both signatures, before anything leaves the phone. Approve, and Near verifies both.",
+  "transcript": "The iPhone app carries the same two locks. Send shows exactly what you sign and both signatures before anything leaves the phone. Approve and near verifies both.",
+  "similarity": 1.0
+ },
+ {
+  "id": "phone-explorer",
+  "expected": "Here's that payment on the explorer.",
+  "transcript": "Here's that payment on the Explorer.",
+  "similarity": 1.0
+ },
+ {
+  "id": "close",
+  "expected": "One seed. Every chain. A quantum safe lock on every move, and real bridges in and out. That's Magen, on Near testnet today.",
+  "transcript": "One seed, every chain, a quantum safe lock on every move and real bridges in and out. That's Magin on Near Testnet today.",
+  "similarity": 0.957
+ }
+]

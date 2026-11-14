@@ -1,0 +1,368 @@
+{
+ "segments": [
+  {
+   "id": "L1",
+   "src": "raw/L-landing.mp4",
+   "a": 0.15,
+   "b": 8.2,
+   "kind": "web",
+   "voice": "landing",
+   "vat": 0.4
+  },
+  {
+   "id": "L2",
+   "src": "raw/L-landing.mp4",
+   "a": 17.0,
+   "b": 19.4,
+   "kind": "web"
+  },
+  {
+   "id": "L3",
+   "src": "raw/L-landing.mp4",
+   "a": 22.6,
+   "b": 24.8,
+   "kind": "web"
+  },
+  {
+   "id": "e1",
+   "src": "raw/E-ext.mp4",
+   "a": 0.8,
+   "b": 6.0,
+   "kind": "web",
+   "voice": "ext",
+   "vat": 0.4
+  },
+  {
+   "id": "e2",
+   "src": "raw/E-popup.mp4",
+   "a": 0.3,
+   "b": 4.6,
+   "kind": "popup"
+  },
+  {
+   "id": "e3",
+   "src": "raw/E-popup.mp4",
+   "a": 5.3,
+   "b": 10.3,
+   "kind": "popup"
+  },
+  {
+   "id": "p1",
+   "src": "raw/phone/phone-send-cfr.mp4",
+   "a": 0.0,
+   "b": 7.5,
+   "kind": "phone",
+   "voice": "phone-open",
+   "vat": 2.0
+  },
+  {
+   "id": "a1",
+   "src": "raw/A-create-blur.mp4",
+   "a": 0.8,
+   "b": 8.4,
+   "kind": "web",
+   "voice": "create",
+   "vat": 0.3
+  },
+  {
+   "id": "a2",
+   "src": "raw/A-create-blur.mp4",
+   "a": 8.9,
+   "b": 15.5,
+   "kind": "web"
+  },
+  {
+   "id": "a3",
+   "src": "raw/A-create-blur.mp4",
+   "a": 18.0,
+   "b": 26.0,
+   "kind": "web",
+   "voice": "chains",
+   "vat": 0.2
+  },
+  {
+   "id": "a4a",
+   "src": "raw/A-create-blur.mp4",
+   "a": 27.4,
+   "b": 29.4,
+   "kind": "web"
+  },
+  {
+   "id": "a4b",
+   "src": "raw/A-create-blur.mp4",
+   "a": 34.0,
+   "b": 50.6,
+   "kind": "web",
+   "voice": "create-sign",
+   "vat": 4.6
+  },
+  {
+   "id": "ax",
+   "src": "raw/A-explorer-create.mp4",
+   "a": 1.6,
+   "b": 8.6,
+   "kind": "explorer",
+   "voice": "create-explorer",
+   "vat": 0.5
+  },
+  {
+   "id": "a5",
+   "src": "raw/A-create-blur.mp4",
+   "a": 65.4,
+   "b": 72.0,
+   "kind": "web",
+   "voice": "home",
+   "vat": 0.4
+  },
+  {
+   "id": "a6",
+   "src": "raw/A-create-blur.mp4",
+   "a": 78.3,
+   "b": 83.3,
+   "kind": "web"
+  },
+  {
+   "id": "b1",
+   "src": "raw/B-noam.mp4",
+   "a": 0.6,
+   "b": 8.6,
+   "kind": "web",
+   "voice": "unlock",
+   "vat": 0.3
+  },
+  {
+   "id": "b2",
+   "src": "raw/B-noam.mp4",
+   "a": 16.0,
+   "b": 23.7,
+   "kind": "web",
+   "voice": "btc",
+   "vat": 0.3
+  },
+  {
+   "id": "bx1",
+   "src": "raw/B-x-btc-mint.mp4",
+   "a": 1.6,
+   "b": 8.6,
+   "kind": "explorer",
+   "voice": "btc-explorer",
+   "vat": 1.5
+  },
+  {
+   "id": "bx2",
+   "src": "raw/B-x-btc-tx.mp4",
+   "a": 1.0,
+   "b": 9.5,
+   "kind": "explorer",
+   "zoom": 1.0
+  },
+  {
+   "id": "b3",
+   "src": "raw/B-noam.mp4",
+   "a": 46.2,
+   "b": 53.5,
+   "kind": "web",
+   "voice": "zec",
+   "vat": 0.3
+  },
+  {
+   "id": "xz",
+   "src": "raw/X-zec-tx.mp4",
+   "a": 2.0,
+   "b": 9.5,
+   "kind": "explorer"
+  },
+  {
+   "id": "b4",
+   "src": "raw/B-noam.mp4",
+   "a": 59.0,
+   "b": 68.5,
+   "kind": "web",
+   "voice": "swap",
+   "vat": 0.4
+  },
+  {
+   "id": "b4b",
+   "src": "raw/B-noam.mp4",
+   "a": 74.0,
+   "b": 84.6,
+   "kind": "web"
+  },
+  {
+   "id": "bx3",
+   "src": "raw/B-x-swap.mp4",
+   "a": 1.6,
+   "b": 7.6,
+   "kind": "explorer",
+   "voice": "swap-explorer",
+   "vat": 0.5
+  },
+  {
+   "id": "b5",
+   "src": "raw/B-noam.mp4",
+   "a": 102.0,
+   "b": 111.0,
+   "kind": "web",
+   "voice": "out",
+   "vat": 0.4
+  },
+  {
+   "id": "b5b",
+   "src": "raw/B-noam.mp4",
+   "a": 115.0,
+   "b": 129.6,
+   "kind": "web"
+  },
+  {
+   "id": "bx4",
+   "src": "raw/B-x-out.mp4",
+   "a": 1.6,
+   "b": 7.6,
+   "kind": "explorer",
+   "voice": "out-explorer",
+   "vat": 0.5
+  },
+  {
+   "id": "xs",
+   "src": "raw/X-sol.mp4",
+   "a": 0.6,
+   "b": 7.1,
+   "kind": "explorer"
+  },
+  {
+   "id": "b6",
+   "src": "raw/B-noam.mp4",
+   "a": 147.5,
+   "b": 166.3,
+   "kind": "web",
+   "voice": "private",
+   "vat": 0.3
+  },
+  {
+   "id": "bx5",
+   "src": "raw/B-x-private.mp4",
+   "a": 1.6,
+   "b": 7.6,
+   "kind": "explorer",
+   "voice": "private-explorer",
+   "vat": 0.5
+  },
+  {
+   "id": "c2",
+   "src": "raw/C-maya.mp4",
+   "a": 14.5,
+   "b": 32.0,
+   "kind": "web",
+   "voice": "guardians",
+   "vat": 0.3
+  },
+  {
+   "id": "cx1",
+   "src": "raw/C-x-guardians.mp4",
+   "a": 1.6,
+   "b": 7.6,
+   "kind": "explorer"
+  },
+  {
+   "id": "c3",
+   "src": "raw/C-maya.mp4",
+   "a": 53.5,
+   "b": 71.0,
+   "kind": "web",
+   "voice": "qday",
+   "vat": 0.3
+  },
+  {
+   "id": "c3b",
+   "src": "raw/C-maya.mp4",
+   "a": 74.5,
+   "b": 76.6,
+   "kind": "web"
+  },
+  {
+   "id": "cx2",
+   "src": "raw/C-x-qday.mp4",
+   "a": 1.6,
+   "b": 7.6,
+   "kind": "explorer",
+   "voice": "qday-explorer",
+   "vat": 0.5
+  },
+  {
+   "id": "cx3",
+   "src": "raw/C-x-keys.mp4",
+   "a": 0.6,
+   "b": 7.6,
+   "kind": "explorer"
+  },
+  {
+   "id": "p2a",
+   "src": "raw/phone/phone-send-cfr.mp4",
+   "a": 7.6,
+   "b": 9.6,
+   "kind": "phone",
+   "voice": "phone",
+   "vat": 0.3
+  },
+  {
+   "id": "p2b",
+   "src": "raw/phone/phone-send-cfr.mp4",
+   "a": 59.0,
+   "b": 66.5,
+   "kind": "phone"
+  },
+  {
+   "id": "p2c",
+   "src": "raw/phone/phone-send-cfr.mp4",
+   "a": 72.5,
+   "b": 80.0,
+   "kind": "phone"
+  },
+  {
+   "id": "p2c2",
+   "src": "raw/phone/phone-send-cfr.mp4",
+   "a": 84.5,
+   "b": 87.5,
+   "kind": "phone"
+  },
+  {
+   "id": "p2d",
+   "src": "raw/phone/phone-send-cfr.mp4",
+   "a": 89.5,
+   "b": 94.4,
+   "kind": "phone"
+  },
+  {
+   "id": "px",
+   "src": "raw/X-phone.mp4",
+   "a": 1.6,
+   "b": 7.6,
+   "kind": "explorer",
+   "voice": "phone-explorer",
+   "vat": 0.5
+  },
+  {
+   "id": "close",
+   "src": "card",
+   "a": 0,
+   "b": 9.0,
+   "kind": "card",
+   "voice": "close",
+   "vat": 0.5
+  }
+ ],
+ "explorer_zoom": {
+  "z": 1.3,
+  "note": "top-centred crop 1477x831 at x=221,y=0 of the 1920x1080 take; every explorer's content column (NEAR Rocks, Blockstream, ZecBlock, Solana Explorer) lies inside x 221-1698, checked on stills"
+ },
+ "blur": {
+  "src": "raw/A-create.mp4",
+  "x": 1150,
+  "y": 420,
+  "w": 580,
+  "h": 290,
+  "from": 10.9,
+  "to": 18.3,
+  "why": "the fresh wallet's 12 words (throwaway testnet wallet) are covered with a heavy blur"
+ }
+}

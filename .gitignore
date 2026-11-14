@@ -22,3 +22,8 @@ videos/**/*.mov
 videos/**/frames/
 
 videos/magen-near/versions/*/work/
+videos/magen-near/versions/v15/raw/
+videos/magen-near/versions/v15/dl/
+videos/magen-near/versions/v15/shots/
+videos/magen-near/versions/v15/cs/
+videos/magen-near/versions/v15/voice/
