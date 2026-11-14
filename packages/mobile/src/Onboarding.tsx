@@ -51,8 +51,8 @@ function Page({ children, footer, back, step }: { children: any; footer: any; ba
 
 function Intro({ set }: { set: (m: Mode) => void }) {
   return <Page footer={<>
-    <Btn title="Create a new wallet" onPress={() => set('create')} icon={<Sparkles color="#fff" size={18} />} />
-    <Btn title="I have 12 words" kind="ghost" onPress={() => set('restore')} icon={<LockOpen color="#fff" size={18} />} />
+    <Btn title="Get a new wallet" onPress={() => set('create')} icon={<Sparkles color="#fff" size={18} />} />
+    <Btn title="I already have one" kind="ghost" onPress={() => set('restore')} icon={<LockOpen color="#fff" size={18} />} />
     <Pressable onPress={() => set('upgrade')} hitSlop={8} accessibilityRole="button"><T style={{ color: C.accentText, fontWeight: '600', textAlign: 'center', paddingVertical: 6 }}>Upgrade a NEAR account I already have</T></Pressable>
     <T style={{ color: C.text3, fontSize: 12.5, textAlign: 'center' }}>NEAR testnet · your keys are made and kept on this phone</T>
   </>}>

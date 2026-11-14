@@ -9,7 +9,7 @@ import Svg, { Path, Line } from 'react-native-svg';
 import { House, History, ArrowUpRight, ShieldCheck } from 'lucide-react-native';
 
 /** The five tab-bar tabs, plus screens opened from Home (no tab highlighted). */
-export type Tab = 'home' | 'activity' | 'scan' | 'send' | 'security' | 'chains' | 'private' | 'swap' | 'receive' | 'bridge';
+export type Tab = 'home' | 'activity' | 'scan' | 'send' | 'security' | 'chains' | 'private' | 'swap' | 'receive' | 'bridge' | 'settings';
 const SIDE: { key: Tab; label: string; Icon: any }[] = [
   { key: 'home', label: 'Home', Icon: House },
   { key: 'activity', label: 'Activity', Icon: History },

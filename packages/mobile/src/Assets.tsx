@@ -19,12 +19,13 @@ const TOKENS: { id: AssetId; token: string | null; name: string; sub: string; lo
   { id: 'usdt', token: 'usdt.itachicara.testnet', name: 'USDT', sub: 'Ref testnet token', logo: 'usdt', decimals: 24, price: ['USDT', 'near'] },
 ];
 let priceCache: { at: number; map: Record<string, number> } | null = null;
-async function prices(): Promise<Record<string, number>> {
+export async function prices(): Promise<Record<string, number>> {
   if (priceCache && Date.now() - priceCache.at < 120_000) return priceCache.map;
   const r = await fetch('https://1click.chaindefuser.com/v0/tokens');
   if (!r.ok) throw Error(`1Click token list HTTP ${r.status}`);
   const all: any[] = await r.json(); const map: Record<string, number> = {};
   for (const t of TOKENS) { const hit = all.find(x => x.symbol === t.price[0] && x.blockchain === t.price[1]); if (hit && typeof hit.price === 'number') map[t.id] = hit.price; }
+  const eth = all.find(x => x.symbol === 'ETH' && x.blockchain === 'eth'); if (eth && typeof eth.price === 'number') map.eth = eth.price;
   priceCache = { at: Date.now(), map }; return map;
 }
 

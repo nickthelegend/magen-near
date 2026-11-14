@@ -1,6 +1,6 @@
 import { ApprovalSheet } from './src/ApprovalSheet';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Animated, AppState, Image, Linking, Pressable, Share, StyleSheet, Switch, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Animated, AppState, Image, Linking, Modal, Pressable, Share, StyleSheet, Switch, TextInput, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
@@ -8,7 +8,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { ArrowUpRight, ArrowDownLeft, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Power, ExternalLink, ScanLine, Network, EyeOff, Repeat, Copy, Lock, Users, ArrowLeftRight, ScanFace } from 'lucide-react-native';
+import { ArrowUpRight, ArrowDownLeft, ShieldCheck, KeyRound, Atom, Check, ShieldAlert, Power, ExternalLink, ScanLine, Network, EyeOff, Repeat, Copy, Lock, Users, ArrowLeftRight, ScanFace, ChevronDown, ChevronRight, MoreHorizontal, Settings as SettingsIcon, Bell, Info as InfoIcon, Smartphone } from 'lucide-react-native';
 import { chainAddresses, signCrossChain, stealthSend, stealthScan, stealthSweep, metaKey, type EthTx } from '../../sdk/phase2.ts';
 import { evm } from '../../sdk/chains.ts';
 import { actions, base58, base64, execute, makeIntent, nearAmount, outcome, pqHandle, publicKeys, sha256, signIntent, submit, view, type Vault } from '../../sdk/index.ts';
@@ -22,7 +22,7 @@ import { C, FONT, LOGO, MONO, TopGlow, fontAssets } from './src/theme';
 import { Onboarding } from './src/Onboarding';
 import { BarCtx, Screen, decimal } from './src/Screen';
 import { BridgeTab, ReceiveTab, SwapTab, TxBanner, nice, retrying } from './src/Flows';
-import { ChainAvatars, PortfolioBar, StripeBar, shares, units, useAssets } from './src/Assets';
+import { StripeBar, prices, units, useAssets } from './src/Assets';
 
 const VAULT = 'magen-vault';
 const CACHE = 'magen-cache';
@@ -75,7 +75,7 @@ function LockScreen({ wallet, onUnlock }: { wallet: string; onUnlock: () => void
 
 /* ---------- wallet ---------- */
 function Wallet({ vault, onReset, lock }: { vault: Vault; onReset: () => void; lock: () => void }) {
-  const [tab, setTab] = useState<Tab>('home');
+  const [tab, setTab] = useState<Tab>('home'); const [menu, setMenu] = useState(false);
   const [scanMode, setScanMode] = useState<ScanMode>('scan');
   const [sheet, setSheet] = useState<Sheet | null>(null);
   const [prefill, setPrefill] = useState<Prefill | null>(null);
@@ -132,12 +132,9 @@ function Wallet({ vault, onReset, lock }: { vault: Vault; onReset: () => void; l
     {/* Opaque header (own copy of the glow, same coordinates) so scrolled content never shows under it. */}
     <View style={{ paddingTop: insets.top, backgroundColor: C.bg, overflow: 'hidden', zIndex: 2 }}>
       {tab !== 'scan' && <TopGlow />}
-      {tab === 'home' && <View style={[styles.top, { paddingVertical: 8 }]}>
-        <Pressable onPress={() => { Clipboard.setStringAsync(vault.wallet); Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); }} accessibilityRole="button" accessibilityLabel={`Copy ${vault.wallet}`} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: C.accentSoft, borderWidth: 1, borderColor: C.accentLine, alignItems: 'center', justifyContent: 'center' }}><Logo size={18} /></View>
-          <T style={{ fontSize: 16, fontWeight: '600', flexShrink: 1 }} numberOfLines={1}>{vault.wallet}</T><Copy color={C.text3} size={14} />
-        </Pressable>
-        <Pressable onPress={lock} hitSlop={10} accessibilityRole="button" accessibilityLabel="Lock Magen" style={{ width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: C.line2, alignItems: 'center', justifyContent: 'center' }}><Lock color={C.text2} size={16} /></Pressable>
+      {tab === 'home' && <View style={[styles.top, { paddingVertical: 6, justifyContent: 'space-between' }]}>
+        <Pressable onPress={() => goTab('scan')} hitSlop={8} accessibilityRole="button" accessibilityLabel="Scan" style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.accentSoft, alignItems: 'center', justifyContent: 'center' }}><ScanLine color={C.accentText} size={19} /></Pressable>
+        <Pressable onPress={() => setMenu(true)} hitSlop={8} accessibilityRole="button" accessibilityLabel="More" style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.accentSoft, alignItems: 'center', justifyContent: 'center' }}><MoreHorizontal color={C.accentText} size={20} /></Pressable>
       </View>}
     </View>
     {tab !== 'scan' && <BarCtx.Provider value={!PUSHED.includes(tab)}><Animated.View style={{ flex: 1, opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) }] }}>
@@ -150,7 +147,9 @@ function Wallet({ vault, onReset, lock }: { vault: Vault; onReset: () => void; l
       {tab === 'swap' && <SwapTab {...props} />}
       {tab === 'receive' && <ReceiveTab {...props} />}
       {tab === 'bridge' && <BridgeTab {...props} />}
+      {tab === 'settings' && <SettingsTab {...props} />}
     </Animated.View></BarCtx.Provider>}
+    <MagicMenu open={menu} close={() => setMenu(false)} wallet={vault.wallet} go={goTab} lock={lock} top={insets.top + 52} />
     {tab === 'scan' && <Animated.View style={[StyleSheet.absoluteFill, { opacity: fade }]}>
       <ScanScreen wallet={vault.wallet} mode={scanMode} setMode={m => { setSheet(null); setScanMode(m); }} sheet={sheet} onCode={route}
         onConfirm={p => send({ to: p.to, amount: p.amount, memo: p.memo, request: true })} onDismiss={() => setSheet(null)} top={insets.top} bottom={insets.bottom} />
@@ -158,7 +157,51 @@ function Wallet({ vault, onReset, lock }: { vault: Vault; onReset: () => void; l
     {!PUSHED.includes(tab) && <TabBar tab={tab} onChange={t => (t === 'scan' && tab === 'scan' ? setSheet(null) : goTab(t))} bottom={insets.bottom} />}
   </View>;
 }
-const PUSHED: string[] = ['swap', 'bridge', 'send', 'chains'];
+
+/** The ••• popover: copy, networks, security, settings, lock. */
+function MagicMenu({ open: on, close, wallet, go, lock, top }: { open: boolean; close: () => void; wallet: string; go: (t: Tab) => void; lock: () => void; top: number }) {
+  const Item = ({ icon, title, onPress, right, danger }: any) => <Pressable onPress={() => { Haptics.selectionAsync(); close(); onPress(); }} accessibilityRole="button" style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 46, paddingHorizontal: 14, backgroundColor: pressed ? 'rgba(255,255,255,0.06)' : 'transparent' })}>
+    {icon}<T style={{ flex: 1, fontSize: 15.5, fontWeight: '600', color: danger ? C.redText : C.text }}>{title}</T>{right}</Pressable>;
+  const Net = ({ logo, name, on: sel, t }: any) => <Item icon={<View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}><Image source={logo} style={{ width: 13, height: 13 }} resizeMode="contain" /></View>} title={name} onPress={() => t && go(t)} right={sel ? <Check color={C.accent} size={17} /> : null} />;
+  return <Modal transparent visible={on} animationType="fade" onRequestClose={close}>
+    <Pressable style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' }} onPress={close} accessibilityLabel="Close menu">
+      <View style={{ position: 'absolute', right: 16, top, width: 262, borderRadius: 18, backgroundColor: '#1E1F25', borderWidth: 1, borderColor: C.line2, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 24 }}>
+        <Item icon={<Copy color={C.text} size={18} />} title="Copy address" onPress={() => Clipboard.setStringAsync(wallet)} />
+        <View style={{ height: 1, backgroundColor: C.line }} />
+        <T style={{ color: C.text3, fontSize: 12.5, fontWeight: '600', paddingHorizontal: 14, paddingTop: 10, paddingBottom: 2 }}>SWITCH NETWORK</T>
+        <Net logo={LOGO.near} name="NEAR testnet" on />
+        <Net logo={LOGO.ethereum} name="Ethereum Sepolia" t="chains" />
+        <Net logo={LOGO.solana} name="Solana devnet" t="bridge" />
+        <Net logo={LOGO.bitcoin} name="Bitcoin testnet" t="bridge" />
+        <View style={{ height: 1, backgroundColor: C.line }} />
+        <Item icon={<ShieldCheck color={C.text} size={18} />} title="Security" onPress={() => go('security')} />
+        <Item icon={<SettingsIcon color={C.text} size={18} />} title="Settings" onPress={() => go('settings')} />
+        <Item icon={<Lock color={C.redText} size={18} />} title="Lock" danger onPress={lock} />
+      </View>
+    </Pressable>
+  </Modal>;
+}
+
+/** Settings: grouped rows with tinted icon squares. */
+function SettingsTab({ vault, live, go }: P) {
+  const Row = ({ icon, tint, title, value, onPress, last }: any) => <Pressable onPress={onPress} disabled={!onPress} accessibilityRole={onPress ? 'button' : undefined} style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 52, paddingHorizontal: 14, borderBottomWidth: last ? 0 : 1, borderBottomColor: 'rgba(255,255,255,0.06)', backgroundColor: pressed ? 'rgba(255,255,255,0.04)' : 'transparent' })}>
+    <View style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: tint, alignItems: 'center', justifyContent: 'center' }}>{icon}</View>
+    <T style={{ flex: 1, fontSize: 16, fontWeight: '500' }}>{title}</T>{value ? <T style={{ color: C.text2, fontSize: 14 }}>{value}</T> : null}{onPress && <ChevronRight color={C.text3} size={18} />}</Pressable>;
+  const G = ({ children }: any) => <View style={{ backgroundColor: C.s1, borderRadius: 16, borderWidth: 1, borderColor: C.line, overflow: 'hidden' }}>{children}</View>;
+  const v = live?.status?.version ?? '…';
+  return <Screen>
+    <Back go={go} title="Settings" />
+    <G><Row icon={<KeyRound color="#fff" size={16} />} tint={C.accent} title="Wallets & Backup" value="12 words" onPress={() => go('security')} />
+      <Row icon={<ShieldCheck color="#fff" size={16} />} tint="#9C2C8A" title="Security" value="Q-Day · guardians · Face ID" onPress={() => go('security')} last /></G>
+    <G><Row icon={<Network color="#fff" size={16} />} tint="#5B5F6B" title="Network" value="NEAR testnet" />
+      <Row icon={<Atom color="#fff" size={16} />} tint="#5B5F6B" title="Wallet contract" value={v} />
+      <Row icon={<Smartphone color="#fff" size={16} />} tint="#5B5F6B" title="App icon" value="Magen L7" last /></G>
+    <G><Row icon={<InfoIcon color="#fff" size={16} />} tint="#5B5F6B" title="About" value="Magen 0.1 · testnet, not audited" last /></G>
+    <T style={{ color: C.text3, fontSize: 13, textAlign: 'center' }}>{vault.wallet}</T>
+  </Screen>;
+}
+
+const PUSHED: string[] = ['swap', 'bridge', 'send', 'chains', 'settings'];
 type Prefill = { to: string; amount?: string; memo?: string; request?: boolean; key: number };
 
 /** "8.48" with the decimals smaller and dimmer, as on the reference's balance. */
@@ -173,66 +216,86 @@ function BigNumber({ value, unit, size = 58 }: { value: string; unit?: string; s
 function HomeTab({ vault, live, acts, actErr, go, receive }: P) {
   const migrated = !!live?.status?.migrated;
   const assets = useAssets(vault.wallet, live?.amount);
-  const sh = shares(assets);
-  const SUB: Record<string, string> = { near: 'NEAR testnet', nbtc: 'Bitcoin, bridged via Omni', nzec: 'Zcash, bridged via Omni', usdt: 'Ref Finance testnet token' };
-  const BADGE: Record<string, string> = { near: 'near', nbtc: 'near', nzec: 'near', usdt: 'near' };
+  const [px, setPx] = useState<Record<string, number>>({});
+  const [eth, setEth] = useState<{ address: string; wei: bigint | null } | null>(null);
+  const [wallets, setWallets] = useState(false);
+  useEffect(() => { prices().then(setPx).catch(() => {}); }, []);
+  useEffect(() => { let on = true; chainAddresses(vault.wallet).then(async (a: any[]) => { const e = a.find(x => x.id === 'ethereum'); if (!e || !on) return; setEth({ address: e.address, wei: null });
+    const w = await evm('https://ethereum-sepolia-rpc.publicnode.com', 'eth_getBalance', [e.address, 'latest']).catch(() => null); on && setEth({ address: e.address, wei: w === null ? null : BigInt(w) }); }).catch(() => {}); return () => { on = false; }; }, [vault.wallet]);
+  const nearPx = px.near; const usdNear = live?.amount != null && nearPx ? Number(live.amount) / 1e24 * nearPx : null;
+  const SUB: Record<string, string> = { near: 'NEAR', nbtc: 'nBTC', nzec: 'nZEC', usdt: 'USDT' };
+  const NAMES: Record<string, string> = { near: 'NEAR', nbtc: 'Bitcoin (nBTC)', nzec: 'Zcash (nZEC)', usdt: 'Tether USD (Ref)' };
+  const order = ['near', 'usdt', 'nbtc', 'nzec'];
+  const rows = order.map(id => assets.find(a => a.id === id)!).filter(Boolean);
+  const usd = (n: number | null) => n === null ? null : `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return <Screen>
-    <View style={{ alignItems: 'center', paddingTop: 6, gap: 2 }}>
-      <T style={{ color: C.text2, fontSize: 15, fontWeight: '500' }}>Current Balance</T>
-      {live ? <BigNumber value={near(live.amount ?? null, 2)} unit="NEAR" /> : <View style={{ height: 70, justifyContent: 'center' }}><ActivityIndicator color={C.accent} /></View>}
-      <View style={{ marginTop: 4 }}><Pill tone="blue" text={migrated ? 'Native PQ key on' : 'Two locks on · ed25519 + ML-DSA-65'} /></View>
+    <View style={{ alignItems: 'center', gap: 6, marginTop: -6 }}>
+      <View style={{ width: 84, height: 84, borderRadius: 42, backgroundColor: '#3A1033', borderWidth: 2, borderColor: C.accentLine, alignItems: 'center', justifyContent: 'center', shadowColor: C.accent, shadowOpacity: 0.5, shadowRadius: 20, shadowOffset: { width: 0, height: 0 } }}><Logo size={44} /></View>
+      <Pressable onPress={() => { Haptics.selectionAsync(); setWallets(true); }} accessibilityRole="button" accessibilityLabel="Switch wallet" hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 }}>
+        <T style={{ fontSize: 18, fontWeight: '700' }} numberOfLines={1}>{vault.wallet}</T><ChevronDown color={C.text2} size={20} /></Pressable>
+      {live ? <T display style={{ fontSize: 40, letterSpacing: -1.2 }}>{near(live.amount ?? null, 2)} <T display style={{ fontSize: 22, color: C.text2 }}>NEAR</T></T> : <ActivityIndicator color={C.accent} style={{ height: 48 }} />}
+      {usdNear !== null && <T style={{ color: C.text2, fontSize: 13 }}>≈ {usd(usdNear)} at mainnet price</T>}
     </View>
-    <PortfolioBar assets={assets} shares={sh} />
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 4 }}>
-      <Action primary label="Send" icon={<ArrowUpRight color="#fff" size={22} />} onPress={() => go('send')} />
-      <Action label="Receive" icon={<ArrowDownLeft color={C.text} size={22} />} onPress={receive} />
-      <Action label="Swap" icon={<Repeat color={C.text} size={21} />} onPress={() => go('swap')} />
-      <Action label="Bridge" icon={<ArrowLeftRight color={C.text} size={21} />} onPress={() => go('bridge')} />
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginTop: 4 }}>
+      <Action label="Receive" icon={<ArrowDownLeft color="#fff" size={22} />} onPress={receive} />
+      <Action label="Swap" icon={<Repeat color="#fff" size={21} />} onPress={() => go('swap')} />
+      <Action label="Send" icon={<ArrowUpRight color="#fff" size={22} />} onPress={() => go('send')} />
+      <Action label="Bridge" icon={<ArrowLeftRight color="#fff" size={21} />} onPress={() => go('bridge')} />
     </View>
-    <Card style={{ paddingVertical: 4 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 12, paddingBottom: 4 }}>
-        <T style={{ fontWeight: '600', fontSize: 16 }}>Assets</T>
-        <ChainAvatars ids={['near', 'bitcoin', 'zcash', 'ethereum', 'solana']} onPlus={() => go('chains')} />
-      </View>
-      {assets.map((a, i) => {
-        const zero = a.amount !== null && a.amount === 0n;
-        const amt = a.amount === null ? '…' : units(a.amount, a.decimals, a.id === 'near' ? 2 : 6);
-        return <Pressable key={a.id} onPress={() => go(zero ? (a.id === 'usdt' ? 'swap' : 'bridge') : 'activity')} accessibilityRole="button" accessibilityLabel={`${a.name}: ${amt} ${a.symbol}`}
-          style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 64, paddingHorizontal: 16, borderTopWidth: i ? 1 : 0, borderTopColor: 'rgba(255,255,255,0.06)', backgroundColor: pressed ? 'rgba(255,255,255,0.03)' : 'transparent' })}>
-          <View style={{ width: 36, height: 36, opacity: zero ? 0.8 : 1 }}>
-            <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}><Image source={a.logo} style={{ width: 20, height: 20 }} resizeMode="contain" /></View>
-            {a.id !== 'near' && <View style={{ position: 'absolute', right: -3, bottom: -3, width: 17, height: 17, borderRadius: 9, backgroundColor: '#fff', borderWidth: 2, borderColor: C.s1, alignItems: 'center', justifyContent: 'center' }}><Image source={LOGO[BADGE[a.id]]} style={{ width: 9, height: 9 }} resizeMode="contain" /></View>}
-          </View>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <T style={{ fontWeight: '600', fontSize: 16, color: zero ? C.text2 : C.text }}>{a.name}</T>
-            <T numberOfLines={1} style={{ color: 'rgba(255,255,255,0.62)', fontSize: 13, marginTop: 2 }}>{SUB[a.id] ?? a.sub}</T>
-          </View>
-          {zero ? <View style={{ paddingHorizontal: 12, height: 30, borderRadius: 15, borderWidth: 1, borderColor: C.accentLine, justifyContent: 'center' }}><T style={{ color: C.accentText, fontWeight: '600', fontSize: 13 }}>{a.id === 'usdt' ? 'Swap in' : 'Bridge in'}</T></View>
-            : <View style={{ alignItems: 'flex-end' }}><T style={{ fontWeight: '600', fontSize: 16 }}>{amt} <T style={{ color: C.text2, fontSize: 13 }}>{a.symbol}</T></T>
-              <T style={{ color: 'rgba(255,255,255,0.62)', fontSize: 13, marginTop: 2 }}>History ›</T></View>}
-        </Pressable>;
-      })}
-    </Card>
-    <View style={{ flexDirection: 'row', gap: 10 }}>
-      <Tile icon={<EyeOff color={C.accent} size={20} />} title="Private send" onPress={() => go('private')} />
-      <Tile icon={<Network color={C.accent} size={20} />} title="Every chain" onPress={() => go('chains')} />
+    <View style={{ marginTop: 6 }}>
+      <T style={{ fontSize: 20, fontWeight: '700', marginBottom: 4 }}>Tokens</T>
+      {rows.map(a => { const zero = a.amount !== null && a.amount === 0n; const amt = a.amount === null ? '…' : units(a.amount, a.decimals, a.id === 'near' ? 4 : 6);
+        const v = a.amount !== null && px[a.id] && !zero ? Number(a.amount) / 10 ** a.decimals * px[a.id] : null;
+        return <TokenRow key={a.id} logo={a.logo} badge={a.id === 'near' ? null : LOGO.near} name={NAMES[a.id]} sub={`${amt} ${SUB[a.id]}`} zero={zero}
+          right={zero ? <View style={{ paddingHorizontal: 12, height: 30, borderRadius: 15, borderWidth: 1, borderColor: C.accentLine, justifyContent: 'center' }}><T style={{ color: C.accentText, fontWeight: '600', fontSize: 13 }}>{a.id === 'usdt' ? 'Swap in' : 'Bridge in'}</T></View> : v !== null ? <T style={{ fontWeight: '600', fontSize: 16 }}>{usd(v)}</T> : null}
+          onPress={() => go(zero ? (a.id === 'usdt' ? 'swap' : 'bridge') : 'activity')} />; })}
+      <TokenRow logo={LOGO.ethereum} badge={LOGO.ethereum} name="Ether (Sepolia)" sub={eth === null || eth.wei === null ? '… ETH · NEAR MPC address' : `${units(eth.wei, 18, 5)} ETH · NEAR MPC address`} zero={eth?.wei === 0n}
+        right={eth?.wei && px.eth ? <T style={{ fontWeight: '600', fontSize: 16 }}>{usd(Number(eth.wei) / 1e18 * px.eth)}</T> : null} onPress={() => go('chains')} />
+      <T style={{ color: C.text3, fontSize: 13, marginTop: 6 }}>$ values use 1Click’s live mainnet prices. Testnet tokens have no market value.</T>
     </View>
-    <Card>
-      <View style={styles.cardHead}><T style={styles.h2}>Your two locks</T><Pressable onPress={() => go('security')} hitSlop={8}><T style={{ color: C.accentText, fontWeight: '600' }}>Q-Day switch</T></Pressable></View>
-      <LockRow icon={<KeyRound color={C.text2} size={18} />} title="Lock 1 · ed25519" sub="Your existing key. Never enough alone." ok={!!live?.status} />
-      <LockRow pq icon={<Atom color={C.accent} size={18} />} title="Lock 2 · ML-DSA-65" sub="Post-quantum. Checked on chain." ok={!!live?.status} />
-      <LockRow pq icon={<Power color={C.accent} size={18} />} title="Native post-quantum key" sub={migrated ? 'On. In NEAR’s key list.' : 'Off. Flip the Q-Day switch.'} ok={migrated} last />
-    </Card>
-    <Card>
-      <View style={styles.cardHead}><T style={styles.h2}>Recent activity</T><Pressable onPress={() => go('activity')} hitSlop={8}><T style={{ color: C.accentText, fontWeight: '600' }}>All</T></Pressable></View>
-      {acts === null ? <ActivityIndicator color={C.accent} style={{ padding: 20 }} /> : acts.length ? acts.slice(0, 4).map(a => <ActRow key={a.hash} a={a} />) : actErr ? <ActErr text={actErr} /> : <Empty />}
-    </Card>
-    <T style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, lineHeight: 18, paddingHorizontal: 2 }}>Amounts are live NEAR testnet reads. The bar splits value at 1Click’s live token prices.</T>
+    <View style={{ gap: 2 }}>
+      <LinkRow icon={<Atom color={C.accent} size={18} />} title="Quantum lock" value={migrated ? 'Native ML-DSA key on' : '2 locks · ed25519 + ML-DSA-65'} onPress={() => go('security')} />
+      <LinkRow icon={<EyeOff color={C.accent} size={18} />} title="Private send" value="One-time accounts" onPress={() => go('private')} />
+      <LinkRow icon={<Network color={C.accent} size={18} />} title="Every chain" value="Sign via NEAR MPC" onPress={() => go('chains')} />
+    </View>
+    <View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}><T style={{ fontSize: 20, fontWeight: '700' }}>Activity</T><Pressable onPress={() => go('activity')} hitSlop={8}><T style={{ color: C.accentText, fontWeight: '600' }}>All</T></Pressable></View>
+      {acts === null ? <ActivityIndicator color={C.accent} style={{ padding: 20 }} /> : acts.length ? acts.slice(0, 3).map(a => <ActRow key={a.hash} a={a} />) : actErr ? <ActErr text={actErr} /> : <Empty />}
+    </View>
+    <WalletsSheet open={wallets} close={() => setWallets(false)} wallet={vault.wallet} balance={live?.amount ?? null} />
   </Screen>;
 }
-const Action = ({ label, icon, onPress, primary }: { label: string; icon: any; onPress: () => void; primary?: boolean }) => <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} accessibilityRole="button" accessibilityLabel={label} style={{ alignItems: 'center', gap: 7, width: 76 }}>
-  {({ pressed }) => <><View style={{ width: 56, height: 56, borderRadius: 20, backgroundColor: primary ? C.accent : C.s2, borderWidth: primary ? 0 : 1, borderColor: C.line, alignItems: 'center', justifyContent: 'center', transform: [{ scale: pressed ? 0.94 : 1 }], ...(primary ? { shadowColor: C.accent, shadowOpacity: 0.45, shadowRadius: 12, shadowOffset: { width: 0, height: 5 } } : null) }}>{icon}</View>
-    <T style={{ fontSize: 13.5, fontWeight: '600', color: primary ? C.text : C.text2 }}>{label}</T></>}
+const TokenRow = ({ logo, badge, name, sub, right, zero, onPress }: any) => <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} accessibilityRole="button" accessibilityLabel={`${name}, ${sub}`}
+  style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 64, opacity: pressed ? 0.7 : 1 })}>
+  <View style={{ width: 40, height: 40, opacity: zero ? 0.7 : 1 }}>
+    <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}><Image source={logo} style={{ width: 22, height: 22 }} resizeMode="contain" /></View>
+    {badge && <View style={{ position: 'absolute', left: -3, bottom: -3, width: 18, height: 18, borderRadius: 9, backgroundColor: '#fff', borderWidth: 2, borderColor: C.bg, alignItems: 'center', justifyContent: 'center' }}><Image source={badge} style={{ width: 10, height: 10 }} resizeMode="contain" /></View>}
+  </View>
+  <View style={{ flex: 1, minWidth: 0 }}><T style={{ fontSize: 16, fontWeight: '600', color: zero ? C.text2 : C.text }} numberOfLines={1}>{name}</T><T style={{ fontSize: 13.5, color: C.text2, marginTop: 2 }} numberOfLines={1}>{sub}</T></View>
+  {right}
+</Pressable>;
+const LinkRow = ({ icon, title, value, onPress }: any) => <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} accessibilityRole="button" style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 56, opacity: pressed ? 0.7 : 1 })}>
+  <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.accentSoft, alignItems: 'center', justifyContent: 'center' }}>{icon}</View>
+  <T style={{ fontSize: 16, fontWeight: '600', flex: 1 }}>{title}</T><T style={{ color: C.text2, fontSize: 14 }}>{value}</T><ChevronRight color={C.text3} size={18} /></Pressable>;
+function WalletsSheet({ open: on, close, wallet, balance }: { open: boolean; close: () => void; wallet: string; balance: bigint | null }) {
+  const DEMO = 'magen-noam.testnet'; const [demo, setDemo] = useState<bigint | null>(null);
+  useEffect(() => { if (on) readAccount(DEMO).then((a: any) => setDemo(a ? BigInt(a.amount) : null)).catch(() => {}); }, [on]);
+  const W = ({ name, bal, me, note }: any) => <View style={{ width: '33%', alignItems: 'center', gap: 6, paddingVertical: 8 }}>
+    <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: me ? '#3A1033' : C.s2, borderWidth: me ? 3 : 1, borderColor: me ? C.accent : C.line2, alignItems: 'center', justifyContent: 'center' }}><Logo size={34} /></View>
+    <T style={{ fontWeight: '600', fontSize: 13.5 }} numberOfLines={1}>{name.replace('.testnet', '')}</T><T style={{ color: C.text2, fontSize: 13 }}>{bal === null ? '…' : `${near(bal, 2)} NEAR`}{note ? ` · ${note}` : ''}</T></View>;
+  return <Modal transparent visible={on} animationType="slide" onRequestClose={close}>
+    <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,6,8,0.6)' }} onPress={close} accessibilityLabel="Close" />
+    <View style={{ backgroundColor: C.s1, borderTopLeftRadius: 30, borderTopRightRadius: 30, borderWidth: 1, borderColor: C.line, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 44 }}>
+      <View style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: C.line2, marginBottom: 14 }} />
+      <T style={{ fontSize: 17, fontWeight: '700', textAlign: 'center', marginBottom: 10 }}>Wallets</T>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}><W name={wallet} bal={balance} me /><W name={DEMO} bal={demo} note="watch" /></View>
+      <View style={{ alignItems: 'flex-end', marginTop: 12 }}><View style={{ paddingHorizontal: 18, height: 40, borderRadius: 20, backgroundColor: C.accent, justifyContent: 'center' }}><T style={{ fontWeight: '700' }}>+ Add</T></View></View>
+    </View>
+  </Modal>;
+}
+const Action = ({ label, icon, onPress }: { label: string; icon: any; onPress: () => void; primary?: boolean }) => <Pressable onPress={() => { Haptics.selectionAsync(); onPress(); }} accessibilityRole="button" accessibilityLabel={label} style={{ alignItems: 'center', gap: 8, width: 70 }}>
+  {({ pressed }) => <><View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center', transform: [{ scale: pressed ? 0.93 : 1 }], shadowColor: C.accent, shadowOpacity: 0.4, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } }}>{icon}</View>
+    <T style={{ fontSize: 14, fontWeight: '600', color: C.text }}>{label}</T></>}
 </Pressable>;
 const ActErr = ({ text }: { text: string }) => <View style={{ padding: 18, gap: 4 }}><T style={{ fontWeight: '600' }}>History is taking a break</T><T style={{ color: C.text3, fontSize: 13, lineHeight: 18 }}>{text} It retries every 30 seconds.</T></View>;
 const LockRow = ({ icon, title, sub, ok, pq, last }: any) => <View style={[styles.row, last && { borderBottomWidth: 0 }]}>
