@@ -1,3 +1,4 @@
+import { GuardianRecovery } from '../ui/Recovery.tsx';
 import { useState } from 'react';
 import { KeyRound, Atom, ExternalLink, Download, Check, X, ShieldCheck, Users } from 'lucide-react';
 import { useWallet, downloadJson, feeSigner } from '../lib/store.tsx';
@@ -51,7 +52,7 @@ export function Security() {
         {(r?.checks ?? []).map(c => <div className="check-row" key={c.label}>{c.ok ? <Check size={20} className="ico-ok" /> : <X size={20} className="ico-bad" />}<div><b>{c.label}</b><p>{c.detail}</p></div><span className="pts">{c.ok ? `+${c.points}` : `0 / ${c.points}`}</span></div>)}
       </div>
     </section>
-    <Guardians />
+    <Guardians /><GuardianRecovery/>
     <div className="grid2">
       <section className="card card-pad rise" style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
         <h2 style={{ fontSize: 17, fontWeight: 600 }}>Encrypted backup</h2>
