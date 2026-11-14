@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -18 283 314" fill="none">
+  <!-- Magen mark L7: an M (the classical lock) stacked on a chevron (the quantum-safe lock): two locks, one shield. -->
+  <path d="M0 0 L121.5 70 L243 0 L243 127 L208 127 L208 84 L121.5 133 L35 84 L35 127 L0 127 Z" fill="#111318" stroke="#111318" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M0 141 L121.5 213 L243 141 L243 203 L121.5 276 L0 203 Z" fill="#E040C8" stroke="#E040C8" stroke-width="10" stroke-linejoin="round"/>
+</svg>

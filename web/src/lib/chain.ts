@@ -117,7 +117,7 @@ async function readActivityFresh(account: string, limit: number): Promise<Activi
       }
       else out.push({ ...base, success: ok, kind: 'call', title: a.method ? `Called ${a.method}` : 'Wallet action', detail: `${a.receiver ? `on ${a.receiver} · ` : ''}signed twice`, counterparty: a.receiver });
     } catch {
-      out.push({ ...base, kind: success ? 'call' : 'refused', title: success ? 'Wallet action' : 'Refused on chain', detail: 'execute' });
+      out.push({ ...base, kind: success ? 'call' : 'refused', title: success ? 'Signed twice' : 'Refused on chain', detail: success ? 'ed25519 + ML-DSA-65, checked on chain' : 'not accepted by the wallet contract' });
     }
   });
   return out.sort((a, b) => b.time - a.time);

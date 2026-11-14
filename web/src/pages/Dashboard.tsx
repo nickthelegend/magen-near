@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowDownLeft, Repeat, Globe, KeyRound, Atom, Power, Check, X, RefreshCw, ChevronRight, ShieldCheck, Plus, ExternalLink } from 'lucide-react';
 import { useWallet } from '../lib/store.tsx';
 import { accountUrl, near, readActivity } from '../lib/chain.ts';
@@ -49,7 +50,7 @@ export function Dashboard() {
   return <>
     <ReadOnlyBar />
     <div className="home-w2"><div className="w2h">
-      <section className="w2h-card rise">
+      <motion.section className="w2h-card" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, ease: [0.2, 0.7, 0.2, 1] }}>
         <div className="w2-bal"><small>Current Balance</small>
           <b className="num">{live?.account ? <>{near(live.account.amount, 2).split('.')[0]}<span>.{near(live.account.amount, 2).split('.')[1] ?? '00'}</span></> : '…'}<i>NEAR</i></b>
           <span className="w2h-acct"><span className="mono">{account}</span><CopyBtn text={account} label="Copy account" /><a href={accountUrl(account)} target="_blank" rel="noreferrer" aria-label="Open in explorer"><ExternalLink size={14} /></a></span>
@@ -60,12 +61,12 @@ export function Dashboard() {
           const list = [{ id: 'near', name: 'NEAR', v: nearN, href: '#/app/send' }, ...NEAR_TOKENS.filter(t => t.id !== 'near' && t.id !== 'usdc').map(t => ({ id: t.id, name: t.symbol, v: tokens[t.token] ?? undefined, href: t.id === 'bitcoin' || t.id === 'zcash' ? '#/app/bridge' : '#/app/swap' }))];
           const max = Math.max(...list.map(x => x.v ?? 0), 1e-9);
           return list.map(x => <div key={x.id} className="w2-row"><div className="w2-row-h"><b>{x.name}</b><a href="#/app/activity"><small>History</small></a></div>
-            <a className="w2-bar" href={x.href}><div className="w2-fill" style={{ width: `${Math.max(.24, (x.v ?? 0) / max) * 100}%` }}><ChainLogo id={x.id} size="sm" /><b className="num">{x.v === undefined ? '…' : x.v === null ? '—' : fmt(x.v, x.id === 'near' ? 2 : 6)}</b></div></a></div>);
+            <a className="w2-bar" href={x.href}><motion.div className="w2-fill" initial={{ width: 0 }} animate={{ width: `${Math.max(.24, (x.v ?? 0) / max) * 100}%` }} transition={{ delay: .25 + list.indexOf(x) * .1, duration: .8, ease: [0.2, 0.7, 0.2, 1] }}><ChainLogo id={x.id} size="sm" /><b className="num">{x.v === undefined ? '…' : x.v === null ? '—' : fmt(x.v, x.id === 'near' ? 2 : 6)}</b></motion.div></a></div>);
         })()}
-      </section>
+      </motion.section>
       <div className="w2h-acts">
         {[['receive', 'Receive', ArrowDownLeft], ['send', 'Send', ArrowUpRight], ['swap', 'Swap', Repeat], ['bridge', 'Bridge', Globe]].map(([to, l, I]: any) =>
-          <a key={to} className="w2h-act" href={`#/app/${to}`}><span><I size={20} /></span>{l}</a>)}
+          <motion.a key={to} className="w2h-act" href={`#/app/${to}`} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .35 + ['receive', 'send', 'swap', 'bridge'].indexOf(to) * .06, duration: .45 }} whileTap={{ scale: .95 }}><span><I size={20} /></span>{l}</motion.a>)}
       </div>
       <a className="w2h-lock" href="#/app/qday"><span className="ico"><ShieldCheck size={22} /></span><span><b>{migrated ? 'Quantum-only key is on' : 'Two locks on every move'}</b><small>ed25519 + ML-DSA-65, both checked on NEAR</small></span><ChevronRight size={18} /></a>
       <section className="card locks-card">

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 import { Home, ArrowUpRight, ArrowDownLeft, History, ShieldCheck, Power, Crosshair, Lock, LockOpen, ChevronRight, Layers, EyeOff, Repeat, Globe } from 'lucide-react';
 import { useWallet, DEMO } from '../lib/store.tsx';
 import { short } from '../lib/chain.ts';
@@ -66,7 +67,7 @@ export function AppShell({ route, children }: { route: string; children: ReactNo
             : <a className="btn btn-primary btn-sm" href="#/start">Start</a>}
         </div>
       </header>
-      <main className="page">{children}</main>
+      <main className="page"><motion.div key={route} className="page-anim" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4, ease: [0.2, 0.7, 0.2, 1] }}>{children}</motion.div></main>
       <nav className="tabbar" aria-label="Wallet">
         {TABS.map(t => <a key={t.to} href={`#/app${t.to ? '/' + t.to : ''}`} aria-label={t.label} aria-current={route === t.to ? 'page' : undefined} className={route === t.to ? 'on' : ''}>
           {t.to === 'send' ? <span className="fab"><ArrowUpRight size={22} /></span> : <t.icon size={22} strokeWidth={route === t.to ? 2.1 : 1.6} />}

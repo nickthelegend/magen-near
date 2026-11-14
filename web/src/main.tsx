@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { MotionConfig } from 'framer-motion';
 import './styles.css';
 import { WalletProvider, useWallet } from './lib/store.tsx';
 import { Landing } from './pages/Landing.tsx';
@@ -33,4 +34,4 @@ function Router() {
   return <>{page}{toast && <div className="toast" role="status">{toast}</div>}</>;
 }
 
-createRoot(document.getElementById('root')!).render(<StrictMode><WalletProvider><Router /></WalletProvider></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><MotionConfig reducedMotion="user"><WalletProvider><Router /></WalletProvider></MotionConfig></StrictMode>);
