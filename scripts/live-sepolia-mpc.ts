@@ -10,7 +10,7 @@ const TO = '0x4B2ACf80Bc6E07bbF5690f0710e25C528cb63F80'; // Nick's Noren operato
 const ethOf = async (w: string) => addressFor('ethereum', await derivedKey(w, 'magen/eth', 0));
 
 if (process.argv[2] === 'addresses') {
-  for (const w of ['magen-ana.testnet', 'dana-magen.testnet']) console.log(w, await ethOf(w));
+  for (const w of ['magen-ana.testnet', 'dana-magen.testnet', 'ira-magen.testnet', 'tovmagen.testnet']) console.log(w, await ethOf(w));
   process.exit(0);
 }
 
