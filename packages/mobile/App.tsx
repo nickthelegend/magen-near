@@ -201,7 +201,7 @@ function SettingsTab({ vault, live, go }: P) {
   </Screen>;
 }
 
-const PUSHED: string[] = ['swap', 'bridge', 'send', 'chains', 'settings'];
+const PUSHED: string[] = ['swap', 'send', 'chains', 'settings', 'receive', 'private'];
 type Prefill = { to: string; amount?: string; memo?: string; request?: boolean; key: number };
 
 /** "8.48" with the decimals smaller and dimmer, as on the reference's balance. */
@@ -317,7 +317,8 @@ const Empty = () => <View style={{ alignItems: 'center', padding: 20, gap: 6 }}>
 /** Floor a yocto amount to a plain decimal string the amount field accepts. */
 const nearPlain = (y: bigint, places = 4) => { const s = y.toString().padStart(25, '0'); const f = s.slice(-24).slice(0, places).replace(/0+$/, ''); return BigInt(s.slice(0, -24)).toString() + (f ? '.' + f : ''); };
 
-function SendTab({ vault, live, refresh, go, prefill, addLocal }: P & { prefill: Prefill | null }) {
+function SendTab({ vault, live, refresh, go, prefill, addLocal, acts }: P & { prefill: Prefill | null }) {
+  const recent = Array.from(new Set((acts ?? []).map(a => a.counterparty).filter((c): c is string => !!c && /\.testnet$/.test(c) && c !== vault.wallet))).slice(0, 3);
   const [to, setTo] = useState(prefill?.to ?? ''); const [amt, setAmt] = useState(prefill?.amount ?? '');
   const [from, setFrom] = useState<Prefill | null>(prefill);
   useEffect(() => { if (prefill && prefill.key !== from?.key) { setFrom(prefill); setTo(prefill.to); setAmt(prefill.amount ?? ''); setStage('form'); setRes(null); setErr(''); } }, [prefill?.key]);
@@ -348,9 +349,9 @@ function SendTab({ vault, live, refresh, go, prefill, addLocal }: P & { prefill:
       {res && <TxBanner state={res.success ? 'ok' : 'bad'} title={res.success ? `Sent ${amt} NEAR. NEAR verified both signatures.` : friendlyError(res.error)} links={res.success ? [['Transaction', txUrl(res.hash)], ['Recipient account', accountUrl(to.trim().toLowerCase())]] : [['View on NEAR Rocks', txUrl(res.hash)]]} />}
       {!!err && <Err text={err} />}</>}
     action={stage === 'done' ? <Btn title="New payment" kind="ghost" onPress={() => { setStage('form'); setRes(null); setAmt(''); }} />
-      : <Btn title={stage === 'signing' ? 'Signing with both keys…' : stage === 'sending' ? 'NEAR is checking both…' : 'Sign twice and send'} icon={<ShieldSend size={22} />} busy={stage !== 'form'} disabled={!to || !amt} onPress={send} />}>
-    <View><Back go={go} title="Send" />
-      {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" hitSlop={8} style={{ position: 'absolute', right: 0, top: -6, height: 44, justifyContent: 'center' }}><ScanLine color={C.text} size={21} /></Pressable>}
+      : <Btn title={stage === 'signing' ? 'Signing with both keys…' : stage === 'sending' ? 'NEAR is checking both…' : 'Review send'} icon={<ShieldSend size={22} />} busy={stage !== 'form'} disabled={!to || !amt} onPress={send} />}>
+    <View><Back sheet go={go} title="Send" />
+      {stage === 'form' && <Pressable onPress={() => go('scan')} accessibilityRole="button" accessibilityLabel="Scan a code" hitSlop={8} style={{ position: 'absolute', left: 0, top: 10, height: 40, justifyContent: 'center' }}><ScanLine color={C.text} size={21} /></Pressable>}
     </View>
     {scanned && <View style={[styles.banner, { backgroundColor: C.accentSoft, borderColor: C.accentLine, alignItems: 'center' }]}><ScanLine color={C.accent} size={18} />
       <View style={{ flex: 1 }}><T style={{ fontWeight: '600' }}>{from!.request ? 'From a Magen pay request' : 'From a scanned code'}</T>
@@ -358,6 +359,10 @@ function SendTab({ vault, live, refresh, go, prefill, addLocal }: P & { prefill:
     <Card style={{ padding: 18, gap: 12 }}>
       <T s="label">To</T>
       <TextInput selectionColor="#E040C8" style={styles.input} placeholder="bob.testnet" placeholderTextColor={C.text3} value={to} onChangeText={t => { setTo(t); setErr(''); }} autoCapitalize="none" autoCorrect={false} editable={stage === 'form'} accessibilityLabel="Send to" />
+      {stage === 'form' && recent.length > 0 && <View style={{ gap: 2 }}><T style={{ color: C.text2, fontSize: 13 }}>Recent</T>
+        {recent.map(r => <Pressable key={r} onPress={() => { Haptics.selectionAsync(); setTo(r); setErr(''); }} accessibilityRole="button" style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 10, height: 44, opacity: pressed ? 0.7 : 1 })}>
+          <View style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: C.accentSoft, alignItems: 'center', justifyContent: 'center' }}><T style={{ color: C.accentText, fontWeight: '700' }}>{r[0].toUpperCase()}</T></View>
+          <T style={{ flex: 1, fontSize: 15, fontWeight: '600', color: to === r ? C.accentText : C.text }}>{r}</T>{to === r && <Check color={C.accent} size={16} />}</Pressable>)}</View>}
       <T s="label">Amount</T>
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 64, paddingHorizontal: 4 }}>
         <TextInput selectionColor="#E040C8" style={{ flex: 1, fontFamily: FONT.display, fontSize: 44, letterSpacing: -1.5, color: C.text }} keyboardType="decimal-pad" placeholder="0" placeholderTextColor={C.text3} value={amt} onChangeText={t => { setAmt(decimal(t)); setErr(''); }} editable={stage === 'form'} accessibilityLabel="Amount in NEAR" />
@@ -550,7 +555,7 @@ function ChainsTab({ vault, live, go, addLocal }: P) {
       {!!err && <Err text={err} />}</>}
     action={stage === 'done' ? <Btn title="New transfer" kind="ghost" onPress={() => { setStage('form'); setRes(null); }} />
       : <Btn title={stage === 'near' ? 'NEAR is checking both…' : stage === 'mpc' ? 'MPC is signing…' : stage === 'sepolia' ? 'Waiting for Sepolia…' : 'Sign twice and send'} icon={<ShieldSend size={22} />} busy={busy} disabled={!eth || !to || !amt || busy} onPress={send} />}>
-    <Back go={go} title="Send on Ethereum" sub="NEAR Chain Signatures sign for your Ethereum address, only after your Magen wallet verifies both of your signatures." />
+    <Back sheet go={go} title="Send on Ethereum" />
     <Card style={{ padding: 16, gap: 10 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <View style={[styles.ico, { backgroundColor: '#fff' }]}><Image source={LOGO.ethereum} style={{ width: 22, height: 22 }} resizeMode="contain" /></View>

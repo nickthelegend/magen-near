@@ -1,22 +1,14 @@
 // Floating, icon-only tab bar. Thin-line icons, filled when active, a magenta glow that springs under the
 // active icon, and a raised centre "Scan" button: Magen's lattice shield with scan brackets inside. Send keeps
 // its own slot. Screen readers get labels.
-import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, View, type LayoutChangeEvent } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Svg, { Path, Line } from 'react-native-svg';
-import { House, History, ArrowUpRight, ShieldCheck } from 'lucide-react-native';
+import { Wallet, Clock, Compass, ShieldCheck } from 'lucide-react-native';
 
 /** The five tab-bar tabs, plus screens opened from Home (no tab highlighted). */
 export type Tab = 'home' | 'activity' | 'scan' | 'send' | 'security' | 'chains' | 'private' | 'swap' | 'receive' | 'bridge' | 'settings';
-const SIDE: { key: Tab; label: string; Icon: any }[] = [
-  { key: 'home', label: 'Home', Icon: House },
-  { key: 'activity', label: 'Activity', Icon: History },
-  { key: 'send', label: 'Send', Icon: ArrowUpRight },
-  { key: 'security', label: 'Security and Q-Day switch', Icon: ShieldCheck },
-];
-const ORDER: Tab[] = ['home', 'activity', 'scan', 'send', 'security'];
+
 
 /** The quantum-shield mark: a shield whose face is a lattice, with a send arrow. */
 export function ShieldSend({ size = 28, color = '#fff' }: { size?: number; color?: string }) {
@@ -40,57 +32,27 @@ export function ShieldScan({ size = 28, color = '#fff' }: { size?: number; color
   </Svg>;
 }
 
+/** Edge-to-edge bottom bar: four icons, the active one magenta inside a soft rounded-square tint. */
+const TABS: { key: Tab; label: string; Icon: any }[] = [
+  { key: 'home', label: 'Wallet', Icon: Wallet },
+  { key: 'activity', label: 'Activity', Icon: Clock },
+  { key: 'bridge', label: 'Bridge', Icon: Compass },
+  { key: 'security', label: 'Security and Q-Day switch', Icon: ShieldCheck },
+];
+export const TAB_H = 58;
 export function TabBar({ tab, onChange, bottom }: { tab: Tab; onChange: (t: Tab) => void; bottom: number }) {
-  const [w, setW] = useState(0);
-  const slot = w / 5;
-  const x = useRef(new Animated.Value(0)).current;
-  const pop = useRef(new Animated.Value(1)).current;
-  const fab = useRef(new Animated.Value(1)).current;
-  const halo = useRef(new Animated.Value(0)).current;
-  const idx = ORDER.indexOf(tab);
-  useEffect(() => {
-    if (!slot) return;
-    Animated.spring(x, { toValue: idx * slot + slot / 2 - 26, useNativeDriver: true, damping: 16, stiffness: 180, mass: 0.8 }).start();
-    pop.setValue(0.6); Animated.spring(pop, { toValue: 1, useNativeDriver: true, damping: 10, stiffness: 220 }).start();
-  }, [idx, slot]);
-  // On the Scan screen the centre button breathes a soft magenta halo.
-  useEffect(() => {
-    if (tab !== 'scan') { halo.stopAnimation(); halo.setValue(0); return; }
-    fab.setValue(0.82); Animated.spring(fab, { toValue: 1, useNativeDriver: true, damping: 8, stiffness: 260 }).start();
-    const loop = Animated.loop(Animated.timing(halo, { toValue: 1, duration: 1800, easing: Easing.out(Easing.quad), useNativeDriver: true }));
-    loop.start(); return () => loop.stop();
-  }, [tab]);
-  const press = (t: Tab) => { Haptics.impactAsync(t === 'scan' ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light); onChange(t); };
-  const onScan = tab === 'scan';
-  return <View pointerEvents="box-none" style={[s.wrap, { bottom: bottom + 10 }]}>
-    <View style={s.bar} onLayout={(e: LayoutChangeEvent) => setW(e.nativeEvent.layout.width)} accessibilityRole="tablist">
-      {slot > 0 && !onScan && ORDER.includes(tab) && <Animated.View style={[s.glow, { transform: [{ translateX: x }, { scale: pop }] }]} />}
-      {ORDER.map(k => {
-        if (k === 'scan') return <View key={k} style={s.slot}>
-          {onScan && <Animated.View pointerEvents="none" style={[s.halo, { opacity: halo.interpolate({ inputRange: [0, 1], outputRange: [0.7, 0] }), transform: [{ scale: halo.interpolate({ inputRange: [0, 1], outputRange: [1, 1.55] }) }] }]} />}
-          <Pressable accessibilityRole="tab" accessibilityLabel="Scan a code" accessibilityState={{ selected: onScan }} onPress={() => press('scan')}
-            onPressIn={() => Animated.spring(fab, { toValue: 0.9, useNativeDriver: true, damping: 14, stiffness: 320 }).start()}
-            onPressOut={() => Animated.spring(fab, { toValue: 1, useNativeDriver: true, damping: 8, stiffness: 260 }).start()}>
-            <Animated.View style={[s.fab, { backgroundColor: '#0B0C0F', transform: [{ scale: fab }] }]}>
-              <LinearGradient colors={['#EE6AD9', '#C930B1']} start={{ x: 0.1, y: 0 }} end={{ x: 0.9, y: 1 }} style={s.fabFill}><ShieldScan size={31} /></LinearGradient>
-            </Animated.View>
-          </Pressable>
-        </View>;
-        const it = SIDE.find(i => i.key === k)!; const on = tab === k;
-        return <Pressable key={k} style={s.slot} accessibilityRole="tab" accessibilityLabel={it.label} accessibilityState={{ selected: on }} onPress={() => press(k)} hitSlop={6}>
-          <it.Icon size={24} strokeWidth={on ? 2 : 1.6} color={on ? '#ffffff' : 'rgba(255,255,255,0.4)'} fill={on && k !== 'send' ? 'rgba(224,64,200,0.35)' : 'none'} />
-        </Pressable>;
-      })}
-    </View>
+  return <View style={[s.bar, { paddingBottom: bottom, height: TAB_H + bottom }]} accessibilityRole="tablist">
+    {TABS.map(({ key, label, Icon }) => { const on = tab === key;
+      return <Pressable key={key} style={s.slot} accessibilityRole="tab" accessibilityLabel={label} accessibilityState={{ selected: on }} hitSlop={4}
+        onPress={() => { Haptics.selectionAsync(); onChange(key); }}>
+        <View style={[s.pad, on && s.on]}><Icon size={24} strokeWidth={on ? 2.2 : 1.8} color={on ? '#E040C8' : 'rgba(255,255,255,0.6)'} fill={on && key !== 'activity' && key !== 'bridge' ? 'rgba(224,64,200,0.3)' : 'none'} /></View>
+      </Pressable>; })}
   </View>;
 }
 
 const s = StyleSheet.create({
-  wrap: { position: 'absolute', left: 20, right: 20, alignItems: 'stretch' },
-  bar: { height: 66, borderRadius: 33, backgroundColor: '#15171C', flexDirection: 'row', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
-  slot: { flex: 1, alignItems: 'center', justifyContent: 'center', height: 66 },
-  glow: { position: 'absolute', left: 0, top: 7, width: 52, height: 52, borderRadius: 26, backgroundColor: 'rgba(224,64,200,0.22)', shadowColor: '#E040C8', shadowOpacity: 0.8, shadowRadius: 14, shadowOffset: { width: 0, height: 0 } },
-  fab: { marginTop: -30, width: 66, height: 66, borderRadius: 33, padding: 4, shadowColor: '#E040C8', shadowOpacity: 0.45, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
-  fabFill: { flex: 1, borderRadius: 29, alignItems: 'center', justifyContent: 'center' },
-  halo: { position: 'absolute', top: -15, left: '50%', marginLeft: -33, width: 66, height: 66, borderRadius: 33, borderWidth: 2, borderColor: '#E040C8' },
+  bar: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', backgroundColor: '#0E0F13', borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(255,255,255,0.14)' },
+  slot: { flex: 1, height: TAB_H, alignItems: 'center', justifyContent: 'center' },
+  pad: { width: 52, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  on: { backgroundColor: 'rgba(224,64,200,0.16)' },
 });

@@ -9,7 +9,7 @@ import { magenQr } from './qr';
 import { C } from './theme';
 
 /** 10 pt lift + 66 pt bar + 30 pt raised Scan button + 10 pt gap. */
-export const BAR_SPACE = 10 + 66 + 30 + 10;
+export const BAR_SPACE = 58 + 10;
 export const ACTION_H = 54;
 /** Amount fields: digits and one dot; a leading dot becomes "0." so ".2" reads as 0.2 NEAR. */
 export const decimal = (t: string) => { const c = t.replace(/[^\d.]/g, '').replace(/^\./, '0.'); const i = c.indexOf('.'); return i < 0 ? c : c.slice(0, i + 1) + c.slice(i + 1).replace(/\./g, ''); };

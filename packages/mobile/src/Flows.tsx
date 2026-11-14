@@ -154,7 +154,7 @@ export function SwapTab(p: P) {
   const [bal, setBal] = useState<bigint | null>(null);
   const [busy, setBusy] = useState(''); const [err, setErr] = useState('');
   const [res, setRes] = useState<{ hash: string; success: boolean; error: string; received: bigint } | null>(null);
-  const [wait, setWait] = useState(false); const [pick, setPick] = useState(false); const [pickBal, setPickBal] = useState<Record<string, bigint>>({});
+  const [wait, setWait] = useState(false); const [pick, setPick] = useState(false); const [q, setQ] = useState(''); const [pickBal, setPickBal] = useState<Record<string, bigint>>({});
   useEffect(() => { if (!pick) return; PAIRS.forEach(x => ftBalance(x.token, vault.wallet).then(b => setPickBal(m => ({ ...m, [x.id]: b }))).catch(() => {})); }, [pick]);
   let amountIn = 0n; try { amountIn = amt ? BigInt(nearAmount(amt)) : 0n; } catch { /* invalid */ }
   useEffect(() => { let on = true; setQuote(null); setQErr(''); if (amountIn <= 0n) return; const t = setTimeout(() => retrying(() => refQuote(pair, amountIn), w => on && setWait(w)).then(q => on && setQuote(q)).catch(e => on && setQErr(nice(e))), 300); return () => { on = false; clearTimeout(t); }; }, [pair, amt]);
@@ -177,7 +177,7 @@ export function SwapTab(p: P) {
       {!!err && <Err text={err} />}</>}
     action={res?.success ? <Btn title="Swap again" kind="ghost" onPress={() => setRes(null)} icon={<Repeat color="#fff" size={18} />} />
     : <Btn title={busy || 'Review swap'} busy={!!busy} disabled={!quote || (version && version !== 'magen-3')} onPress={swap} icon={<ShieldSend size={22} />} />}>
-    <Back go={go} title="Swap" sub="Trade NEAR for a testnet stablecoin on Ref Finance, NEAR's exchange. One approval, signed twice." />
+    <Back sheet go={go} title="Swap" />
     <View style={{ gap: 8 }}>
       <Card style={{ padding: 18, paddingBottom: 26, gap: 6 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}><T s="label">You pay</T>
@@ -202,8 +202,12 @@ export function SwapTab(p: P) {
       <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,6,8,0.72)' }} onPress={() => setPick(false)} accessibilityLabel="Close" />
       <View style={{ backgroundColor: C.s1, borderTopLeftRadius: 28, borderTopRightRadius: 28, borderWidth: 1, borderColor: C.line, padding: 20, paddingBottom: 40, gap: 6 }}>
         <View style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: C.line2, marginBottom: 10 }} />
-        <T display style={{ fontSize: 22, marginBottom: 6 }}>Receive token</T>
-        {PAIRS.map(x => <Pressable key={x.id} onPress={() => { Haptics.selectionAsync(); setPair(x); setRes(null); setPick(false); }} accessibilityRole="button" style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 64, paddingHorizontal: 12, borderRadius: 18, backgroundColor: pair.id === x.id ? C.accentSoft : pressed ? C.s2 : 'transparent' })}>
+        <T style={{ fontSize: 17, fontWeight: '700', textAlign: 'center', marginBottom: 10 }}>Find a token to buy</T>
+        <View style={{ flexDirection: 'row', gap: 8, marginBottom: 8 }}>
+          <TextInput selectionColor={C.accent} value={q} onChangeText={setQ} placeholder="Search tokens" placeholderTextColor={C.text3} autoCapitalize="none" style={[styles.input, { flex: 1, height: 44 }]} accessibilityLabel="Search tokens" />
+          <View style={[styles.chip, { height: 44, borderRadius: 22, paddingLeft: 6 }]}><View style={styles.chipLogo}><Image source={LOGO.near} style={{ width: 14, height: 14 }} resizeMode="contain" /></View><T style={{ fontWeight: '600' }}>NEAR</T></View>
+        </View>
+        {PAIRS.filter(x => !q || (x.symbol + x.label).toLowerCase().includes(q.toLowerCase())).map(x => <Pressable key={x.id} onPress={() => { Haptics.selectionAsync(); setPair(x); setRes(null); setPick(false); }} accessibilityRole="button" style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 12, height: 64, paddingHorizontal: 12, borderRadius: 18, backgroundColor: pair.id === x.id ? C.accentSoft : pressed ? C.s2 : 'transparent' })}>
           <ChainLogo id={x.id} size={20} /><View style={{ flex: 1 }}><T style={{ fontWeight: '600', fontSize: 16 }}>{x.symbol}</T><T style={{ color: 'rgba(255,255,255,0.62)', fontSize: 13 }}>{x.label} · pool #{x.pool}</T></View>
           <T style={{ fontWeight: '600', fontSize: 15 }}>{x.id in pickBal ? f24(pickBal[x.id]) : '…'}</T></Pressable>)}
       </View>
@@ -262,7 +266,7 @@ function BridgeIn(p: P & { seg: any }) {
   }, [chain, d]);
   const conf = d ? String(Object.values(d.confirmations ?? {})[0] ?? '') || null : null;
   return <Screen>
-    <Back go={p.go} title="Bridge" sub="Bring Bitcoin or Zcash onto NEAR, or send NEAR out to Solana. Omni Bridge does the moving; your two locks guard it on NEAR." />
+    <Back sheet go={p.go} title="Bridge" />
     {p.seg}
     <Route from={chain === 'btc' ? ['bitcoin', 'Bitcoin'] : ['zcash', 'Zcash']} fromNet="testnet" to={['near', chain === 'btc' ? 'nBTC' : 'nZEC']} toNet="on NEAR" via="Omni Bridge" />
     <View style={{ flexDirection: 'row', gap: 8 }}>{(Object.keys(UTXO) as UtxoChain[]).map(k => <Pressable key={k} onPress={() => setChain(k)} style={[styles.chip, chain === k && styles.chipOn]} accessibilityRole="button" accessibilityState={{ selected: chain === k }}>
@@ -343,7 +347,7 @@ function BridgeOut(p: P & { seg: any }) {
       {!!err && <Err text={err} />}</>}
     action={res?.success ? <Btn title="Send more to Solana" kind="ghost" onPress={() => { setRes(null); setSt(null); }} />
     : <Btn title={busy || 'Sign twice and bridge'} busy={!!busy} disabled={!fee || !validTo || (version && version !== 'magen-3')} onPress={go} icon={<ShieldSend size={22} />} />}>
-    <Back go={p.go} title="Bridge" sub="Bring Bitcoin or Zcash onto NEAR, or send NEAR out to Solana. Omni Bridge does the moving; your two locks guard it on NEAR." />
+    <Back sheet go={p.go} title="Bridge" />
     {p.seg}
     <Route from={['near', 'NEAR']} fromNet="testnet" to={['solana', 'Solana']} toNet="devnet" via="Omni Bridge" />
     <Card style={{ padding: 18, gap: 10 }}>
@@ -360,6 +364,13 @@ function BridgeOut(p: P & { seg: any }) {
     <KV rows={[['To', to ? <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}><Image source={LOGO.solana} style={{ width: 13, height: 13 }} resizeMode="contain" /></View><T style={{ fontSize: 14, fontWeight: '600' }}>{mySol ? 'Your Solana · ' : ''}<T style={{ fontFamily: MONO, fontSize: 13 }}>{short(to, 5, 5)}</T></T></View> : <ActivityIndicator color={C.accent} size="small" />], ['Network', 'Solana devnet'], ['Time', 'About 1–2 min (bridge relayer)'],
       ['Bridge fee', fee === null ? (feeErr ? '—' : '…') : `${units(fee, 24, 4)} wNEAR`], ['Arrives', fee !== null && amount > fee ? `${units(amount - fee, 24, 4)} wNEAR` : '…'],
       ['On Solana now', dest === null ? '…' : `${dest.toFixed(4)} wNEAR`]]} />
+    <Card style={{ paddingVertical: 4 }}>
+      <T style={{ color: C.text2, fontSize: 13, fontWeight: '600', paddingHorizontal: 16, paddingTop: 10 }}>DESTINATION NETWORK</T>
+      {OUT_ROUTES.map((r, i) => { const on = r.id === 'solana'; return <View key={r.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, height: 50, paddingHorizontal: 16, borderTopWidth: i ? 1 : 0, borderTopColor: 'rgba(255,255,255,0.06)', opacity: on ? 1 : 0.55 }}>
+        <View style={{ width: 26, height: 26, borderRadius: 13, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>{LOGO[r.id] ? <Image source={LOGO[r.id]} style={{ width: 15, height: 15 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '800', fontSize: 12 }}>{r.chain[0]}</T>}</View>
+        <T style={{ flex: 1, fontSize: 15.5, fontWeight: '600' }}>{r.chain} <T style={{ color: C.text2, fontSize: 13 }}>{r.network}</T></T>
+        {on ? <Check color={C.accent} size={18} /> : <T style={{ color: C.text2, fontSize: 13 }}>not in the app yet</T>}</View>; })}
+    </Card>
     {(!!busy || res?.success) && <Steps at={done ? 3 : res?.success ? (st && st.status !== 'Initialised' ? 2 : 1) : 0} logo={LOGO.solana} items={[['Signed twice on NEAR', res?.success ? 'Both locks verified · wNEAR handed to Omni' : 'ed25519 + ML-DSA-65'], ['Bridge relaying', st ? (PLAIN[st.status] ?? `Status: ${st.status}`) : 'Omni picks it up on NEAR'], ['Arrived on Solana', done ? 'wNEAR is in your Solana address' : 'Usually a minute or two']]} />}
     {version && version !== 'magen-3' && <Err text={`This wallet runs contract ${version}. Bridging needs magen-3: create a new wallet to bridge.`} />}
     {!!feeErr && <Err text={feeErr} />}

@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 import { ActivityIndicator, Animated, Image, Linking, Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { ChevronLeft, ShieldAlert } from 'lucide-react-native';
+import { ChevronLeft, ShieldAlert, X } from 'lucide-react-native';
 import type { Vault } from '../../../sdk/index.ts';
 import { txUrl, type Activity, type KeyInfo } from '../../../web/src/lib/chain.ts';
 import { C, FONT, T as Txt } from './theme';
@@ -40,8 +40,15 @@ export const Logo = ({ size = 30 }: { size?: number }) => <Image source={require
 
 export const Tile = ({ icon, title, onPress }: any) => <Pressable onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); onPress(); }} style={({ pressed }) => [styles.tile, { transform: [{ scale: pressed ? 0.96 : 1 }] }]} accessibilityRole="button" accessibilityLabel={title}>
   <View style={[styles.ico, { backgroundColor: C.accentSoft }]}>{icon}</View><T style={{ fontWeight: '600', fontSize: 14 }}>{title}</T></Pressable>;
-/** iOS nav bar: one 44 pt row, a plain chevron (44x44 hit area) on the left, the title centred at 17/600. */
-export const Back = ({ go, title }: any) => <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginHorizontal: -4, marginTop: -6 }}>
+/** iOS nav bar: one 44 pt row, a plain chevron (44x44 hit area) on the left, the title centred at 17/600.
+ *  `sheet`: the pushed-sheet look instead (grabber on top, title centred, a round close button on the right). */
+export const Back = ({ go, title, sheet }: any) => sheet ? <View style={{ marginTop: -8 }}>
+  <View style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: C.line2, marginBottom: 8 }} />
+  <View style={{ height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+    <T style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={1}>{title}</T>
+    <Pressable onPress={() => go('home')} hitSlop={8} accessibilityRole="button" accessibilityLabel="Close" style={{ position: 'absolute', right: 0, width: 32, height: 32, borderRadius: 16, backgroundColor: C.s2, alignItems: 'center', justifyContent: 'center' }}><X color={C.text2} size={17} strokeWidth={2.4} /></Pressable>
+  </View></View>
+  : <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginHorizontal: -4, marginTop: -6 }}>
   <Pressable onPress={() => go('home')} hitSlop={6} accessibilityRole="button" accessibilityLabel="Back" style={{ position: 'absolute', left: 0, width: 44, height: 44, alignItems: 'flex-start', justifyContent: 'center', paddingLeft: 4 }}><ChevronLeft color={C.text} size={26} strokeWidth={2.2} /></Pressable>
   <T style={{ fontSize: 17, fontWeight: '600' }} numberOfLines={1}>{title}</T></View>;
 export const feeOf = (vault: Vault, live: Live | null) => live?.keys.some(k => k.scheme === 'ed25519') === false && live?.status?.migrated ? { account: vault.wallet, seed: vault.keys.pq, pq: true } : vault.relay;
