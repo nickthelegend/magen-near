@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, ActivityIndicator, Animated, Easing, Image, Linking, Modal, Pressable, TextInput, View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import { ArrowDown, ArrowDownToLine, ArrowUpFromLine, Atom, Check, Copy, ExternalLink, Info, Repeat, ShieldAlert, ShieldCheck } from 'lucide-react-native';
+import { ArrowDown, ArrowDownToLine, ArrowUpDown, ArrowUpFromLine, Atom, ChevronDown, Check, Copy, ExternalLink, Info, Repeat, ShieldAlert, ShieldCheck } from 'lucide-react-native';
 import { nearAmount } from '../../../sdk/index.ts';
 import { deriveAll } from '../../../sdk/hd.ts';
 import { chainAddresses } from '../../../sdk/phase2.ts';
 import { PAIRS, ftBalance, refPool, refQuote, swapNearFor, type Pair } from '../../../sdk/swap.ts';
-import { OUT_ROUTES, UTXO, bridgeOut, bridgedBalance, depositAddress, outFee, outStatus, splBalance, type UtxoChain } from '../../../sdk/omni.ts';
+import { OUT_ROUTES, UTXO, bridgeOut, bridgedBalance, depositAddress, liveOutRoutes, outFee, outStatus, splBalance, type OutRoute, type UtxoChain } from '../../../sdk/omni.ts';
+import { SvgXml } from 'react-native-svg';
+import { CHAIN_SVG } from './chainSvgs';
 import { accountUrl, friendlyError, near, short, txUrl } from '../../../web/src/lib/chain.ts';
 import { Back, Btn, Card, Err, Pill, T, feeSigner, styles, type P } from './ui';
 import { Qr, Screen, decimal } from './Screen';
@@ -41,7 +43,7 @@ const Seg = ({ value, set, items }: { value: string; set: (v: any) => void; item
 const KV = ({ rows }: { rows: [string, any][] }) => <Card>{rows.map(([k, v], i) => <View key={k} style={[styles.row, { paddingVertical: 11 }, i === rows.length - 1 && { borderBottomWidth: 0 }]}>
   <T style={{ color: 'rgba(255,255,255,0.62)', fontSize: 14, width: 112 }}>{k}</T><View style={{ flex: 1, alignItems: 'flex-end' }}>{typeof v === 'string' ? <T style={{ fontWeight: '600', fontSize: 14, textAlign: 'right' }}>{v}</T> : v}</View></View>)}</Card>;
 const ChainLogo = ({ id, size = 22 }: { id: string; size?: number }) => <View style={[styles.ico, { backgroundColor: '#fff', width: size + 18, height: size + 18, borderRadius: (size + 18) / 2 }]}>
-  {LOGO[id] ? <Image source={LOGO[id]} style={{ width: size, height: size }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '700' }}>{id[0].toUpperCase()}</T>}</View>;
+  {LOGO[id] ? <Image source={LOGO[id]} style={{ width: size, height: size }} resizeMode="contain" /> : CHAIN_SVG[id] ? <SvgXml xml={CHAIN_SVG[id]} width={size} height={size} /> : <T style={{ color: C.bg, fontWeight: '700' }}>{id[0].toUpperCase()}</T>}</View>;
 function CopyBtn({ text, label = 'Copy' }: { text: string; label?: string }) {
   const [ok, setOk] = useState(false);
   return <Pressable onPress={async () => { await Clipboard.setStringAsync(text); Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); setOk(true); setTimeout(() => setOk(false), 1400); }} hitSlop={10} accessibilityRole="button" accessibilityLabel={`${label} ${text}`}
@@ -229,10 +231,55 @@ export function SwapTab(p: P) {
 }
 
 /* ---------- Bridge ---------- */
+type Side = { id: string; logo: string; name: string; net: string };
+const NEAR_SIDE: Side = { id: 'near', logo: 'near', name: 'NEAR', net: 'testnet' };
+const UTXO_SIDES: Side[] = (Object.keys(UTXO) as UtxoChain[]).map(k => ({ id: k, logo: k === 'btc' ? 'bitcoin' : 'zcash', name: UTXO[k].name, net: 'testnet' }));
+/** Bridge: From and To chains picked from what Omni lists live (its NEAR token registry + the BTC/ZEC connectors). */
 export function BridgeTab(p: P) {
-  const [dir, setDir] = useState<'in' | 'out'>('in');
-  return dir === 'in' ? <BridgeIn {...p} seg={<Seg value={dir} set={setDir} items={[['in', 'Bring to NEAR', ArrowDownToLine], ['out', 'Send out', ArrowUpFromLine]]} />} />
-    : <BridgeOut {...p} seg={<Seg value={dir} set={setDir} items={[['in', 'Bring to NEAR', ArrowDownToLine], ['out', 'Send out', ArrowUpFromLine]]} />} />;
+  const [routes, setRoutes] = useState<(OutRoute & { token: string })[] | null>(null); const [rErr, setRErr] = useState('');
+  useEffect(() => { retrying(() => liveOutRoutes()).then(setRoutes).catch(e => setRErr(nice(e))); }, []);
+  const [from, setFrom] = useState('near'); const [to, setTo] = useState('solana'); const [pick, setPick] = useState<null | 'from' | 'to'>(null);
+  const [mpcEth, setMpcEth] = useState(''); const [mySol, setMySol] = useState('');
+  useEffect(() => { chainAddresses(p.vault.wallet).then((a: any[]) => setMpcEth(a.find(x => x.id === 'ethereum')?.address ?? '')).catch(() => {}); if (p.vault.mnemonic) setTimeout(() => { try { setMySol(derived(p.vault.mnemonic!).chains.find(c => c.id === 'solana')?.address ?? ''); } catch { /* typed */ } }, 30); }, [p.vault.wallet]);
+  const [fees, setFees] = useState<Record<string, string>>({});
+  useEffect(() => { if (pick !== 'to' || from !== 'near' || !routes) return; routes.forEach(r => { const rcp = r.id === 'solana' ? mySol : mpcEth; if (!rcp) return;
+    outFee(p.vault.wallet, r, rcp, 500_000_000_000_000_000_000_000n).then(q => setFees(m => ({ ...m, [r.id]: `${units(q.fee, 24, 4)} wNEAR fee` }))).catch(() => setFees(m => ({ ...m, [r.id]: 'Unavailable now' }))); }); }, [pick, routes, mpcEth, mySol]);
+  const routeSides: Side[] = (routes ?? []).map(r => ({ id: r.id, logo: r.id, name: r.chain, net: r.network }));
+  const all = [NEAR_SIDE, ...UTXO_SIDES, ...routeSides];
+  const side = (id: string) => all.find(x => x.id === id) ?? NEAR_SIDE;
+  const out = from === 'near'; const utxoIn = (Object.keys(UTXO) as string[]).includes(from);
+  const route = routes?.find(r => r.id === to);
+  const flip = () => { Haptics.selectionAsync(); if (out) { if (to === 'solana' || !route) { setFrom('btc'); setTo('near'); } else { setFrom(to); setTo('near'); } } else { setTo(utxoIn ? 'solana' : from); setFrom('near'); } };
+  const Btn2 = ({ s: sd, label, onPress }: any) => <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${label}: ${sd.name}`} style={({ pressed }) => ({ flex: 1, padding: 12, borderRadius: 20, backgroundColor: C.s2, borderWidth: 1, borderColor: C.line, gap: 8, opacity: pressed ? 0.8 : 1 })}>
+    <T style={{ color: C.text2, fontSize: 13 }}>{label}</T>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><ChainLogo id={sd.logo} size={18} /><View style={{ flex: 1, minWidth: 0 }}><T style={{ fontWeight: '700', fontSize: 15 }} numberOfLines={1}>{sd.name}</T><T style={{ color: C.text2, fontSize: 12 }} numberOfLines={1}>{sd.net}</T></View><ChevronDown color={C.text2} size={16} /></View>
+  </Pressable>;
+  const head = <View>
+    <View style={{ flexDirection: 'row', gap: 10 }}><Btn2 s={side(from)} label="From" onPress={() => setPick('from')} /><Btn2 s={side(to)} label="To" onPress={() => setPick('to')} /></View>
+    <Pressable onPress={flip} accessibilityRole="button" accessibilityLabel="Flip direction" style={{ position: 'absolute', left: '50%', top: 34, marginLeft: -20, width: 40, height: 40, borderRadius: 20, backgroundColor: C.accent, borderWidth: 4, borderColor: C.bg, alignItems: 'center', justifyContent: 'center' }}><ArrowUpDown color="#fff" size={17} /></Pressable>
+    {!routes && !rErr && <T style={{ color: C.text2, fontSize: 13, marginTop: 8 }}>Reading Omni Bridge's live chain list…</T>}
+    {!!rErr && <Err text={rErr} />}
+  </View>;
+  const opts: { s: Side; note: string; ok: boolean }[] = pick === 'from'
+    ? [{ s: NEAR_SIDE, note: 'Send out with both locks', ok: true }, ...UTXO_SIDES.map(s => ({ s, note: 'Live on testnet · deposit address', ok: true })), ...routeSides.map(s => ({ s, note: 'Coming: needs Omni locker call via Chain Signatures', ok: false }))]
+    : out ? routeSides.map(s => ({ s, note: fees[s.id] ? `Live on testnet · ${fees[s.id]}` : 'Live on testnet · quoting…', ok: true })) : [{ s: NEAR_SIDE, note: 'Arrives as a NEP-141 token', ok: true }];
+  const choose = (id: string) => { Haptics.selectionAsync(); if (pick === 'from') { setFrom(id); setTo(id === 'near' ? (routes?.[0]?.id ?? 'solana') : 'near'); } else setTo(id); setPick(null); };
+  const picker = <Modal transparent visible={!!pick} animationType="slide" onRequestClose={() => setPick(null)}>
+    <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,6,8,0.7)' }} onPress={() => setPick(null)} accessibilityLabel="Close" />
+    <View style={{ backgroundColor: C.s1, borderTopLeftRadius: 28, borderTopRightRadius: 28, borderWidth: 1, borderColor: C.line, paddingHorizontal: 16, paddingTop: 10, paddingBottom: 40, maxHeight: '80%' }}>
+      <View style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, backgroundColor: C.line2, marginBottom: 12 }} />
+      <T style={{ fontSize: 17, fontWeight: '700', textAlign: 'center', marginBottom: 4 }}>{pick === 'from' ? 'Bridge from' : 'Bridge to'}</T>
+      <T style={{ color: C.text2, fontSize: 13, textAlign: 'center', marginBottom: 10 }}>Chains Omni Bridge lists on testnet right now</T>
+      {opts.map(o => { const sel = (pick === 'from' ? from : to) === o.s.id; return <Pressable key={o.s.id} disabled={!o.ok} onPress={() => choose(o.s.id)} accessibilityRole="button" accessibilityState={{ selected: sel, disabled: !o.ok }}
+        style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 60, paddingHorizontal: 10, borderRadius: 16, backgroundColor: sel ? C.accentSoft : 'transparent', opacity: o.ok ? 1 : 0.6 }}>
+        <ChainLogo id={o.s.logo} size={20} /><View style={{ flex: 1 }}><T style={{ fontWeight: '600', fontSize: 16 }}>{o.s.name} <T style={{ color: C.text2, fontSize: 13 }}>{o.s.net}</T></T><T style={{ color: o.ok ? C.accentText : C.text2, fontSize: 13, marginTop: 2 }}>{o.note}</T></View>
+        {sel && <Check color={C.accent} size={18} />}</Pressable>; })}
+    </View>
+  </Modal>;
+  return <>{out && route ? <BridgeOut {...p} key={route.id} route={route} to={route.id === 'solana' ? mySol : mpcEth} seg={head} />
+    : utxoIn ? <BridgeIn {...p} key={from} chain={from as UtxoChain} seg={head} />
+    : <Screen><Back sheet go={p.go} title="Bridge" />{head}{!routes ? <ActivityIndicator color={C.accent} /> : <Card style={{ padding: 18, gap: 8 }}><T style={{ fontWeight: '700', fontSize: 16 }}>{side(from).name} → NEAR is coming</T><T style={{ color: C.text2, fontSize: 14, lineHeight: 20 }}>Omni quotes this route, but Magen does not yet sign the deposit into Omni's locker contract on {side(from).name} through Chain Signatures. Nothing is sent from here.</T></Card>}</Screen>}
+    {picker}</>;
 }
 
 const DEMO = 'magen-noam.testnet';
@@ -250,8 +297,8 @@ async function deposits(address: string): Promise<Dep[]> {
   }));
 }
 
-function BridgeIn(p: P & { seg: any }) {
-  const [chain, setChain] = useState<UtxoChain>('btc');
+function BridgeIn(p: P & { seg: any; chain: UtxoChain }) {
+  const chain = p.chain;
   const [who, setWho] = useState(p.vault.wallet);
   const [d, setD] = useState<Awaited<ReturnType<typeof depositAddress>> | null>(null);
   const [err, setErr] = useState(''); const [bal, setBal] = useState<bigint | null>(null);
@@ -269,8 +316,6 @@ function BridgeIn(p: P & { seg: any }) {
     <Back sheet go={p.go} title="Bridge" />
     {p.seg}
     <Route from={chain === 'btc' ? ['bitcoin', 'Bitcoin'] : ['zcash', 'Zcash']} fromNet="testnet" to={['near', chain === 'btc' ? 'nBTC' : 'nZEC']} toNet="on NEAR" via="Omni Bridge" />
-    <View style={{ flexDirection: 'row', gap: 8 }}>{(Object.keys(UTXO) as UtxoChain[]).map(k => <Pressable key={k} onPress={() => setChain(k)} style={[styles.chip, chain === k && styles.chipOn]} accessibilityRole="button" accessibilityState={{ selected: chain === k }}>
-      <View style={styles.chipLogo}><Image source={LOGO[k === 'btc' ? 'bitcoin' : 'zcash']} style={{ width: 14, height: 14 }} resizeMode="contain" /></View><T style={{ fontWeight: '600', color: chain === k ? '#fff' : C.text2 }}>{UTXO[k].name}</T></Pressable>)}</View>
     {!mine && <View style={[styles.banner, { backgroundColor: C.s1, borderColor: C.line, alignItems: 'center' }]}><Info color={C.text2} size={18} />
       <T style={{ flex: 1, color: C.text2, fontSize: 13.5 }}>Showing the demo wallet {DEMO} (read only).</T><Pressable onPress={() => setWho(p.vault.wallet)} hitSlop={8}><T style={{ color: C.accentText, fontWeight: '600' }}>Mine</T></Pressable></View>}
     <Card style={{ padding: 16, gap: 10, alignItems: 'center' }}>
@@ -303,14 +348,13 @@ function BridgeIn(p: P & { seg: any }) {
 
 const arrived = (s: { status: string; destTx?: string } | null) => !!s && (!!s.destTx || ['Finalised', 'Claimed', 'Settled'].includes(s.status));
 const PLAIN: Record<string, string> = { Initialised: 'Started on NEAR. The bridge is picking it up…', Signed: 'The bridge signed it. Sending to the destination chain…' };
-function BridgeOut(p: P & { seg: any }) {
+function BridgeOut(p: P & { seg: any; route: OutRoute; to: string }) {
   const { vault, live, refresh } = p;
-  const [rid, setRid] = useState('solana'); const route = OUT_ROUTES.find(r => r.id === rid)!;
-  const [mpcEth, setMpcEth] = useState(''); useEffect(() => { chainAddresses(vault.wallet).then((a: any[]) => setMpcEth(a.find(x => x.id === 'ethereum')?.address ?? '')).catch(() => {}); }, [vault.wallet]);
+  const route = p.route; const rid = route.id;
   const [mySol, setMySol] = useState('');
   useEffect(() => { if (vault.mnemonic) setTimeout(() => { try { setMySol(derived(vault.mnemonic!).chains.find(c => c.id === 'solana')?.address ?? ''); } catch { /* typed instead */ } }, 30); }, [vault.mnemonic]);
   const [typed, setTyped] = useState('');
-  const to = route.id === 'solana' ? (mySol || typed.trim()) : mpcEth;
+  const to = route.id === 'solana' ? (p.to || mySol || typed.trim()) : p.to;
   const [amt, setAmt] = useState('0.5');
   const [fee, setFee] = useState<bigint | null>(null); const [feeErr, setFeeErr] = useState('');
   const [busy, setBusy] = useState(''); const [err, setErr] = useState('');
@@ -365,14 +409,6 @@ function BridgeOut(p: P & { seg: any }) {
     <KV rows={[['To', to ? <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>{LOGO[route.id] ? <Image source={LOGO[route.id]} style={{ width: 13, height: 13 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '800', fontSize: 11 }}>{route.chain[0]}</T>}</View><T style={{ fontSize: 14, fontWeight: '600' }}>{route.id === 'solana' ? (mySol ? 'Your Solana · ' : '') : 'Your MPC address · '}<T style={{ fontFamily: MONO, fontSize: 13 }}>{short(to, 5, 5)}</T></T></View> : <ActivityIndicator color={C.accent} size="small" />], ['Network', `${route.chain} ${route.network}`], ['Time', 'About 1–2 min (bridge relayer)'],
       ['Bridge fee', fee === null ? (feeErr ? '—' : '…') : `${units(fee, 24, 4)} wNEAR`], ['Arrives', fee !== null && amount > fee ? `${units(amount - fee, 24, 4)} wNEAR` : '…'],
       ['On Solana now', route.id !== 'solana' ? 'see explorer after arrival' : dest === null ? '…' : `${dest.toFixed(4)} wNEAR`]]} />
-    <Card style={{ paddingVertical: 4 }}>
-      <T style={{ color: C.text2, fontSize: 13, fontWeight: '600', paddingHorizontal: 16, paddingTop: 10 }}>DESTINATION NETWORK</T>
-      {OUT_ROUTES.map((r, i) => { const on = r.id === rid;
-        return <Pressable key={r.id} disabled={!!busy || !!res} onPress={() => { Haptics.selectionAsync(); setRid(r.id); setRes(null); setSt(null); }} accessibilityRole="button" accessibilityState={{ selected: on }} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, height: 52, paddingHorizontal: 16, borderTopWidth: i ? 1 : 0, borderTopColor: 'rgba(255,255,255,0.06)', backgroundColor: on ? C.accentSoft : 'transparent' }}>
-        <View style={{ width: 26, height: 26, borderRadius: 13, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>{LOGO[r.id] ? <Image source={LOGO[r.id]} style={{ width: 15, height: 15 }} resizeMode="contain" /> : <T style={{ color: C.bg, fontWeight: '800', fontSize: 12 }}>{r.chain[0]}</T>}</View>
-        <T style={{ flex: 1, fontSize: 15.5, fontWeight: '600' }}>{r.chain} <T style={{ color: C.text2, fontSize: 13 }}>{r.network}</T></T>
-        {on ? <Check color={C.accent} size={18} /> : <T style={{ color: C.text2, fontSize: 13 }}>Live on testnet</T>}</Pressable>; })}
-    </Card>
     {(!!busy || res?.success) && <Steps at={done ? 3 : res?.success ? (st && st.status !== 'Initialised' ? 2 : 1) : 0} logo={LOGO.solana} items={[['Signed twice on NEAR', res?.success ? 'Both locks verified · wNEAR handed to Omni' : 'ed25519 + ML-DSA-65'], ['Bridge relaying', st ? (PLAIN[st.status] ?? `Status: ${st.status}`) : 'Omni picks it up on NEAR'], [`Arrived on ${route.chain}`, done ? `wNEAR is in your ${route.chain} address` : 'Usually a few minutes']]} />}
     {version && version !== 'magen-3' && <Err text={`This wallet runs contract ${version}. Bridging needs magen-3: create a new wallet to bridge.`} />}
     {!!feeErr && <Err text={feeErr} />}

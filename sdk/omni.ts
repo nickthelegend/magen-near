@@ -14,14 +14,24 @@ export const UTXO = {
 } as const;
 export type UtxoChain = keyof typeof UTXO;
 
-export type OutRoute = { id: string; chain: string; prefix: 'sol' | 'eth' | 'base' | 'arb' | 'avax' | 'bnb'; network: string; explorerTx: (h: string) => string; explorerAddr: (a: string) => string };
+export type OutRoute = { id: string; chain: string; prefix: 'sol' | 'eth' | 'base' | 'arb' | 'avax' | 'bnb' | 'pol'; network: string; explorerTx: (h: string) => string; explorerAddr: (a: string) => string };
 export const OUT_ROUTES: OutRoute[] = [
   { id: 'solana', chain: 'Solana', prefix: 'sol', network: 'devnet', explorerTx: h => `https://explorer.solana.com/tx/${h}?cluster=devnet`, explorerAddr: a => `https://explorer.solana.com/address/${a}?cluster=devnet` },
   { id: 'base', chain: 'Base', prefix: 'base', network: 'Base Sepolia', explorerTx: h => `https://sepolia.basescan.org/tx/${h}`, explorerAddr: a => `https://sepolia.basescan.org/address/${a}` },
   { id: 'ethereum', chain: 'Ethereum', prefix: 'eth', network: 'Sepolia', explorerTx: h => `https://sepolia.etherscan.io/tx/${h}`, explorerAddr: a => `https://sepolia.etherscan.io/address/${a}` },
   { id: 'arbitrum', chain: 'Arbitrum', prefix: 'arb', network: 'Arbitrum Sepolia', explorerTx: h => `https://sepolia.arbiscan.io/tx/${h}`, explorerAddr: a => `https://sepolia.arbiscan.io/address/${a}` },
+  { id: 'polygon', chain: 'Polygon', prefix: 'pol', network: 'Amoy', explorerTx: h => `https://amoy.polygonscan.com/tx/${h}`, explorerAddr: a => `https://amoy.polygonscan.com/address/${a}` },
+  { id: 'avalanche', chain: 'Avalanche', prefix: 'avax', network: 'Fuji', explorerTx: h => `https://testnet.snowtrace.io/tx/${h}`, explorerAddr: a => `https://testnet.snowtrace.io/address/${a}` },
   { id: 'bnb', chain: 'BNB Chain', prefix: 'bnb', network: 'BNB testnet', explorerTx: h => `https://testnet.bscscan.com/tx/${h}`, explorerAddr: a => `https://testnet.bscscan.com/address/${a}` },
 ];
+const KIND: Record<string, string> = { eth: 'Eth', base: 'Base', arb: 'Arb', bnb: 'Bnb', sol: 'Sol', pol: 'Pol', avax: 'Avax' };
+/** The destinations Omni's NEAR contract actually lists wNEAR on right now (its token registry, read live). */
+export async function liveOutRoutes(): Promise<(OutRoute & { token: string })[]> {
+  const rows = await Promise.all(OUT_ROUTES.map(r => view(OMNI, 'get_token_address', { chain_kind: KIND[r.prefix], token: WNEAR }).then((a: string | null) => a ? { ...r, token: a } : null).catch(() => null)));
+  const live = rows.filter((x): x is OutRoute & { token: string } => !!x);
+  if (!live.length) throw Error('Omni Bridge did not list any destination right now.');
+  return live;
+}
 /** wNEAR's SPL mint on Solana devnet, as the bridge reports it (get_token_address). */
 export const WNEAR_SOL_MINT = '3wQct2e43J1Z99h2RWrhPAhf6E32ZpuzEt6tgwfEAKAy';
 
