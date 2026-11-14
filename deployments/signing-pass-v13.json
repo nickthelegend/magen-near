@@ -6,6 +6,78 @@
       "name": "landing",
       "start": 0.901,
       "end": 4.503
+    },
+    {
+      "name": "upgrade-explorer",
+      "url": "https://nearvalidate.org/txns/HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu?network=testnet",
+      "file": "upgrade-explorer.webm",
+      "readyText": "Testnet Network\nHhN3eu...tJxB5yu\nSuccess\nFrom\nmagen-...testnet\nTo\nmagen-...testnet\nBlock\n277,592,000\nTime (UTC)\n2026-11-14 01:51:27\nAmount\n0 Ⓝ\nFee\n0.001612 Ⓝ\nExecution Plan\n \nExpand All +\nmagen-sign...m8.testnet\nContract Deployed+\nnew+\nAccess Key Deleted+\nAccess Key Created+\nmagen-sign...m8.testnet\nBuilt by NearBlocks\n\nNear Transaction HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu | Near Validate"
+    },
+    {
+      "name": "send",
+      "start": 2.442,
+      "end": 10.651,
+      "file": "app-rest2.webm"
+    },
+    {
+      "name": "send-explorer",
+      "url": "https://nearvalidate.org/txns/EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR?network=testnet",
+      "file": "send-explorer.webm",
+      "readyText": "Testnet Network\nEU7LbU...uXx8YDR\nSuccess\nFrom\nmagen-...testnet\nTo\nmagen-...testnet\nBlock\n277,592,688\nTime (UTC)\n2026-11-14 01:58:23\nAmount\n0 Ⓝ\nFee\n0.000661 Ⓝ\nExecution Plan\n \nExpand All +\nmagen-mwf26bd5.testnet\nexecute+\nmagen-ana.testnet\nTransfer+0.001 Ⓝ\nmagen-mwf26bd5.testnet\nsettle+\nmagen-ana.testnet\nBuilt by NearBlocks\n\nNear Transaction EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR | Near Validate"
+    },
+    {
+      "name": "chains",
+      "start": 19.559,
+      "end": 32.13,
+      "file": "app-rest2.webm"
+    },
+    {
+      "name": "chains-explorer",
+      "url": "https://nearvalidate.org/txns/HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24?network=testnet",
+      "file": "chains-explorer.webm",
+      "readyText": "Testnet Network\nHCRgmB...gwUJu24\nSuccess\nFrom\nmagen-...testnet\nTo\nmagen-...testnet\nBlock\n277,592,717\nTime (UTC)\n2026-11-14 01:58:40\nAmount\n0 Ⓝ\nFee\n0.001496 Ⓝ\nExecution Plan\n \nExpand All +\nmagen-mwf26bd5.testnet\nexecute+\nmagen-ana.testnet\nsign+\nv1.signer-prod.testnet\nreturn_sig...on_success+\nv1.signer-prod.testnet\nsettle+\nmagen-ana.testnet\nBuilt by NearBlocks\n\nNear Transaction HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24 | Near Validate"
+    },
+    {
+      "name": "private",
+      "start": 41.022,
+      "end": 49.081,
+      "file": "app-rest2.webm"
+    },
+    {
+      "name": "private-explorer",
+      "url": "https://nearvalidate.org/txns/5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ?network=testnet",
+      "file": "private-explorer.webm",
+      "readyText": "Testnet Network\n5eBxXQ...qyoCoBJ\nSuccess\nFrom\nmagen-...testnet\nTo\nmagen-...testnet\nBlock\n277,592,751\nTime (UTC)\n2026-11-14 01:59:01\nAmount\n0 Ⓝ\nFee\n0.007733 Ⓝ\nExecution Plan\n \nExpand All +\nmagen-mwf26bd5.testnet\nexecute+\nmagen-ana.testnet\nTransfer+0.001 Ⓝ\nf1f5613783...c0770ae520\nsettle+\nmagen-ana.testnet\nBuilt by NearBlocks\n\nNear Transaction 5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ | Near Validate"
+    },
+    {
+      "name": "recovery",
+      "start": 2.505,
+      "end": 9.667,
+      "file": "app-rest4.webm"
+    },
+    {
+      "name": "recovery-explorer",
+      "url": "https://nearvalidate.org/txns/ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB?network=testnet",
+      "file": "recovery-explorer.webm",
+      "readyText": "Testnet Network\nELx4bG...ysV8AGB\nSuccess\nFrom\nmagen-...testnet\nTo\nmagen-...testnet\nBlock\n277,593,190\nTime (UTC)\n2026-11-14 02:03:23\nAmount\n0 Ⓝ\nFee\n0.000572 Ⓝ\nExecution Plan\n \nExpand All +\nmagen-fee-...b8.testnet\nrecover+\nmagen-ana.testnet\nAccess Key Deleted+\nmagen-ana.testnet\nAccess Key Created+\nmagen-ana.testnet\nBuilt by NearBlocks\n\nNear Transaction ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB | Near Validate"
+    },
+    {
+      "name": "qday",
+      "start": 18.628,
+      "end": 26.185,
+      "file": "app-rest4.webm"
+    },
+    {
+      "name": "qday-explorer",
+      "url": "https://nearvalidate.org/txns/5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX?network=testnet",
+      "file": "qday-explorer.webm",
+      "readyText": "Testnet Network\n5kG5kK...Y4vfHaX\nSuccess\nFrom\nmagen-...testnet\nTo\nmagen-...testnet\nBlock\n277,593,218\nTime (UTC)\n2026-11-14 02:03:40\nAmount\n0 Ⓝ\nFee\n0.000636 Ⓝ\nExecution Plan\n \nExpand All +\nmagen-ana.testnet\nexecute+\nmagen-ana.testnet\nAccess Key Created+\nmagen-ana.testnet\nsettle+\nmagen-ana.testnet\nBuilt by NearBlocks\n\nNear Transaction 5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX | Near Validate"
+    },
+    {
+      "name": "closing",
+      "start": 35.001,
+      "end": 40.003,
+      "file": "app-rest4.webm"
     }
   ],
   "transactions": [
@@ -18,6 +90,56 @@
         "SuccessValue": ""
       },
       "signingKey": "ed25519"
+    },
+    {
+      "step": "send",
+      "hash": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR",
+      "signer": "magen-mwf26bd5.testnet",
+      "receiver": "magen-ana.testnet",
+      "status": {
+        "SuccessValue": "dHJ1ZQ=="
+      },
+      "signingKey": "ed25519"
+    },
+    {
+      "step": "chains",
+      "hash": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24",
+      "signer": "magen-mwf26bd5.testnet",
+      "receiver": "magen-ana.testnet",
+      "status": {
+        "SuccessValue": "dHJ1ZQ=="
+      },
+      "signingKey": "ed25519"
+    },
+    {
+      "step": "private",
+      "hash": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ",
+      "signer": "magen-mwf26bd5.testnet",
+      "receiver": "magen-ana.testnet",
+      "status": {
+        "SuccessValue": "dHJ1ZQ=="
+      },
+      "signingKey": "ed25519"
+    },
+    {
+      "step": "recovery",
+      "hash": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB",
+      "signer": "magen-fee-mwfrh6b8.testnet",
+      "receiver": "magen-ana.testnet",
+      "status": {
+        "SuccessValue": ""
+      },
+      "signingKey": "ed25519"
+    },
+    {
+      "step": "qday",
+      "hash": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX",
+      "signer": "magen-ana.testnet",
+      "receiver": "magen-ana.testnet",
+      "status": {
+        "SuccessValue": "dHJ1ZQ=="
+      },
+      "signingKey": "ed25519"
     }
   ],
   "pending": [
@@ -25,11 +147,58 @@
       "step": "upgrade",
       "hash": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu",
       "at": "2026-11-14T01:51:26.834Z"
+    },
+    {
+      "step": "send",
+      "hash": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR",
+      "at": "2026-11-14T01:58:22.920Z"
+    },
+    {
+      "step": "chains",
+      "hash": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24",
+      "at": "2026-11-14T01:58:40.242Z"
+    },
+    {
+      "step": "private",
+      "hash": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ",
+      "at": "2026-11-14T01:59:01.177Z"
+    },
+    {
+      "step": "recovery",
+      "hash": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB",
+      "at": "2026-11-14T02:03:23.150Z"
+    },
+    {
+      "step": "qday",
+      "hash": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX",
+      "at": "2026-11-14T02:03:39.674Z"
     }
   ],
-  "error": {
-    "phase": "upgrade",
-    "message": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
-    "at": "2026-11-14T01:51:58.505Z"
-  }
+  "previousErrors": [
+    {
+      "phase": "upgrade",
+      "message": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+      "at": "2026-11-14T01:51:58.505Z"
+    },
+    {
+      "phase": "",
+      "message": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Sign twice and send', exact: true })\u001b[22m\n",
+      "at": "2026-11-14T01:55:54.412Z"
+    },
+    {
+      "phase": "recovery",
+      "message": "No confirmed response for recovery; inspect pending hash, never replay.",
+      "at": "2026-11-14T02:01:33.405Z"
+    }
+  ],
+  "rejectedBeforeInclusion": [
+    {
+      "step": "recovery",
+      "hash": "13N1vJXkf1AiiqSgRoJaD193mF2SgK2mFDGJPhVwAmxY",
+      "at": "2026-11-14T02:00:33.249Z",
+      "resolution": "Rejected before inclusion: NotEnoughBalance; UNKNOWN_TRANSACTION verified. No recovery occurred."
+    }
+  ],
+  "feePayer": "magen-fee-mwfrh6b8.testnet",
+  "complete": true
 }

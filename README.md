@@ -9,7 +9,7 @@ It ships on three surfaces that share one SDK:
 | Surface | What it does | Where |
 |---|---|---|
 | **Chrome extension** (MV3) | Popup wallet (balance, send, receive, activity, keys, Q-Day switch, drill). dApps connect through `window.magen`; every request opens an approval window that says **"Signed twice: classical + quantum-safe"**. | `packages/extension`, [zip](web/public/downloads/magen-extension.zip) |
-| **iPhone app** (Expo, Release build) | Upgrade in place, dual-signed send, a centre **Scan** button (camera, scan from photo, paste) that reads NEAR accounts and `magen://pay` requests, a lattice QR for receiving, activity, Q-Day switch. Keys live in the iOS keychain; ML-DSA-65 signs on the phone. | `packages/mobile`, [iOS Simulator build](web/public/downloads/Magen-NEAR-iOS-Simulator.zip) (SHA-256 `faa91c8bd6c96358f1827ed4c248fcc33f99af903c0fe138629889215a4daeba`) |
+| **iPhone app** (Expo, Release build) | Upgrade in place, dual-signed send, a centre **Scan** button (camera, scan from photo, paste) that reads NEAR accounts and `magen://pay` requests, a lattice QR for receiving, activity, Q-Day switch. Keys live in the iOS keychain; ML-DSA-65 signs on the phone. | `packages/mobile`, [iOS Simulator build](web/public/downloads/Magen-NEAR-iOS-Simulator.zip) (SHA-256 `a30cffbca37a6f212bc1b99dec94c02da542a4a8d582aa4ff5cee6a67c3e49a2`) |
 | **Web** | The front door: a read-only **quantum readiness scan** of any NEAR account, the **"steal the key, still get nothing" drill**, and the full wallet. | `web/` |
 
 All three also have **Every chain** (ETH/BTC/SOL/Cosmos addresses from NEAR Chain Signatures that the MPC signs for only after both signatures verify on NEAR; the other chains and the MPC stay classical), **Private send** (one-time receiving accounts) and **Swap & bridge** (live NEAR Intents quotes; quote only, mainnet funding required). See [BLOCKED.md](BLOCKED.md) for what is quote-only or local-chain only.
@@ -109,3 +109,18 @@ It follows wallet-selector's action shape (one `Transfer` or `FunctionCall` per 
 An October 2026 prototype (near-hybrid-pq-wallet) explored dual-signature verification; Magen is a new codebase written Nov 13-14 for NEAR HACKATHON. No October source was copied; dated commits start at scaffold 7997402.
 
 MIT. Copyright (c) 2026 Nivesh Gajengi.
+
+## Camera-approved signing pass (Nov 14)
+
+The current 1:49 film shows landing, six real approvals, and each matching successful NearValidate receipt. Kokoro am_echo at 0.95; original cinematic low drone, no subtitles or overlay captions. Native Q-Day key state is shown in the app from a live RPC query.
+
+| Action | FINAL testnet receipt |
+|---|---|
+| upgrade | [HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu](https://nearvalidate.org/txns/HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu?network=testnet) |
+| send | [EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR](https://nearvalidate.org/txns/EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR?network=testnet) |
+| chains | [HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24](https://nearvalidate.org/txns/HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24?network=testnet) |
+| private | [5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ](https://nearvalidate.org/txns/5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ?network=testnet) |
+| recovery | [ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB](https://nearvalidate.org/txns/ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB?network=testnet) |
+| qday | [5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX](https://nearvalidate.org/txns/5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX?network=testnet) |
+
+New upgraded account: `magen-sign-mwfqr4m8.testnet`; other actions: `magen-ana.testnet`. Recovery payer: `magen-fee-mwfrh6b8.testnet`. The disposable upgrade capture lost its temporary encrypted backup; it must not receive additional funds. Upgrades and recovery now download the encrypted replacement backup before approval/broadcast. Cross-chain footage proves an MPC signature request only. Private send leaves sender, amount and timing public. Q-Day adds a native full-access PQ key and changes the control model.

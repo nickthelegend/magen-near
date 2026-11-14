@@ -22,3 +22,7 @@ Phone layout: floating icon-only tab bar (Home, Activity, raised lattice-shield 
 
 Extension: `scripts/ext-e2e.mjs` drives the real extension in Chromium (`--load-extension`): popup upgrade-in-place, demo dApp connect, approval window "Signed twice", testnet result.
 Phone: Release build on the iOS Simulator (iPhone 17 Pro): onboarding upgrade, send, receive, activity, Q-Day switch, remove classical key.
+
+Signing pass v13: approval modal / phone-web bottom sheet at 1440×900, 375×844, 390×844; zero horizontal overflow after fixing the long pending-payment button label. Reject causes zero broadcasts. Screens: `orchestration/shots/magen/approval-reject-{1440,375,390}.png`; before fixes: `approval-before-{1440,375}.png`. Every filmed transaction also has `approval-<step>-1440.png` and `explorer-<step>.png`. Routes: start/upgrade, app/send, app/chains, app/private, app/security, app/qday.
+
+Native iOS approval bottom sheet compiles in the Release artifact. The Simulator GUI was unavailable for this pass; new transaction footage is explicitly the web app, not a native-phone claim. NearValidate shows all six successes and execution plans. NEAR Rocks' current account page only displayed a key count, so the film uses the actual RPC-backed app key list after Q-Day.

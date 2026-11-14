@@ -1,0 +1,387 @@
+[
+  {
+    "step": "upgrade",
+    "hash": "HhN3eukjg93jBh5m76cvfun9jqckMpEiJ6cxXtJxB5yu",
+    "signer": "magen-sign-mwfqr4m8.testnet",
+    "receiver": "magen-sign-mwfqr4m8.testnet",
+    "final": "FINAL",
+    "status": {
+      "SuccessValue": ""
+    },
+    "actions": [
+      "DeployContract",
+      "FunctionCall",
+      "DeleteKey",
+      "AddKey"
+    ],
+    "receipts": [
+      {
+        "id": "Dsz7mwC8TmbtV9JZ9Ej9knQE2ehTwZHWd9EZPe9Y4UBw",
+        "executor": "magen-sign-mwfqr4m8.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "CBRiQnE6NgjZM31JWAF66zA4ijyiGVC1zeCwPBKyYVC9",
+        "executor": "magen-sign-mwfqr4m8.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      }
+    ]
+  },
+  {
+    "step": "send",
+    "hash": "EU7LbUWuhTvMVQtpRhE7sJhzvoeycfMjsYPxfuXx8YDR",
+    "signer": "magen-mwf26bd5.testnet",
+    "receiver": "magen-ana.testnet",
+    "final": "FINAL",
+    "status": {
+      "SuccessValue": "dHJ1ZQ=="
+    },
+    "actions": [
+      "FunctionCall"
+    ],
+    "receipts": [
+      {
+        "id": "FDFs1pXmTssPsUQWmvsayBuZaHC9jK9Qs6eMNygbTkQM",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessReceiptId": "5uN5f8hC3isdPqeyH7c9NpVLAJqUZk1N6eMbZoZMUzyP"
+        },
+        "logs": [
+          "MAGEN_AUTHORIZED nonce=6 dual_verified=true"
+        ]
+      },
+      {
+        "id": "CLQqfv42u1g2YB68URRn4YFi9bHvL9ygcb5Zr9uAPQpJ",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "Cd5Vxa9U7gEXTFRKxsojermHn44sMjNgxdp1f97GKP4e",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "5uN5f8hC3isdPqeyH7c9NpVLAJqUZk1N6eMbZoZMUzyP",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": "dHJ1ZQ=="
+        },
+        "logs": [
+          "MAGEN_SETTLED nonce=6 success=true migration=false"
+        ]
+      },
+      {
+        "id": "5gmwQ7b5eBz21a78D6T77QiCNU7iNpfSHGuQYcqpACMH",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "kyamsdymisgYo6JS9sEoJ2p4do1DcozKh452jPGgJGk",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      }
+    ]
+  },
+  {
+    "step": "chains",
+    "hash": "HCRgmBJPDsBM4FpqBfZtHVuzgY8B1UA7gLxBagwUJu24",
+    "signer": "magen-mwf26bd5.testnet",
+    "receiver": "magen-ana.testnet",
+    "final": "FINAL",
+    "status": {
+      "SuccessValue": "dHJ1ZQ=="
+    },
+    "actions": [
+      "FunctionCall"
+    ],
+    "receipts": [
+      {
+        "id": "5K7CkjMr5pXRDvXpUcSfcvNossxjbrF6QaPTWz9dd4Le",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessReceiptId": "CSDFmwMJjp8MzhrMsYFSp5DWTCsDy8CARPiP2WmyMTpX"
+        },
+        "logs": [
+          "MAGEN_AUTHORIZED nonce=7 dual_verified=true"
+        ]
+      },
+      {
+        "id": "8tsZbPN2eXpA9Z3jsoYPUUxGVYQ8r9tGUZXGMKUYY8Ev",
+        "executor": "v1.signer-prod.testnet",
+        "status": {
+          "SuccessReceiptId": "66PQBDXwQQiqcNdH4VRxddtCFFfFNFEHHdffMCEWKuD9"
+        },
+        "logs": [
+          "sign: predecessor=AccountId(\"magen-ana.testnet\"), request=SignRequestArgs { path: \"magen/eth\", payload: Ecdsa(BoundedVec { inner: [230, 27, 44, 167, 133, 211, 223, 146, 176, 15, 31, 147, 204, 50, 9, 104, 182, 39, 92, 40, 196, 236, 212, 39, 199, 214, 66, 130, 33, 38, 110, 212], witness: NonEmpty(()) }), domain_id: DomainId(0) }"
+        ]
+      },
+      {
+        "id": "66PQBDXwQQiqcNdH4VRxddtCFFfFNFEHHdffMCEWKuD9",
+        "executor": "v1.signer-prod.testnet",
+        "status": {
+          "SuccessValue": "eyJzY2hlbWUiOiJTZWNwMjU2azEiLCJiaWdfciI6eyJhZmZpbmVfcG9pbnQiOiIwMjVkZDVmZTY2YzE3N2U2OWIyY2I2OWIwMzE4NDBiYzUyMTFlYWM4YTExYjdjNjdhNDU3ZDc4MTFhMWM2MzdmNTcifSwicyI6eyJzY2FsYXIiOiIzZWJkZDE3MzI4YmYxOGI0YjNmY2M1MmNiMDM5YTgyZWMzZTRjMjc0MDA5NWJiNGE1NmUxNTIwMzIwNTZmMTFkIn0sInJlY292ZXJ5X2lkIjowfQ=="
+        },
+        "logs": []
+      },
+      {
+        "id": "GB7jW3se4ML17iZy4vfQQwVosFm1SSCFf1t4TJepXT6z",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "6vTyJZeYzcuVNckgNAqdz8xk5b4RhZvq886uxLVR4NoE",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "CSDFmwMJjp8MzhrMsYFSp5DWTCsDy8CARPiP2WmyMTpX",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": "dHJ1ZQ=="
+        },
+        "logs": [
+          "MAGEN_SETTLED nonce=7 success=true migration=false"
+        ]
+      },
+      {
+        "id": "CYxpAS7gxy73e5rRCKVAtWyk8Fy3ruatowBBzrP3YHYJ",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "H6TSdY2bGpYAAt1madJ81YoTHkZ4JUkhNe83P8Qd55EA",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      }
+    ]
+  },
+  {
+    "step": "private",
+    "hash": "5eBxXQfPPU9JnxL3A4XaRyMfrK4n7kcYJwC3yqyoCoBJ",
+    "signer": "magen-mwf26bd5.testnet",
+    "receiver": "magen-ana.testnet",
+    "final": "FINAL",
+    "status": {
+      "SuccessValue": "dHJ1ZQ=="
+    },
+    "actions": [
+      "FunctionCall"
+    ],
+    "receipts": [
+      {
+        "id": "6tzRDNj5rhftKTanf4afaNrd1aQJMjREyqaBYkowwFS3",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessReceiptId": "BAmza6E63a3rFjzXD3iDKVu6P77Z7nercZrwVHfUrqzP"
+        },
+        "logs": [
+          "MAGEN_AUTHORIZED nonce=8 dual_verified=true"
+        ]
+      },
+      {
+        "id": "HAu5zXtaKPTJsfuEkFqRnUNLyqoYMYTtdbvTfrhymX7d",
+        "executor": "f1f56137831a114018b54314860c47b1540763689bec599809d12fc0770ae520",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "8QFWUYK4azBtP45jPHeMsW3Yb7kGn7EiWzF6ds8ysVQ",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "BAmza6E63a3rFjzXD3iDKVu6P77Z7nercZrwVHfUrqzP",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": "dHJ1ZQ=="
+        },
+        "logs": [
+          "MAGEN_SETTLED nonce=8 success=true migration=false"
+        ]
+      },
+      {
+        "id": "523sXXdS1tLySYgr6vf6bp8V5HhAtJh6RXeqRgZmTFNz",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "Du8KGPrcghyQwNyaWRkqVgu3uXUCzBYhT9Z4XPcZzDWU",
+        "executor": "magen-mwf26bd5.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      }
+    ]
+  },
+  {
+    "step": "recovery",
+    "hash": "ELx4bGLxYniea436swpjoGMrrMVBCFWVaUFtzysV8AGB",
+    "signer": "magen-fee-mwfrh6b8.testnet",
+    "receiver": "magen-ana.testnet",
+    "final": "FINAL",
+    "status": {
+      "SuccessValue": ""
+    },
+    "actions": [
+      "FunctionCall"
+    ],
+    "receipts": [
+      {
+        "id": "2S3TkaQU7scKS5HLvoLHKvYiAGE2DdXnQBp65dBbhKwV",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessReceiptId": "ADJ3gsSvGpPzccJ8Eby48Um8Sg9Hd6Y3aiKBo4PemQze"
+        },
+        "logs": [
+          "MAGEN_RECOVERED by=2 of=3"
+        ]
+      },
+      {
+        "id": "44VEhEhb4d9K5suZAAf7ukafmGR2ZdEET6HFqAUM6GRx",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "CL6H7jkxGKkL3c4bAraXsDXAAXecnQ3aQ9uYtEvXkCag",
+        "executor": "magen-fee-mwfrh6b8.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "ADJ3gsSvGpPzccJ8Eby48Um8Sg9Hd6Y3aiKBo4PemQze",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "Dq2R1smkRnYxgCQtMKCkewrwJ7RGeV6URX9HUJmkwNEb",
+        "executor": "magen-fee-mwfrh6b8.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "HEL6ziE4C419nQQYkC1SshgrrWmWGHkPBiCwypnVZbph",
+        "executor": "magen-fee-mwfrh6b8.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      }
+    ]
+  },
+  {
+    "step": "qday",
+    "hash": "5kG5kKiG9U59J1Ezw7pVm8AwyWSz8xeAA6AcnY4vfHaX",
+    "signer": "magen-ana.testnet",
+    "receiver": "magen-ana.testnet",
+    "final": "FINAL",
+    "status": {
+      "SuccessValue": "dHJ1ZQ=="
+    },
+    "actions": [
+      "FunctionCall"
+    ],
+    "receipts": [
+      {
+        "id": "6yzjr5JArb2GeNRVh7XBaXNMCwHvFFP2mYnLgFbfreHS",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessReceiptId": "83Ccv6fJgCeMHgFuCNgWWnUzxvzetUWLiPY3cKHr4XxP"
+        },
+        "logs": [
+          "MAGEN_AUTHORIZED nonce=9 dual_verified=true"
+        ]
+      },
+      {
+        "id": "9YpYUWMiqtGbSttBUCtVsU4pyJd82bqBqAenhmnQTpac",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "4LBzgkARDXjFpXhowdgfLDyWJNPqwLxyRXCExKJfuY9p",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "83Ccv6fJgCeMHgFuCNgWWnUzxvzetUWLiPY3cKHr4XxP",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": "dHJ1ZQ=="
+        },
+        "logs": [
+          "MAGEN_SETTLED nonce=9 success=true migration=true"
+        ]
+      },
+      {
+        "id": "DN5sMJtko3Bd2wefD5XxJ15RyhcBdCXHtvAB7E9ejdyg",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      },
+      {
+        "id": "6LtN6ENLycs8EZx1CMfi6V7x6e35mjZig6WChPpPra8h",
+        "executor": "magen-ana.testnet",
+        "status": {
+          "SuccessValue": ""
+        },
+        "logs": []
+      }
+    ]
+  }
+]

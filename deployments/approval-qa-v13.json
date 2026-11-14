@@ -1,0 +1,47 @@
+{
+  "results": [
+    {
+      "width": 1440,
+      "dimensions": {
+        "scroll": 1440,
+        "inner": 1440,
+        "body": 1440,
+        "x": 0
+      },
+      "overflow": false,
+      "overflowElements": [
+        {
+          "tag": "SMALL",
+          "class": "",
+          "right": 200
+        }
+      ],
+      "approveVisible": true
+    },
+    {
+      "width": 375,
+      "dimensions": {
+        "scroll": 375,
+        "inner": 375,
+        "body": 375,
+        "x": 0
+      },
+      "overflow": false,
+      "overflowElements": [],
+      "approveVisible": true
+    },
+    {
+      "width": 390,
+      "dimensions": {
+        "scroll": 390,
+        "inner": 390,
+        "body": 390,
+        "x": 0
+      },
+      "overflow": false,
+      "overflowElements": [],
+      "approveVisible": true
+    }
+  ],
+  "broadcastsAfterReject": 0
+}

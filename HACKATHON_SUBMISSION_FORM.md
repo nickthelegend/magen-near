@@ -18,7 +18,7 @@ Magen upgrades an existing account **in place** in one transaction (DeployContra
 
 ## Proof
 - Live testnet transactions for every flow: README table and `deployments/` (`surfaces-live.json`, `drill-live.json`, `attacks.json`, `verified-live.json`).
-- Tests: 39 automated (10 SDK + 29 on a local neard 2.14 sandbox, protocol 88) plus live testnet runs; see TESTING.md.
+- Tests: 78 automated (14 SDK, 46 local NEAR sandbox, 18 phone) plus live testnet runs; see TESTING.md.
 - Film: `videos/magen-near/magen-near-film.mp4` (2:19), share copy `magen-near-film-share.mp4` (720p, 3.9 MB).
 
 ## Honest limits
@@ -29,3 +29,5 @@ An October 2026 prototype (near-hybrid-pq-wallet) explored dual-signature verifi
 
 **Repository:** github.com/nickthelegend/magen-near (private until Nick makes it public).
 **License:** MIT, Copyright (c) 2026 Nivesh Gajengi.
+
+Signing-pass film v13: 1:49, six explicit approvals followed by their FINAL NearValidate receipts. Live app: https://magen-near.vercel.app. Details and all six hashes in README.

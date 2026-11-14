@@ -4,12 +4,12 @@ No mocks: every chain test sends real transactions, to a local NEAR node (neard 
 
 | Suite | Command | Count | What it covers |
 |---|---|---|---|
-| SDK unit tests | `npm test` | **10 / 10** | real ed25519 + ML-DSA-65 signatures; forged classical half, forged quantum half, edited recipient, wrong wallet; native key handle format; exact 24-decimal amounts; encrypted backup round-trip and wrong password |
+| SDK unit tests | `npm test` | **14 / 14** | real ed25519 + ML-DSA-65 signatures; forged classical half, forged quantum half, edited recipient, wrong wallet; native key handle format; exact 24-decimal amounts; encrypted backup round-trip and wrong password |
 | Contract on local NEAR node | `npm run test:sandbox` (`scripts/sandbox.ts`) | **13 / 13** | valid dual send; forged ed25519; forged ML-DSA; missing quantum half; wrong message; wrong wallet; expired intent; migration by non-owner; nonce replay; self-call blocked; private callback; native migration; migration settles |
 | Upgrade + drill on local NEAR node | `npm run test:sandbox` (`scripts/sandbox-upgrade.ts`) | **19 / 19** | default upgrade leaves zero classical access keys (ML-DSA-65 execute-only fee key), a dual-signed send paid by that key, Q-Day switch alongside it; precheck accepts / refuses wrong key / refuses second upgrade; one-tx in-place upgrade leaves exactly one execute-only key; old key can't transfer natively; dual-signed send via the execute-only key; attacker recovers both weak keys from public data; plain account drained; same attack on Magen refused ("quantum half missing"); self-made ML-DSA key refused; Magen keeps its funds; Q-Day switch adds the native `ml-dsa-65-hash` key; readiness scan scores 100 / 15; recovery-phrase derivation and rejection |
 | Guardians (contract magen-2) on local NEAR node | `npm run test:sandbox` (`scripts/sandbox-guardians.ts`) | **14 / 14** | upgrade with magen-2; recovery refused without guardians; guardians can't be set with the classical key alone; owner sets 2-of-3 (dual-signed); one guardian alone refused; same guardian twice refused; non-guardian signature refused; signature over different new keys refused; expired recovery refused; valid 2-of-3 rotates both locks, removes the old key and adds the new execute-only key; funds untouched; replayed recovery refused; old device can no longer act; new device spends |
 | Phone scan + QR | `cd packages/mobile && npm test` | **18 / 18** | scan parser: named, sub-, implicit and eth-implicit accounts; `magen://pay` and https pay links; `magen://` screen links; dApp / WalletConnect requests refused with a clear message; own code, mainnet and malformed accounts, missing recipient, bad or zero amounts, memo limits, empty / oversized / random input. QR: the exact SVG the app draws is rendered to PNG (resvg) and decoded back (jsQR) for 5 payloads at 240 and 480 px |
-| **Total automated** | | **74 / 74** | the magen-1 suites (29) also pass unchanged on magen-2 |
+| **Total automated** | | **78 / 78** | the magen-1 suites (29) also pass unchanged on magen-2 |
 
 Results: [`deployments/sandbox-tests.json`](deployments/sandbox-tests.json), [`deployments/sandbox-upgrade-tests.json`](deployments/sandbox-upgrade-tests.json).
 
@@ -35,3 +35,8 @@ Results: [`deployments/sandbox-tests.json`](deployments/sandbox-tests.json), [`d
 - Rebuilding the contract from source gives the on-chain code hashes: magen-1 `BfybLd2PncEnEM3twymN35YYA8q5RheNq1DRSXwpp1p3` (accounts upgraded Nov 13 and the phone app's embedded build) and magen-2 `84P7CKENx6FNQDWktEfr1KiSDfGFo4Bq9cZgM41zj7yV` (guardians; web and extension upgrades from Nov 14).
 
 Not audited.
+
+## Signing pass v13 (Nov 14)
+14 SDK tests rerun, including public-only previews, Reject before RPC/signing, and backup preparation before approval. All 18 phone tests rerun; web/extension builds and mobile typecheck pass. Native iOS Release build passes (SHA-256 `a30cffbca37a6f212bc1b99dec94c02da542a4a8d582aa4ff5cee6a67c3e49a2`). The existing 46 sandbox cases were retained; no Rust changed in this pass and they were not rerun. Total 78 = 14 SDK + 13 contract + 19 upgrade + 14 guardians + 18 phone.
+
+Six new camera-approved transactions independently verified FINAL: [receipts](deployments/signing-pass-receipts-v13.json). The recovery attempt with the low-balance sponsor was rejected before inclusion, confirmed UNKNOWN_TRANSACTION; a funded own payer then submitted the successful recovery. Reject in the browser produced zero broadcasts. Approval at 1440, 375 and 390 has zero horizontal overflow, with Approve visible: [QA](deployments/approval-qa-v13.json).
